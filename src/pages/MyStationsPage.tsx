@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery, useMutation } from 'convex/react';
+import { useQuery, useMutation, useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useAuth } from '../WalletAuthProvider';
 import { WalletConnection } from '../WalletConnection';
 import { useWeatherChat } from '../hooks/useWeatherChat';
 import { ChatInterface } from '../components/weather/ChatInterface';
+import { StationDetailCard } from '../components/weather/StationDetailCard';
+import { SyncAllStationsButton } from '../components/weather/SyncAllStationsButton';
+import { useToast } from '../hooks/useToast';
+import { ToastContainer } from '../components/ui/ToastContainer';
 
 export function MyStationsPage() {
   const { user, isGuest, signOut, sessionId } = useAuth();
   const [selectedStationId, setSelectedStationId] = useState<string | null>(null);
+  const [syncingStations, setSyncingStations] = useState<Set<string>>(new Set());
+  const { toasts, showSuccess, showError, hideToast } = useToast();
 
   const savedStations = useQuery(api.weatherxmApi.getMySavedStations, 
     sessionId ? { sessionId } : "skip"
   );
   const removeStation = useMutation(api.weatherxmApi.removeStationFromMyStations);
+  const syncStationData = useAction(api.weatherxm.stationSyncApi.syncStationData);
 
   const {
     chatMessages,
@@ -32,9 +39,36 @@ export function MyStationsPage() {
       if (selectedStationId === stationId) {
         setSelectedStationId(null);
       }
-    } catch (error) {
-      console.error('Failed to remove station:', error);
+      showSuccess('Station removed from your collection');
+    } catch (error: any) {
+      showError(error.message || 'Failed to remove station');
     }
+  };
+
+  const handleSyncStation = async (stationId: string) => {
+    if (!sessionId) return;
+    
+    setSyncingStations(prev => new Set(prev).add(stationId));
+    try {
+      const result = await syncStationData({ sessionId, stationId });
+      showSuccess(result.message);
+    } catch (error: any) {
+      showError(error.message || 'Failed to sync station data');
+    } finally {
+      setSyncingStations(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(stationId);
+        return newSet;
+      });
+    }
+  };
+
+  const handleSyncAllComplete = (message: string) => {
+    showSuccess(message);
+  };
+
+  const handleSyncAllError = (error: string) => {
+    showError(error);
   };
 
   const selectedStation = savedStations?.find(s => s.stationId === selectedStationId);
@@ -101,10 +135,21 @@ export function MyStationsPage() {
       <div className="max-w-7xl mx-auto px-4 space-y-6">
         {/* Header */}
         <div className="nb-panel-white p-6">
-          <h1 className="text-3xl font-bold mb-2">🌤️ My Weather Stations</h1>
-          <p className="text-gray-600">
-            Chat with AI about your saved weather stations and get insights about weather patterns and conditions.
-          </p>
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">🌤️ My Weather Stations</h1>
+              <p className="text-gray-600">
+                Manage your saved weather stations, sync latest data, and chat with AI about weather patterns.
+              </p>
+            </div>
+            {sessionId && savedStations && savedStations.length > 0 && (
+              <SyncAllStationsButton
+                sessionId={sessionId}
+                onSyncComplete={handleSyncAllComplete}
+                onSyncError={handleSyncAllError}
+              />
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -137,41 +182,19 @@ export function MyStationsPage() {
                 {savedStations?.map((station) => (
                   <div
                     key={station._id}
-                    className={`nb-panel p-4 cursor-pointer transition-all ${
+                    className={`cursor-pointer transition-all ${
                       selectedStationId === station.stationId 
-                        ? 'nb-panel-accent' 
-                        : 'hover:nb-panel-success'
+                        ? 'ring-2 ring-blue-500' 
+                        : ''
                     }`}
                     onClick={() => setSelectedStationId(station.stationId)}
                   >
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <h3 className="font-bold text-sm mb-1">
-                          {station.customName || station.stationData?.name || `Station ${station.stationId}`}
-                        </h3>
-                        <p className="text-xs text-gray-600 mb-2">
-                          📍 {station.stationData?.address || 'Unknown Location'}
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <span className={`px-2 py-1 rounded text-xs font-bold ${
-                            station.stationData?.isActive 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                            {station.stationData?.isActive ? '🟢' : '🔴'}
-                          </span>
-                        </div>
-                      </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveStation(station.stationId);
-                        }}
-                        className="text-red-600 hover:text-red-800 font-bold text-sm"
-                      >
-                        ✕
-                      </button>
-                    </div>
+                    <StationDetailCard
+                      station={station}
+                      onRemove={handleRemoveStation}
+                      onSync={handleSyncStation}
+                      isSyncing={syncingStations.has(station.stationId)}
+                    />
                   </div>
                 ))}
               </div>
@@ -207,6 +230,8 @@ export function MyStationsPage() {
           </div>
         </div>
       </div>
+
+      <ToastContainer toasts={toasts} onHideToast={hideToast} />
     </div>
   );
 }

@@ -155,6 +155,86 @@ const applicationTables = {
     .index("by_user_and_station", ["userId", "stationId"])
     .index("by_station", ["stationId"]),
 
+  // WeatherXM station latest observations
+  stationLatestData: defineTable({
+    stationId: v.string(),
+    observation: v.object({
+      timestamp: v.string(),
+      temperature: v.optional(v.number()),
+      feels_like: v.optional(v.number()),
+      dew_point: v.optional(v.number()),
+      precipitation_rate: v.optional(v.number()),
+      precipitation_accumulated: v.optional(v.number()),
+      humidity: v.optional(v.number()),
+      wind_speed: v.optional(v.number()),
+      wind_gust: v.optional(v.number()),
+      wind_direction: v.optional(v.number()),
+      uv_index: v.optional(v.number()),
+      pressure: v.optional(v.number()),
+      solar_irradiance: v.optional(v.number()),
+      icon: v.optional(v.string()),
+    }),
+    health: v.object({
+      timestamp: v.string(),
+      data_quality: v.object({
+        score: v.number(),
+      }),
+      location_quality: v.object({
+        score: v.number(),
+        reason: v.optional(v.string()),
+      }),
+    }),
+    location: v.object({
+      lat: v.number(),
+      lon: v.number(),
+      elevation: v.optional(v.number()),
+    }),
+    lastUpdated: v.number(),
+  })
+    .index("by_station", ["stationId"])
+    .index("by_last_updated", ["lastUpdated"]),
+
+  // WeatherXM station historical data
+  stationHistoryData: defineTable({
+    stationId: v.string(),
+    date: v.string(),
+    health: v.object({
+      timestamp: v.string(),
+      data_quality: v.object({
+        score: v.number(),
+      }),
+      location_quality: v.object({
+        score: v.number(),
+        reason: v.optional(v.string()),
+      }),
+    }),
+    observations: v.array(v.object({
+      timestamp: v.string(),
+      temperature: v.optional(v.number()),
+      feels_like: v.optional(v.number()),
+      dew_point: v.optional(v.number()),
+      precipitation_rate: v.optional(v.number()),
+      precipitation_accumulated: v.optional(v.number()),
+      humidity: v.optional(v.number()),
+      wind_speed: v.optional(v.number()),
+      wind_gust: v.optional(v.number()),
+      wind_direction: v.optional(v.number()),
+      uv_index: v.optional(v.number()),
+      pressure: v.optional(v.number()),
+      solar_irradiance: v.optional(v.number()),
+      icon: v.optional(v.string()),
+    })),
+    location: v.object({
+      lat: v.number(),
+      lon: v.number(),
+      elevation: v.optional(v.number()),
+    }),
+    lastUpdated: v.number(),
+  })
+    .index("by_station", ["stationId"])
+    .index("by_station_and_date", ["stationId", "date"])
+    .index("by_last_updated", ["lastUpdated"]),
+
   // WeatherXM AI chat history
   weatherChatHistory: defineTable({
     userId: v.id("users"),
