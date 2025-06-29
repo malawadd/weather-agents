@@ -12,9 +12,15 @@ export const addStationToMyStations = mutation({
       location: v.optional(v.object({
         lat: v.number(),
         lon: v.number(),
+        elevation: v.optional(v.number()),
+        cellId: v.optional(v.string()),
       })),
       address: v.optional(v.string()),
       isActive: v.optional(v.boolean()),
+      lastDayQod: v.optional(v.number()),
+      createdAt: v.optional(v.string()),
+      region: v.optional(v.string()),
+      country: v.optional(v.string()),
     })),
   },
   handler: async (ctx, args) => {

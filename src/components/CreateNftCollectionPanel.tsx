@@ -53,7 +53,7 @@ export default function CreateNftCollectionPanel({
         isPublicMinting: false,
         mintOpen: true,
         mintFeeRecipient: zeroAddress,
-        contractURI,
+        contractURI: contractURI || undefined,
       });
 
       onCreated({
