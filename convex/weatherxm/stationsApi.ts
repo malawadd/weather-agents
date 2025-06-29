@@ -8,6 +8,8 @@ export const fetchStations = action({
     page: v.optional(v.number()),
     limit: v.optional(v.number()),
     search: v.optional(v.string()),
+    country: v.optional(v.string()),
+    city: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     validateApiKey();
@@ -24,7 +26,6 @@ export const fetchStations = action({
       });
 
       console.log('Response status:', response.status);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -36,22 +37,57 @@ export const fetchStations = action({
       console.log('Stations data received:', data ? 'Success' : 'No data');
       
       // Transform the data to match our expected format
-      const stations = Array.isArray(data) ? data : (data.data || data.stations || []);
+      let stations = Array.isArray(data) ? data : [];
+      
+      // Apply search filter if provided
+      if (args.search) {
+        const searchTerm = args.search.toLowerCase();
+        stations = stations.filter((station: any) => 
+          station.name?.toLowerCase().includes(searchTerm) ||
+          station.id?.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      // Apply country filter if provided
+      if (args.country) {
+        stations = stations.filter((station: any) => 
+          station.country?.toLowerCase() === args.country?.toLowerCase()
+        );
+      }
+
+      // Apply city filter if provided
+      if (args.city) {
+        stations = stations.filter((station: any) => 
+          station.city?.toLowerCase() === args.city?.toLowerCase()
+        );
+      }
+
+      // Apply pagination
+      const page = args.page || 1;
+      const limit = args.limit || 20;
+      const startIndex = (page - 1) * limit;
+      const paginatedStations = stations.slice(startIndex, startIndex + limit);
       
       return {
-        data: stations.map((station: any) => ({
-          id: station.id || station._id || station.stationId,
+        data: paginatedStations.map((station: any) => ({
+          id: station.id,
           name: station.name || `Station ${station.id}`,
           location: {
-            lat: station.location?.lat || station.lat || 0,
-            lon: station.location?.lon || station.lng || station.lon || 0,
-            address: station.location?.address || station.address || 'Unknown Location',
+            lat: station.lat || 0,
+            lon: station.lon || 0,
+            address: `${station.lat?.toFixed(4)}, ${station.lon?.toFixed(4)}`,
+            elevation: station.elevation,
+            cellId: station.cellId,
           },
-          isActive: station.isActive !== false, // Default to true if not specified
-          lastActivity: station.lastActivity || station.last_activity,
+          isActive: station.lastDayQod > 0.5, // Consider active if QoD > 0.5
+          lastActivity: station.createdAt,
+          lastDayQod: station.lastDayQod,
+          createdAt: station.createdAt,
         })),
         total: stations.length,
-        page: args.page || 1,
+        page: page,
+        totalPages: Math.ceil(stations.length / limit),
+        hasMore: startIndex + limit < stations.length,
       };
     } catch (error) {
       console.error('Error fetching stations:', error);
@@ -87,20 +123,24 @@ export const fetchStationDetails = action({
         handleApiError(response);
       }
 
-      const data = await response.json();
+      const station = await response.json();
       
       // Transform the data to match our expected format
       return {
-        id: data.id || data._id || args.stationId,
-        name: data.name || `Station ${args.stationId}`,
+        id: station.id,
+        name: station.name || `Station ${station.id}`,
         location: {
-          lat: data.location?.lat || data.lat || 0,
-          lon: data.location?.lon || data.lng || data.lon || 0,
-          address: data.location?.address || data.address || 'Unknown Location',
+          lat: station.lat || 0,
+          lon: station.lon || 0,
+          address: `${station.lat?.toFixed(4)}, ${station.lon?.toFixed(4)}`,
+          elevation: station.elevation,
+          cellId: station.cellId,
         },
-        isActive: data.isActive !== false,
-        lastActivity: data.lastActivity || data.last_activity,
-        ...data, // Include all other fields
+        isActive: station.lastDayQod > 0.5,
+        lastActivity: station.createdAt,
+        lastDayQod: station.lastDayQod,
+        createdAt: station.createdAt,
+        ...station, // Include all other fields
       };
     } catch (error) {
       console.error('Error fetching station details:', error);
@@ -108,6 +148,70 @@ export const fetchStationDetails = action({
         throw error;
       }
       throw new Error('Failed to fetch station details from WeatherXM API');
+    }
+  },
+});
+
+// Get unique locations for filtering
+export const getStationLocations = action({
+  args: {},
+  handler: async (ctx) => {
+    validateApiKey();
+    
+    try {
+      const url = `${WEATHERXM_BASE_URL}/stations`;
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: getApiHeaders(),
+      });
+
+      if (!response.ok) {
+        handleApiError(response);
+      }
+
+      const data = await response.json();
+      const stations = Array.isArray(data) ? data : [];
+      
+      // Extract unique locations for filtering
+      const locations = new Set<string>();
+      const countries = new Set<string>();
+      const cities = new Set<string>();
+      
+      stations.forEach((station: any) => {
+        if (station.lat && station.lon) {
+          // Create location strings for major regions
+          const lat = station.lat;
+          const lon = station.lon;
+          
+          // Simple region detection based on coordinates
+          let region = 'Unknown';
+          if (lat >= 35 && lat <= 71 && lon >= -10 && lon <= 40) {
+            region = 'Europe';
+          } else if (lat >= 25 && lat <= 49 && lon >= -125 && lon <= -66) {
+            region = 'North America';
+          } else if (lat >= -35 && lat <= 37 && lon >= -20 && lon <= 55) {
+            region = 'Africa';
+          } else if (lat >= -50 && lat <= 70 && lon >= 25 && lon <= 180) {
+            region = 'Asia';
+          } else if (lat >= -47 && lat <= -10 && lon >= 113 && lon <= 154) {
+            region = 'Australia';
+          }
+          
+          locations.add(region);
+        }
+      });
+      
+      return {
+        regions: Array.from(locations).sort(),
+        totalStations: stations.length,
+      };
+    } catch (error) {
+      console.error('Error fetching station locations:', error);
+      return {
+        regions: ['Europe', 'North America', 'Asia', 'Africa', 'Australia'],
+        totalStations: 0,
+      };
     }
   },
 });

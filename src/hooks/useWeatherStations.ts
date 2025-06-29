@@ -10,22 +10,34 @@ interface Station {
     lat: number;
     lon: number;
     address?: string;
+    elevation?: number;
+    cellId?: string;
   };
   isActive: boolean;
   lastActivity?: string;
+  lastDayQod?: number;
+  createdAt?: string;
 }
 
 interface UseWeatherStationsProps {
   sessionId: Id<"sessions"> | null;
   searchTerm?: string;
   currentPage?: number;
+  selectedRegion?: string;
 }
 
-export function useWeatherStations({ sessionId, searchTerm = '', currentPage = 1 }: UseWeatherStationsProps) {
+export function useWeatherStations({ 
+  sessionId, 
+  searchTerm = '', 
+  currentPage = 1,
+  selectedRegion = ''
+}: UseWeatherStationsProps) {
   const [stations, setStations] = useState<Station[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [addingStations, setAddingStations] = useState<Set<string>>(new Set());
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalStations, setTotalStations] = useState(0);
 
   const fetchStations = useAction(api.weatherxmApi.fetchStations);
   const addStationToMyStations = useMutation(api.weatherxmApi.addStationToMyStations);
@@ -37,26 +49,37 @@ export function useWeatherStations({ sessionId, searchTerm = '', currentPage = 1
     setLoading(true);
     setError(null);
     try {
-      console.log('Loading stations with params:', { currentPage, searchTerm });
+      console.log('Loading stations with params:', { 
+        currentPage, 
+        searchTerm, 
+        selectedRegion 
+      });
       
       const result = await fetchStations({
         page: currentPage,
         limit: 20,
         search: searchTerm || undefined,
+        country: selectedRegion || undefined,
       });
       
       console.log('Stations result:', result);
       
       if (result && result.data) {
         setStations(result.data);
+        setTotalPages(result.totalPages || 1);
+        setTotalStations(result.total || 0);
       } else {
         console.warn('No data in stations result:', result);
         setStations([]);
+        setTotalPages(1);
+        setTotalStations(0);
       }
     } catch (err: any) {
       console.error('Error loading stations:', err);
       setError(err.message || 'Failed to load stations');
       setStations([]);
+      setTotalPages(1);
+      setTotalStations(0);
     } finally {
       setLoading(false);
     }
@@ -99,6 +122,8 @@ export function useWeatherStations({ sessionId, searchTerm = '', currentPage = 1
     error,
     addingStations,
     savedStations,
+    totalPages,
+    totalStations,
     loadStations,
     handleAddStation,
     setError,
