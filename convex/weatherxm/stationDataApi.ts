@@ -49,7 +49,7 @@ export const fetchAndStoreLatestData = action({
 export const fetchAndStoreHistoryData = action({
   args: {
     stationId: v.string(),
-    date: v.string(), // Now required - format: YYYY-MM-DD
+    date: v.string(), // Required - format: YYYY-MM-DD
   },
   handler: async (ctx, args): Promise<any> => {
     validateApiKey();
@@ -83,15 +83,18 @@ export const fetchAndStoreHistoryData = action({
         handleApiError(response);
       }
 
-      const data = await response.json();
+      const rawData = await response.json();
+      
+      // Process the array of observations
+      const processedData = processHistoricalObservations(rawData, args.date);
       
       // Store in database
       await ctx.runMutation(internal.weatherxm.stationDataApi.storeHistoryData, {
         stationId: args.stationId,
-        data: data,
+        data: processedData,
       });
 
-      return data;
+      return processedData;
     } catch (error) {
       console.error('Error fetching history data:', error);
       if (error instanceof Error && error.message.includes('WeatherXM')) {
@@ -102,42 +105,130 @@ export const fetchAndStoreHistoryData = action({
   },
 });
 
+// Process historical observations array into structured data
+function processHistoricalObservations(rawData: any[], date: string) {
+  if (!Array.isArray(rawData) || rawData.length === 0) {
+    return {
+      date,
+      observations: [],
+      health: {
+        timestamp: new Date().toISOString(),
+        data_quality: { score: 0 },
+        location_quality: { score: 0, reason: "NO_DATA" }
+      },
+      location: { lat: 0, lon: 0 },
+      summary: {
+        totalObservations: 0,
+        validObservations: 0,
+        dataQuality: 0
+      }
+    };
+  }
+
+  // Filter out observations with all null values
+  const validObservations = rawData.filter(item => {
+    const obs = item.observation;
+    if (!obs) return false;
+    
+    // Check if at least one weather parameter has a valid value
+    return obs.temperature !== null || 
+           obs.humidity !== null || 
+           obs.wind_speed !== null || 
+           obs.pressure !== null ||
+           obs.precipitation_rate !== null ||
+           obs.solar_irradiance !== null ||
+           obs.uv_index !== null;
+  });
+
+  // Sort by timestamp
+  validObservations.sort((a, b) => 
+    new Date(a.observation.timestamp).getTime() - new Date(b.observation.timestamp).getTime()
+  );
+
+  // Take the most recent health and location data
+  const latestItem = rawData[rawData.length - 1] || rawData[0];
+  
+  // Calculate summary statistics
+  const summary = calculateDailySummary(validObservations);
+
+  return {
+    date,
+    observations: validObservations.map(item => filterObservationData(item.observation)),
+    health: latestItem?.health || {
+      timestamp: new Date().toISOString(),
+      data_quality: { score: 0 },
+      location_quality: { score: 0, reason: "UNKNOWN" }
+    },
+    location: latestItem?.location || { lat: 0, lon: 0 },
+    summary: {
+      totalObservations: rawData.length,
+      validObservations: validObservations.length,
+      dataQuality: latestItem?.health?.data_quality?.score || 0,
+      ...summary
+    }
+  };
+}
+
+// Calculate daily summary statistics
+function calculateDailySummary(observations: any[]) {
+  if (observations.length === 0) {
+    return {
+      avgTemperature: null,
+      minTemperature: null,
+      maxTemperature: null,
+      avgHumidity: null,
+      avgWindSpeed: null,
+      maxWindSpeed: null,
+      avgPressure: null,
+      totalPrecipitation: null,
+      maxUvIndex: null,
+      avgSolarIrradiance: null
+    };
+  }
+
+  const temps = observations.map(o => o.observation.temperature).filter(v => v !== null);
+  const humidity = observations.map(o => o.observation.humidity).filter(v => v !== null);
+  const windSpeeds = observations.map(o => o.observation.wind_speed).filter(v => v !== null);
+  const pressures = observations.map(o => o.observation.pressure).filter(v => v !== null);
+  const precipitation = observations.map(o => o.observation.precipitation_rate).filter(v => v !== null);
+  const uvIndex = observations.map(o => o.observation.uv_index).filter(v => v !== null);
+  const solar = observations.map(o => o.observation.solar_irradiance).filter(v => v !== null);
+
+  return {
+    avgTemperature: temps.length > 0 ? temps.reduce((a, b) => a + b, 0) / temps.length : null,
+    minTemperature: temps.length > 0 ? Math.min(...temps) : null,
+    maxTemperature: temps.length > 0 ? Math.max(...temps) : null,
+    avgHumidity: humidity.length > 0 ? humidity.reduce((a, b) => a + b, 0) / humidity.length : null,
+    avgWindSpeed: windSpeeds.length > 0 ? windSpeeds.reduce((a, b) => a + b, 0) / windSpeeds.length : null,
+    maxWindSpeed: windSpeeds.length > 0 ? Math.max(...windSpeeds) : null,
+    avgPressure: pressures.length > 0 ? pressures.reduce((a, b) => a + b, 0) / pressures.length : null,
+    totalPrecipitation: precipitation.length > 0 ? precipitation.reduce((a, b) => a + b, 0) : null,
+    maxUvIndex: uvIndex.length > 0 ? Math.max(...uvIndex) : null,
+    avgSolarIrradiance: solar.length > 0 ? solar.reduce((a, b) => a + b, 0) / solar.length : null
+  };
+}
+
 // Helper function to filter observation data to match schema
 function filterObservationData(observation: any) {
   if (!observation) return {};
   
-  // Only include fields that are expected in the schema
-  const {
-    timestamp,
-    temperature,
-    humidity,
-    pressure,
-    wind_speed,
-    wind_direction,
-    wind_gust,
-    precipitation_rate,
-    solar_irradiance,
-    uv_index,
-    dew_point,
-    feels_like,
-    icon
-  } = observation;
-
+  // Only include fields that are expected in the schema and are not null
   const filtered: any = {};
   
-  if (timestamp !== undefined) filtered.timestamp = timestamp;
-  if (temperature !== undefined) filtered.temperature = temperature;
-  if (humidity !== undefined) filtered.humidity = humidity;
-  if (pressure !== undefined) filtered.pressure = pressure;
-  if (wind_speed !== undefined) filtered.wind_speed = wind_speed;
-  if (wind_direction !== undefined) filtered.wind_direction = wind_direction;
-  if (wind_gust !== undefined) filtered.wind_gust = wind_gust;
-  if (precipitation_rate !== undefined) filtered.precipitation_rate = precipitation_rate;
-  if (solar_irradiance !== undefined) filtered.solar_irradiance = solar_irradiance;
-  if (uv_index !== undefined) filtered.uv_index = uv_index;
-  if (dew_point !== undefined) filtered.dew_point = dew_point;
-  if (feels_like !== undefined) filtered.feels_like = feels_like;
-  if (icon !== undefined) filtered.icon = icon;
+  if (observation.timestamp !== undefined) filtered.timestamp = observation.timestamp;
+  if (observation.temperature !== null && observation.temperature !== undefined) filtered.temperature = observation.temperature;
+  if (observation.humidity !== null && observation.humidity !== undefined) filtered.humidity = observation.humidity;
+  if (observation.pressure !== null && observation.pressure !== undefined) filtered.pressure = observation.pressure;
+  if (observation.wind_speed !== null && observation.wind_speed !== undefined) filtered.wind_speed = observation.wind_speed;
+  if (observation.wind_direction !== null && observation.wind_direction !== undefined) filtered.wind_direction = observation.wind_direction;
+  if (observation.wind_gust !== null && observation.wind_gust !== undefined) filtered.wind_gust = observation.wind_gust;
+  if (observation.precipitation_rate !== null && observation.precipitation_rate !== undefined) filtered.precipitation_rate = observation.precipitation_rate;
+  if (observation.precipitation_accumulated !== null && observation.precipitation_accumulated !== undefined) filtered.precipitation_accumulated = observation.precipitation_accumulated;
+  if (observation.solar_irradiance !== null && observation.solar_irradiance !== undefined) filtered.solar_irradiance = observation.solar_irradiance;
+  if (observation.uv_index !== null && observation.uv_index !== undefined) filtered.uv_index = observation.uv_index;
+  if (observation.dew_point !== null && observation.dew_point !== undefined) filtered.dew_point = observation.dew_point;
+  if (observation.feels_like !== null && observation.feels_like !== undefined) filtered.feels_like = observation.feels_like;
+  if (observation.icon !== null && observation.icon !== undefined) filtered.icon = observation.icon;
 
   return filtered;
 }
@@ -193,11 +284,6 @@ export const storeHistoryData = internalMutation({
       )
       .unique();
 
-    // Filter observations array if it exists
-    const filteredObservations = args.data.observations 
-      ? args.data.observations.map((obs: any) => filterObservationData(obs))
-      : [];
-
     const dataToStore = {
       stationId: args.stationId,
       date: date,
@@ -206,9 +292,10 @@ export const storeHistoryData = internalMutation({
         data_quality: { score: 0 },
         location_quality: { score: 0, reason: "UNKNOWN" }
       },
-      observations: filteredObservations,
+      observations: args.data.observations || [],
       location: args.data.location || { lat: 0, lon: 0 },
       lastUpdated: Date.now(),
+      summary: args.data.summary || {},
     };
 
     if (existing) {

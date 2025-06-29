@@ -129,7 +129,7 @@ const applicationTables = {
     .index("by_user", ["userId"])
     .index("by_user_and_timestamp", ["userId", "timestamp"]),
 
-  // WeatherXM user stations - FIXED SCHEMA
+  // WeatherXM user stations
   userStations: defineTable({
     userId: v.id("users"),
     stationId: v.string(), // WeatherXM station ID
@@ -194,7 +194,7 @@ const applicationTables = {
     .index("by_station", ["stationId"])
     .index("by_last_updated", ["lastUpdated"]),
 
-  // WeatherXM station historical data
+  // WeatherXM station historical data - Enhanced schema
   stationHistoryData: defineTable({
     stationId: v.string(),
     date: v.string(),
@@ -230,6 +230,22 @@ const applicationTables = {
       elevation: v.optional(v.number()),
     }),
     lastUpdated: v.number(),
+    // Enhanced summary statistics
+    summary: v.optional(v.object({
+      totalObservations: v.number(),
+      validObservations: v.number(),
+      dataQuality: v.number(),
+      avgTemperature: v.optional(v.number()),
+      minTemperature: v.optional(v.number()),
+      maxTemperature: v.optional(v.number()),
+      avgHumidity: v.optional(v.number()),
+      avgWindSpeed: v.optional(v.number()),
+      maxWindSpeed: v.optional(v.number()),
+      avgPressure: v.optional(v.number()),
+      totalPrecipitation: v.optional(v.number()),
+      maxUvIndex: v.optional(v.number()),
+      avgSolarIrradiance: v.optional(v.number()),
+    })),
   })
     .index("by_station", ["stationId"])
     .index("by_station_and_date", ["stationId", "date"])

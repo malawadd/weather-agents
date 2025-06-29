@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useAction } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import { DatePicker } from './DatePicker';
+import { ObservationsList } from './ObservationsList';
 
 interface HistoryDay {
   _id: string;
@@ -20,6 +21,19 @@ interface HistoryDay {
     data_quality: { score: number };
     location_quality: { score: number; reason?: string };
   };
+  summary?: {
+    totalObservations: number;
+    validObservations: number;
+    avgTemperature?: number;
+    minTemperature?: number;
+    maxTemperature?: number;
+    avgHumidity?: number;
+    avgWindSpeed?: number;
+    maxWindSpeed?: number;
+    avgPressure?: number;
+    totalPrecipitation?: number;
+    maxUvIndex?: number;
+  };
 }
 
 interface HistoricalDataPanelProps {
@@ -35,6 +49,7 @@ export function HistoricalDataPanel({ stationId, onSyncData, isSyncing }: Histor
     return yesterday.toISOString().split('T')[0];
   });
   const [isLoadingSpecificDate, setIsLoadingSpecificDate] = useState(false);
+  const [showObservations, setShowObservations] = useState(false);
 
   const fetchHistoryData = useAction(api.weatherxm.stationDataApi.fetchAndStoreHistoryData);
   
@@ -52,6 +67,7 @@ export function HistoricalDataPanel({ stationId, onSyncData, isSyncing }: Histor
 
   const handleDateChange = (date: string) => {
     setSelectedDate(date);
+    setShowObservations(false);
   };
 
   const handleFetchSpecificDate = async () => {
@@ -67,18 +83,8 @@ export function HistoricalDataPanel({ stationId, onSyncData, isSyncing }: Histor
     }
   };
 
-  const calculateAverage = (observations: any[], field: string) => {
-    const values = observations.map(obs => obs[field] || 0).filter(val => val > 0);
-    return values.length > 0 ? (values.reduce((sum, val) => sum + val, 0) / values.length).toFixed(1) : '0.0';
-  };
-
-  const calculateMinMax = (observations: any[], field: string) => {
-    const values = observations.map(obs => obs[field] || 0).filter(val => val > 0);
-    if (values.length === 0) return { min: '0.0', max: '0.0' };
-    return {
-      min: Math.min(...values).toFixed(1),
-      max: Math.max(...values).toFixed(1)
-    };
+  const formatValue = (value?: number, decimals = 1) => {
+    return value !== undefined && value !== null ? value.toFixed(decimals) : 'N/A';
   };
 
   return (
@@ -107,42 +113,57 @@ export function HistoricalDataPanel({ stationId, onSyncData, isSyncing }: Histor
           <div className="lg:col-span-2">
             {specificDateData ? (
               <div className="nb-panel-success p-4">
-                <h3 className="font-bold mb-3">📊 Data for {selectedDate}</h3>
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="font-bold">📊 Data for {selectedDate}</h3>
+                  {specificDateData.summary && (
+                    <span className="text-xs text-gray-600">
+                      {specificDateData.summary.validObservations} / {specificDateData.summary.totalObservations} valid observations
+                    </span>
+                  )}
+                </div>
+                
                 {specificDateData.observations && specificDateData.observations.length > 0 ? (
                   <div className="space-y-4">
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                      <div className="nb-panel-white p-3">
-                        <p className="font-bold">🌡️ Temperature</p>
-                        <p>Avg: {calculateAverage(specificDateData.observations, 'temperature')}°C</p>
-                        <p className="text-xs">
-                          {calculateMinMax(specificDateData.observations, 'temperature').min}° - {calculateMinMax(specificDateData.observations, 'temperature').max}°
-                        </p>
+                    {/* Summary Statistics */}
+                    {specificDateData.summary && (
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                        <div className="nb-panel-white p-3">
+                          <p className="font-bold">🌡️ Temperature</p>
+                          <p>Avg: {formatValue(specificDateData.summary.avgTemperature)}°C</p>
+                          <p className="text-xs">
+                            {formatValue(specificDateData.summary.minTemperature)}° - {formatValue(specificDateData.summary.maxTemperature)}°
+                          </p>
+                        </div>
+                        <div className="nb-panel-white p-3">
+                          <p className="font-bold">💧 Humidity</p>
+                          <p>Avg: {formatValue(specificDateData.summary.avgHumidity)}%</p>
+                        </div>
+                        <div className="nb-panel-white p-3">
+                          <p className="font-bold">💨 Wind</p>
+                          <p>Avg: {formatValue(specificDateData.summary.avgWindSpeed)} m/s</p>
+                          <p className="text-xs">Max: {formatValue(specificDateData.summary.maxWindSpeed)} m/s</p>
+                        </div>
+                        <div className="nb-panel-white p-3">
+                          <p className="font-bold">🌊 Pressure</p>
+                          <p>Avg: {formatValue(specificDateData.summary.avgPressure)} hPa</p>
+                        </div>
                       </div>
-                      <div className="nb-panel-white p-3">
-                        <p className="font-bold">💧 Humidity</p>
-                        <p>Avg: {calculateAverage(specificDateData.observations, 'humidity')}%</p>
-                        <p className="text-xs">
-                          {calculateMinMax(specificDateData.observations, 'humidity').min}% - {calculateMinMax(specificDateData.observations, 'humidity').max}%
-                        </p>
-                      </div>
-                      <div className="nb-panel-white p-3">
-                        <p className="font-bold">💨 Wind</p>
-                        <p>Avg: {calculateAverage(specificDateData.observations, 'wind_speed')} m/s</p>
-                        <p className="text-xs">
-                          {calculateMinMax(specificDateData.observations, 'wind_speed').min} - {calculateMinMax(specificDateData.observations, 'wind_speed').max} m/s
-                        </p>
-                      </div>
-                      <div className="nb-panel-white p-3">
-                        <p className="font-bold">🌊 Pressure</p>
-                        <p>Avg: {calculateAverage(specificDateData.observations, 'pressure')} hPa</p>
-                        <p className="text-xs">
-                          {calculateMinMax(specificDateData.observations, 'pressure').min} - {calculateMinMax(specificDateData.observations, 'pressure').max} hPa
-                        </p>
-                      </div>
+                    )}
+                    
+                    {/* Toggle Observations View */}
+                    <div className="text-center">
+                      <button
+                        onClick={() => setShowObservations(!showObservations)}
+                        className="nb-button px-4 py-2 font-bold text-sm"
+                      >
+                        {showObservations ? '📊 Hide Detailed Observations' : `📊 Show All ${specificDateData.observations.length} Observations`}
+                      </button>
                     </div>
-                    <p className="text-xs text-gray-500">
-                      {specificDateData.observations.length} observations recorded on this date
-                    </p>
+                    
+                    {/* Detailed Observations */}
+                    {showObservations && (
+                      <ObservationsList observations={specificDateData.observations} />
+                    )}
                   </div>
                 ) : (
                   <p className="text-gray-500">No observations available for this date</p>
@@ -179,29 +200,40 @@ export function HistoricalDataPanel({ stationId, onSyncData, isSyncing }: Histor
               <div key={day._id} className="nb-panel p-4">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-bold">📅 {day.date}</h3>
-                  <span className="text-sm text-gray-500">
-                    {day.observations.length} observations
-                  </span>
+                  <div className="text-sm text-gray-500">
+                    {day.summary ? (
+                      <span>{day.summary.validObservations} / {day.summary.totalObservations} valid observations</span>
+                    ) : (
+                      <span>{day.observations.length} observations</span>
+                    )}
+                  </div>
                 </div>
-                {day.observations.length > 0 && (
+                
+                {day.summary ? (
                   <div className="grid grid-cols-4 gap-4 text-sm">
                     <div>
-                      <p className="font-bold">🌡️ Avg Temp</p>
-                      <p>{calculateAverage(day.observations, 'temperature')}°C</p>
+                      <p className="font-bold">🌡️ Temperature</p>
+                      <p>{formatValue(day.summary.avgTemperature)}°C avg</p>
+                      <p className="text-xs">{formatValue(day.summary.minTemperature)}° - {formatValue(day.summary.maxTemperature)}°</p>
                     </div>
                     <div>
-                      <p className="font-bold">💧 Avg Humidity</p>
-                      <p>{calculateAverage(day.observations, 'humidity')}%</p>
+                      <p className="font-bold">💧 Humidity</p>
+                      <p>{formatValue(day.summary.avgHumidity)}% avg</p>
                     </div>
                     <div>
-                      <p className="font-bold">💨 Avg Wind</p>
-                      <p>{calculateAverage(day.observations, 'wind_speed')} m/s</p>
+                      <p className="font-bold">💨 Wind</p>
+                      <p>{formatValue(day.summary.avgWindSpeed)} m/s avg</p>
+                      <p className="text-xs">Max: {formatValue(day.summary.maxWindSpeed)} m/s</p>
                     </div>
                     <div>
-                      <p className="font-bold">🌊 Avg Pressure</p>
-                      <p>{calculateAverage(day.observations, 'pressure')} hPa</p>
+                      <p className="font-bold">🌊 Pressure</p>
+                      <p>{formatValue(day.summary.avgPressure)} hPa avg</p>
                     </div>
                   </div>
+                ) : day.observations.length > 0 && (
+                  <p className="text-sm text-gray-600">
+                    Raw observations available - sync to calculate statistics
+                  </p>
                 )}
               </div>
             ))}
