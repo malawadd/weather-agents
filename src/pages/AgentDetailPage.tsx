@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useParams , Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery } from 'convex/react';
 import { useAccount } from 'wagmi';
 import { api } from '../../convex/_generated/api';
 import { useAuth } from '../WalletAuthProvider';
 import { Id } from "../../convex/_generated/dataModel";
-import { WalletConnection } from "../WalletConnection";
+import { AppNavigation } from '../components/navigation/AppNavigation';
 import { AgentProfile } from '../components/AgentProfile';
 import { MintLicenseTokensPanel } from '../components/MintLicenseTokensPanel';
 
@@ -44,8 +44,14 @@ export function AgentDetailPage() {
 
   if (!agent) {
     return (
-      <div className="min-h-screen nb-grid-bg p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen nb-grid-bg">
+        <AppNavigation 
+          user={user} 
+          isGuest={isGuest} 
+          signOut={signOut} 
+          currentPage=""
+        />
+        <div className="max-w-4xl mx-auto px-4">
           <div className="nb-panel p-6 text-center">
             Loading...
           </div>
@@ -56,41 +62,12 @@ export function AgentDetailPage() {
 
   return (
     <div className="min-h-screen nb-grid-bg">
-      {/* Navigation */}
-      <nav className="nb-panel-white p-4 m-4 mb-6">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-8">
-            <h1 className="text-2xl font-bold">🤖 Kiyan</h1>
-            <div className="flex space-x-6">
-              <Link to="/" className="font-bold text-gray-600 hover:text-black hover:underline">Dashboard</Link>
-              {!isGuest && (
-                <>
-                  <Link to="/create-agent" className="font-bold text-gray-600 hover:text-black hover:underline">
-                    Import Agent
-                  </Link>
-                  <Link to="/my-agents" className="font-bold text-gray-600 hover:text-black hover:underline">
-                    My Agents
-                  </Link>
-                </>
-              )}
-             
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="font-bold">
-              Welcome, {user?.name || 'Trader'}!
-              {isGuest && <span className="text-sm text-gray-600"> (Guest)</span>}
-            </span>
-            {!isGuest && <WalletConnection />}
-            <button 
-              onClick={signOut}
-              className="nb-button px-4 py-2 text-sm font-bold"
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </nav>
+      <AppNavigation 
+        user={user} 
+        isGuest={isGuest} 
+        signOut={signOut} 
+        currentPage=""
+      />
 
       <div className="max-w-6xl mx-auto space-y-6 px-4">
         {/* Header */}

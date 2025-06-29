@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useAuth } from '../WalletAuthProvider';
 import { WalletConnection } from '../WalletConnection';
+import { AppNavigation } from '../components/navigation/AppNavigation';
 import { AgentEditor } from '../components/AgentEditor';
 
 export function MyAgentsPage() {
@@ -16,8 +16,14 @@ export function MyAgentsPage() {
 
   if (!sessionId || isGuest) {
     return (
-      <div className="min-h-screen nb-grid-bg p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen nb-grid-bg">
+        <AppNavigation 
+          user={user} 
+          isGuest={isGuest} 
+          signOut={signOut} 
+          currentPage="my-agents"
+        />
+        <div className="max-w-4xl mx-auto px-4">
           <div className="nb-panel p-6 text-center">
             <p className="text-gray-500 mb-4">Please sign in to access your agents</p>
             <WalletConnection />
@@ -29,32 +35,12 @@ export function MyAgentsPage() {
 
   return (
     <div className="min-h-screen nb-grid-bg">
-      {/* Navigation */}
-      <nav className="nb-panel-white p-4 m-4 mb-6">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-8">
-            <h1 className="text-2xl font-bold">🤖 Kiyan</h1>
-            <div className="flex space-x-6">
-              <Link to="/" className="font-bold text-gray-600 hover:text-black hover:underline">
-                Dashboard
-              </Link>
-              <Link to="/create-agent" className="font-bold text-gray-600 hover:text-black hover:underline">
-                Import Agent
-              </Link>
-              <Link to="/my-agents" className="font-bold text-black hover:underline">
-                My Agents
-              </Link>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="font-bold">Welcome, {user?.name || 'Trader'}!</span>
-            <WalletConnection />
-            <button onClick={signOut} className="nb-button px-4 py-2 text-sm font-bold">
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </nav>
+      <AppNavigation 
+        user={user} 
+        isGuest={isGuest} 
+        signOut={signOut} 
+        currentPage="my-agents"
+      />
 
       <div className="max-w-6xl mx-auto px-4 space-y-6">
         {/* API Key Input */}
@@ -89,9 +75,9 @@ export function MyAgentsPage() {
           {agents?.length === 0 && (
             <div className="nb-panel p-6 text-center">
               <p className="text-gray-500 mb-4">No agents found</p>
-              <Link to="/create-agent" className="nb-button-accent px-6 py-3">
+              <a href="/create-agent" className="nb-button-accent px-6 py-3">
                 Import Your First Agent
-              </Link>
+              </a>
             </div>
           )}
 

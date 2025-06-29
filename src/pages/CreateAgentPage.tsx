@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAction, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useAuth } from '../WalletAuthProvider';
 import { Id } from "../../convex/_generated/dataModel";
-import { WalletConnection } from "../WalletConnection";
+import { AppNavigation } from '../components/navigation/AppNavigation';
 import RegisterOnStoryProtocolPanel from "../components/RegisterOnStoryProtocolPanel";
 import CreateNftCollectionPanel from "../components/CreateNftCollectionPanel";
 
@@ -84,41 +84,12 @@ export function CreateAgentPage() {
 
   return (
     <div className="min-h-screen nb-grid-bg">
-      {/* Navigation Bar */}
-      <nav className="nb-panel-white p-4 m-4 mb-6">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-8">
-            <h1 className="text-2xl font-bold">🤖 Kiyan</h1>
-            <div className="flex space-x-6">
-              <Link to="/" className="font-bold text-gray-600 hover:text-black hover:underline">Dashboard</Link>
-              {!isGuest && (
-                <>
-                  <Link to="/create-agent" className="font-bold text-black hover:underline">
-                    Import Agent
-                  </Link>
-                  <Link to="/my-agents" className="font-bold text-gray-600 hover:text-black hover:underline">
-                    My Agents
-                  </Link>
-                </>
-              )}
-              
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <span className="font-bold">
-              Welcome, {user?.name || 'Trader'}!
-              {isGuest && <span className="text-sm text-gray-600"> (Guest)</span>}
-            </span>
-            {!isGuest && <WalletConnection />}
-            <button 
-              onClick={signOut}
-              className="nb-button px-4 py-2 text-sm font-bold"
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </nav>
+      <AppNavigation 
+        user={user} 
+        isGuest={isGuest} 
+        signOut={signOut} 
+        currentPage="create-agent"
+      />
 
       <div className="max-w-2xl mx-auto space-y-6">
         {/* Header */}
@@ -209,14 +180,6 @@ export function CreateAgentPage() {
   {showEditPopover && (
     <div className="absolute top-12 right-3 bg-white border-2 border-black rounded-lg shadow-lg z-50 p-4 w-72 flex flex-col gap-2">
       <label className="font-bold text-sm mb-1">NFT Collection Address</label>
-      {/* <input
-        className="nb-input w-full font-mono px-2 py-1 text-xs"
-        value={manualCollection || collectionInfo?.spgNftContract || ""}
-        onChange={e => setManualCollection(e.target.value)}
-        placeholder="0x..."
-        autoFocus
-        spellCheck={false}
-      /> */}
      <input
   className="nb-input w-full font-mono px-2 py-1 text-xs"
   value={manualCollection || collectionInfo?.spgNftContract || ""}
@@ -291,14 +254,6 @@ export function CreateAgentPage() {
          </div>
           </>
         )}
-
-        {/* STEP 2: Register on Story Protocol
-        {step === 2 && !storyProtocolResult && (
-          <RegisterOnStoryProtocolPanel
-            agentData={agentData}
-            onRegistered={e => { void handleRegistered(e); }}
-          />
-        )} */}
 
         {/* STEP 3: Show registration result */}
         {storyProtocolResult && (
