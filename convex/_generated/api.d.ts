@@ -25,6 +25,11 @@ import type * as router from "../router.js";
 import type * as transactions from "../transactions.js";
 import type * as walletAuth from "../walletAuth.js";
 import type * as walletAuthNode from "../walletAuthNode.js";
+import type * as weatherxm_config from "../weatherxm/config.js";
+import type * as weatherxm_stationsApi from "../weatherxm/stationsApi.js";
+import type * as weatherxm_userQueries from "../weatherxm/userQueries.js";
+import type * as weatherxm_userStations from "../weatherxm/userStations.js";
+import type * as weatherxm_weatherDataApi from "../weatherxm/weatherDataApi.js";
 import type * as weatherxmApi from "../weatherxmApi.js";
 
 /**
@@ -48,6 +53,11 @@ declare const fullApi: ApiFromModules<{
   transactions: typeof transactions;
   walletAuth: typeof walletAuth;
   walletAuthNode: typeof walletAuthNode;
+  "weatherxm/config": typeof weatherxm_config;
+  "weatherxm/stationsApi": typeof weatherxm_stationsApi;
+  "weatherxm/userQueries": typeof weatherxm_userQueries;
+  "weatherxm/userStations": typeof weatherxm_userStations;
+  "weatherxm/weatherDataApi": typeof weatherxm_weatherDataApi;
   weatherxmApi: typeof weatherxmApi;
 }>;
 export declare const api: FilterApi<
