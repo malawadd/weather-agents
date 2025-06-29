@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as agents from "../agents.js";
+import type * as aiChat from "../aiChat.js";
 import type * as auth from "../auth.js";
 import type * as demoData from "../demoData.js";
 import type * as fleekAgents from "../fleekAgents.js";
@@ -24,6 +25,7 @@ import type * as router from "../router.js";
 import type * as transactions from "../transactions.js";
 import type * as walletAuth from "../walletAuth.js";
 import type * as walletAuthNode from "../walletAuthNode.js";
+import type * as weatherxmApi from "../weatherxmApi.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -35,6 +37,7 @@ import type * as walletAuthNode from "../walletAuthNode.js";
  */
 declare const fullApi: ApiFromModules<{
   agents: typeof agents;
+  aiChat: typeof aiChat;
   auth: typeof auth;
   demoData: typeof demoData;
   fleekAgents: typeof fleekAgents;
@@ -45,6 +48,7 @@ declare const fullApi: ApiFromModules<{
   transactions: typeof transactions;
   walletAuth: typeof walletAuth;
   walletAuthNode: typeof walletAuthNode;
+  weatherxmApi: typeof weatherxmApi;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

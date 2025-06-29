@@ -28,7 +28,7 @@ export function AgentProfile({ fleekData }: AgentProfileProps) {
         <h2 className="text-2xl font-bold mb-4">Agent Profile</h2>
   
         {/* Avatar */}
-        {avatar && (
+        {avatar && avatar.length > 0 && (
           <div className="nb-panel-white p-4">
             <img 
               src={`data:image/png;base64,${avatar}`}
@@ -82,4 +82,3 @@ export function AgentProfile({ fleekData }: AgentProfileProps) {
       </div>
     );
   }
-  
