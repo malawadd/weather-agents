@@ -92,6 +92,46 @@ export const fetchAndStoreHistoryData = action({
   },
 });
 
+// Helper function to filter observation data to match schema
+function filterObservationData(observation: any) {
+  if (!observation) return {};
+  
+  // Only include fields that are expected in the schema
+  const {
+    timestamp,
+    temperature,
+    humidity,
+    pressure,
+    wind_speed,
+    wind_direction,
+    wind_gust,
+    precipitation_rate,
+    solar_irradiance,
+    uv_index,
+    dew_point,
+    feels_like,
+    icon
+  } = observation;
+
+  const filtered: any = {};
+  
+  if (timestamp !== undefined) filtered.timestamp = timestamp;
+  if (temperature !== undefined) filtered.temperature = temperature;
+  if (humidity !== undefined) filtered.humidity = humidity;
+  if (pressure !== undefined) filtered.pressure = pressure;
+  if (wind_speed !== undefined) filtered.wind_speed = wind_speed;
+  if (wind_direction !== undefined) filtered.wind_direction = wind_direction;
+  if (wind_gust !== undefined) filtered.wind_gust = wind_gust;
+  if (precipitation_rate !== undefined) filtered.precipitation_rate = precipitation_rate;
+  if (solar_irradiance !== undefined) filtered.solar_irradiance = solar_irradiance;
+  if (uv_index !== undefined) filtered.uv_index = uv_index;
+  if (dew_point !== undefined) filtered.dew_point = dew_point;
+  if (feels_like !== undefined) filtered.feels_like = feels_like;
+  if (icon !== undefined) filtered.icon = icon;
+
+  return filtered;
+}
+
 // Store latest data in database
 export const storeLatestData = internalMutation({
   args: {
@@ -107,7 +147,7 @@ export const storeLatestData = internalMutation({
 
     const dataToStore = {
       stationId: args.stationId,
-      observation: args.data.observation || {},
+      observation: filterObservationData(args.data.observation),
       health: args.data.health || { 
         timestamp: new Date().toISOString(),
         data_quality: { score: 0 },
@@ -143,6 +183,11 @@ export const storeHistoryData = internalMutation({
       )
       .unique();
 
+    // Filter observations array if it exists
+    const filteredObservations = args.data.observations 
+      ? args.data.observations.map((obs: any) => filterObservationData(obs))
+      : [];
+
     const dataToStore = {
       stationId: args.stationId,
       date: date,
@@ -151,7 +196,7 @@ export const storeHistoryData = internalMutation({
         data_quality: { score: 0 },
         location_quality: { score: 0, reason: "UNKNOWN" }
       },
-      observations: args.data.observations || [],
+      observations: filteredObservations,
       location: args.data.location || { lat: 0, lon: 0 },
       lastUpdated: Date.now(),
     };
