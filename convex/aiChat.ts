@@ -2,6 +2,18 @@ import { action, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
 
+// Helper query to get session
+export const getSession = query({
+  args: { sessionId: v.id("sessions") },
+  handler: async (ctx, args) => {
+    const session = await ctx.db.get(args.sessionId);
+    if (!session || session.expiresAt < Date.now()) {
+      return null;
+    }
+    return session;
+  },
+});
+
 // Chat with AI about a specific weather station
 export const chatWithStationAI = action({
   args: {
@@ -10,8 +22,9 @@ export const chatWithStationAI = action({
     userMessage: v.string(),
   },
   handler: async (ctx, args) => {
-    const session = await ctx.db.get(args.sessionId);
-    if (!session || session.expiresAt < Date.now()) {
+    // Validate session using a query
+    const session = await ctx.runQuery(api.aiChat.getSession, { sessionId: args.sessionId });
+    if (!session) {
       throw new Error("Invalid or expired session");
     }
 
