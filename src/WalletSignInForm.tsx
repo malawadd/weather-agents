@@ -43,7 +43,10 @@ export function WalletSignInForm() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-4">🤖 Kiyan</h1>
           <p className="text-lg font-medium">
-            Connect your wallet to start trading with AI agents
+            Your AI-powered weather intelligence platform
+          </p>
+          <p className="text-sm text-gray-600 mt-2">
+            Explore global weather stations and get AI insights
           </p>
         </div>
 
@@ -102,11 +105,23 @@ export function WalletSignInForm() {
           {/* Info */}
           <div className="nb-panel p-4 mt-6">
             <p className="text-sm font-medium">
-              <strong>Wallet Mode:</strong> Full access to trading features with blockchain integration
+              <strong>Wallet Mode:</strong> Save weather stations and get personalized AI insights
             </p>
             <p className="text-sm font-medium mt-2">
-              <strong>Guest Mode:</strong> Demo mode with simulated data only
+              <strong>Guest Mode:</strong> Explore weather stations and chat with AI (limited features)
             </p>
+          </div>
+
+          {/* Features Preview */}
+          <div className="nb-panel-accent p-4 mt-4">
+            <h4 className="font-bold mb-2">🌤️ What you can do:</h4>
+            <ul className="text-sm space-y-1">
+              <li>• 🌍 Explore global weather stations</li>
+              <li>• 🤖 Chat with AI about weather patterns</li>
+              <li>• 📊 View real-time weather data</li>
+              <li>• 📈 Analyze historical weather trends</li>
+              <li>• 💾 Save favorite weather stations (wallet required)</li>
+            </ul>
           </div>
         </div>
       </div>

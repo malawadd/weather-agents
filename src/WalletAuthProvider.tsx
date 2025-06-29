@@ -62,7 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     setIsLoading(true);
     try {
-      const message = `Sign in to Trading Agent Dashboard\n\nWallet: ${address}\nTimestamp: ${Date.now()}`;
+      const message = `Sign in to Kiyan Weather Intelligence Platform\n\nWallet: ${address}\nTimestamp: ${Date.now()}`;
       
       const signature = await signMessageAsync({ message });
       
@@ -103,7 +103,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   };
 
   const value: AuthContextType = {
-    user: isGuest ? { name: 'Guest User', walletAddress: null } : user,
+    user: isGuest ? { name: 'Guest Explorer', walletAddress: null } : user,
     sessionId,
     isAuthenticated: !!sessionId || isGuest,
     isGuest,
