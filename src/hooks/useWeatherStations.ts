@@ -26,13 +26,15 @@ interface UseWeatherStationsProps {
   searchTerm?: string;
   currentPage?: number;
   selectedRegion?: string;
+  onStationAdded?: (stationName: string) => void;
 }
 
 export function useWeatherStations({ 
   sessionId, 
   searchTerm = '', 
   currentPage = 1,
-  selectedRegion = ''
+  selectedRegion = '',
+  onStationAdded
 }: UseWeatherStationsProps) {
   const [stations, setStations] = useState<Station[]>([]);
   const [loading, setLoading] = useState(false);
@@ -106,6 +108,11 @@ export function useWeatherStations({
           country: station.country,
         },
       });
+      
+      // Call the success callback
+      if (onStationAdded) {
+        onStationAdded(station.name);
+      }
     } catch (err: any) {
       setError(err.message || 'Failed to add station');
     } finally {

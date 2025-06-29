@@ -3,6 +3,8 @@ import { useAction } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useAuth } from '../WalletAuthProvider';
 import { useWeatherStations } from '../hooks/useWeatherStations';
+import { useToast } from '../hooks/useToast';
+import { ToastContainer } from '../components/ui/ToastContainer';
 import { StationsNavigation } from '../components/weather/StationsNavigation';
 import { StationsHeader } from '../components/weather/StationsHeader';
 import { StationFilters } from '../components/weather/StationFilters';
@@ -21,6 +23,7 @@ export function StationsListPage() {
   const [availableRegions, setAvailableRegions] = useState<string[]>([]);
   const [regionCounts, setRegionCounts] = useState<Record<string, number>>({});
 
+  const { toasts, showSuccess, showError, hideToast } = useToast();
   const getAvailableRegions = useAction(api.weatherxmApi.getAvailableRegions);
 
   const {
@@ -33,7 +36,15 @@ export function StationsListPage() {
     loadStations,
     handleAddStation,
     setError,
-  } = useWeatherStations({ sessionId, searchTerm, currentPage, selectedRegion });
+  } = useWeatherStations({ 
+    sessionId, 
+    searchTerm, 
+    currentPage, 
+    selectedRegion,
+    onStationAdded: (stationName: string) => {
+      showSuccess(`"${stationName}" has been added to your weather stations collection! 🌤️`);
+    }
+  });
 
   // Load available regions on mount
   useEffect(() => {
@@ -81,6 +92,14 @@ export function StationsListPage() {
     setCurrentPage(1);
   };
 
+  const handleAddStationWithToast = async (station: any) => {
+    try {
+      await handleAddStation(station);
+    } catch (err: any) {
+      showError(err.message || 'Failed to add station to your collection');
+    }
+  };
+
   return (
     <div className="min-h-screen nb-grid-bg">
       <StationsNavigation user={user} isGuest={isGuest} signOut={signOut} />
@@ -120,7 +139,7 @@ export function StationsListPage() {
             stations={stations}
             addingStations={addingStations}
             isGuest={isGuest}
-            onAddStation={handleAddStation}
+            onAddStation={handleAddStationWithToast}
           />
         )}
 
@@ -147,6 +166,9 @@ export function StationsListPage() {
           availableRegions={availableRegions}
         />
       </div>
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} onHideToast={hideToast} />
     </div>
   );
 }
