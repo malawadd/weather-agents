@@ -18,6 +18,7 @@ interface Station {
   lastDayQod?: number;
   createdAt?: string;
   region?: string;
+  country?: string;
 }
 
 interface UseWeatherStationsProps {
@@ -50,12 +51,6 @@ export function useWeatherStations({
     setLoading(true);
     setError(null);
     try {
-      console.log('Loading stations with params:', { 
-        currentPage, 
-        searchTerm, 
-        selectedRegion 
-      });
-      
       const result = await fetchStations({
         page: currentPage,
         limit: 20,
@@ -63,14 +58,11 @@ export function useWeatherStations({
         region: selectedRegion || undefined,
       });
       
-      console.log('Stations result:', result);
-      
       if (result && result.data) {
         setStations(result.data);
         setTotalPages(result.totalPages || 1);
         setTotalStations(result.total || 0);
       } else {
-        console.warn('No data in stations result:', result);
         setStations([]);
         setTotalPages(1);
         setTotalStations(0);
@@ -104,9 +96,7 @@ export function useWeatherStations({
           isActive: station.isActive,
         },
       });
-      console.log('Station added successfully:', station.id);
     } catch (err: any) {
-      console.error('Error adding station:', err);
       setError(err.message || 'Failed to add station');
     } finally {
       setAddingStations(prev => {

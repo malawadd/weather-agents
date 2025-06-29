@@ -6,6 +6,8 @@ import { useAuth } from '../WalletAuthProvider';
 import { WalletConnection } from '../WalletConnection';
 import { useWeatherStations } from '../hooks/useWeatherStations';
 import { StationCard } from '../components/weather/StationCard';
+import { StationFilters } from '../components/weather/StationFilters';
+import { StationsPagination } from '../components/weather/StationsPagination';
 
 export function StationsListPage() {
   const { user, isGuest, signOut, sessionId } = useAuth();
@@ -36,10 +38,8 @@ export function StationsListPage() {
         const result = await getAvailableRegions({});
         setAvailableRegions(result.regions);
         setRegionCounts(result.regionCounts);
-        console.log('Available regions:', result.regions, 'Counts:', result.regionCounts);
       } catch (err) {
         console.error('Failed to load regions:', err);
-        // Set default regions if API fails
         setAvailableRegions(['Europe', 'North America', 'Asia', 'Africa', 'Australia', 'South America']);
       }
     };
@@ -126,7 +126,7 @@ export function StationsListPage() {
         <div className="nb-panel-white p-6">
           <h1 className="text-3xl font-bold mb-2">🌤️ WeatherXM Stations</h1>
           <p className="text-gray-600">
-            Discover weather stations from the WeatherXM network and add them to your collection for AI-powered weather insights.
+            Discover weather stations worldwide. Search by country name (e.g., "Germany") or filter by region.
           </p>
           {totalStations > 0 && (
             <p className="text-sm text-gray-500 mt-2">
@@ -136,86 +136,19 @@ export function StationsListPage() {
           )}
         </div>
 
-        {/* Controls */}
-        <div className="nb-panel p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-            <div>
-              <label className="block text-sm font-bold mb-2">Search Stations</label>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search by name or ID..."
-                className="nb-input w-full px-4 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-bold mb-2">Filter by Region</label>
-              <select
-                value={selectedRegion}
-                onChange={(e) => handleRegionChange(e.target.value)}
-                className="nb-input w-full px-4 py-2"
-              >
-                <option value="">All Regions</option>
-                {availableRegions.map((region) => (
-                  <option key={region} value={region}>
-                    {region} {regionCounts[region] ? `(${regionCounts[region]})` : ''}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-end gap-2">
-              <button
-                onClick={handleSearch}
-                disabled={loading}
-                className="nb-button-accent px-6 py-2 font-bold flex-1"
-              >
-                {loading ? 'Searching...' : 'Search'}
-              </button>
-              <button
-                onClick={handleRefresh}
-                disabled={loading}
-                className="nb-button px-4 py-2 font-bold"
-              >
-                🔄
-              </button>
-            </div>
-          </div>
-
-          {/* Active Filters */}
-          {(searchTerm || selectedRegion) && (
-            <div className="flex flex-wrap gap-2 mt-4">
-              {searchTerm && (
-                <span className="nb-panel-accent px-3 py-1 text-sm font-bold">
-                  Search: "{searchTerm}"
-                  <button
-                    onClick={() => setSearchTerm('')}
-                    className="ml-2 text-red-600 hover:text-red-800"
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
-              {selectedRegion && (
-                <span className="nb-panel-success px-3 py-1 text-sm font-bold">
-                  Region: {selectedRegion}
-                  <button
-                    onClick={() => handleRegionChange('')}
-                    className="ml-2 text-red-600 hover:text-red-800"
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
-              <button
-                onClick={clearAllFilters}
-                className="nb-button px-3 py-1 text-sm font-bold"
-              >
-                Clear All Filters
-              </button>
-            </div>
-          )}
-        </div>
+        {/* Filters */}
+        <StationFilters
+          searchTerm={searchTerm}
+          selectedRegion={selectedRegion}
+          availableRegions={availableRegions}
+          regionCounts={regionCounts}
+          loading={loading}
+          onSearchChange={setSearchTerm}
+          onRegionChange={handleRegionChange}
+          onSearch={() => handleSearch({ preventDefault: () => {} } as React.FormEvent)}
+          onRefresh={handleRefresh}
+          onClearFilters={clearAllFilters}
+        />
 
         {/* Error Display */}
         {error && (
@@ -274,7 +207,7 @@ export function StationsListPage() {
             <h3 className="text-xl font-bold mb-2">📡 No Stations Found</h3>
             <p className="text-gray-600 mb-4">
               {searchTerm || selectedRegion
-                ? 'Try adjusting your search terms or filters.' 
+                ? 'Try searching for a different country or adjusting your filters.' 
                 : 'Click "Search" to load stations from the WeatherXM network.'
               }
             </p>
@@ -298,66 +231,13 @@ export function StationsListPage() {
         )}
 
         {/* Pagination */}
-        {!loading && stations.length > 0 && totalPages > 1 && (
-          <div className="nb-panel p-4">
-            <div className="flex justify-center items-center gap-4">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="nb-button px-4 py-2 font-bold disabled:opacity-50"
-              >
-                ← Previous
-              </button>
-              
-              <div className="flex items-center gap-2">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const pageNum = i + 1;
-                  return (
-                    <button
-                      key={pageNum}
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`px-3 py-2 font-bold text-sm ${
-                        currentPage === pageNum 
-                          ? 'nb-panel-accent' 
-                          : 'nb-button'
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  );
-                })}
-                {totalPages > 5 && (
-                  <>
-                    <span className="px-2">...</span>
-                    <button
-                      onClick={() => handlePageChange(totalPages)}
-                      className={`px-3 py-2 font-bold text-sm ${
-                        currentPage === totalPages 
-                          ? 'nb-panel-accent' 
-                          : 'nb-button'
-                      }`}
-                    >
-                      {totalPages}
-                    </button>
-                  </>
-                )}
-              </div>
-
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="nb-button px-4 py-2 font-bold disabled:opacity-50"
-              >
-                Next →
-              </button>
-            </div>
-            
-            <div className="text-center mt-2 text-sm text-gray-600">
-              Page {currentPage} of {totalPages} • {totalStations} total stations
-              {selectedRegion && ` in ${selectedRegion}`}
-            </div>
-          </div>
-        )}
+        <StationsPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalStations={totalStations}
+          selectedRegion={selectedRegion}
+          onPageChange={handlePageChange}
+        />
 
         {/* API Info */}
         <div className="nb-panel-accent p-4">
