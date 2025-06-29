@@ -29,36 +29,36 @@ export const chatWithStationAI = action({
     }
 
     try {
-      // Fetch station details and weather data
-      const [stationDetails, weatherData] = await Promise.all([
-        ctx.runAction(api.weatherxmApi.fetchStationDetails, { stationId: args.stationId }),
-        ctx.runAction(api.weatherxmApi.fetchStationWeatherData, { stationId: args.stationId }),
-      ]);
+      // Try to fetch station details and weather data
+      let stationDetails: any = null;
+      let weatherData: any = null;
+
+      try {
+        stationDetails = await ctx.runAction(api.weatherxm.stationDetails.fetchStationDetails, { 
+          stationId: args.stationId 
+        });
+      } catch (error) {
+        console.warn('Could not fetch station details:', error);
+        // Continue without station details
+      }
+
+      try {
+        weatherData = await ctx.runQuery(api.weatherxm.stationDataApi.getLatestData, { 
+          stationId: args.stationId 
+        });
+      } catch (error) {
+        console.warn('Could not fetch weather data:', error);
+        // Continue without weather data
+      }
 
       // Prepare context for AI
       const weatherContext = {
-        station: stationDetails,
-        weatherData: weatherData,
+        station: stationDetails || { id: args.stationId, name: `Station ${args.stationId}` },
+        weatherData: weatherData || null,
         timestamp: new Date().toISOString(),
       };
 
-      // Create AI prompt
-      const systemPrompt = `You are a helpful weather assistant with access to real-time weather data from WeatherXM stations. 
-      You can analyze weather patterns, provide insights, and answer questions about weather conditions.
-      
-      Current station data:
-      Station: ${stationDetails?.name || 'Unknown Station'}
-      Location: ${stationDetails?.location?.address || 'Unknown Location'}
-      
-      Latest weather data: ${JSON.stringify(weatherData, null, 2)}
-      
-      Please provide helpful, accurate responses based on this data. If the user asks about trends or comparisons, 
-      use the available historical data. Be conversational and informative.`;
-
-      const userPrompt = `User question: ${args.userMessage}`;
-
-      // For demo purposes, we'll create a mock AI response
-      // In production, you would integrate with OpenAI, Anthropic, or another AI service
+      // Generate AI response based on available data
       const aiResponse = await generateMockAIResponse(args.userMessage, weatherContext);
 
       // Save chat history
@@ -142,21 +142,53 @@ async function generateMockAIResponse(userMessage: string, weatherContext: any):
 
   // Simple pattern matching for demo
   if (message.includes('temperature') || message.includes('temp')) {
-    return `Based on the latest data from ${station?.name || 'this station'}, the current temperature readings show interesting patterns. The weather station is actively monitoring conditions and providing real-time updates. Would you like me to analyze any specific temperature trends or compare with historical data?`;
+    if (weather?.observation?.temperature) {
+      return `The current temperature at ${station?.name || 'this station'} is ${weather.observation.temperature}°C. ${weather.observation.feels_like ? `It feels like ${weather.observation.feels_like}°C.` : ''} This data was last updated at ${new Date(weather.observation.timestamp).toLocaleString()}.`;
+    }
+    return `I don't have current temperature data for ${station?.name || 'this station'}. Try syncing the station data to get the latest readings.`;
   }
   
   if (message.includes('humidity')) {
-    return `The humidity levels at ${station?.name || 'this station'} are being tracked continuously. Weather stations like this one provide valuable insights into local atmospheric conditions. I can help you understand humidity patterns and their implications for local weather.`;
+    if (weather?.observation?.humidity) {
+      return `The humidity at ${station?.name || 'this station'} is currently ${weather.observation.humidity}%. This indicates ${weather.observation.humidity > 70 ? 'high humidity conditions' : weather.observation.humidity > 40 ? 'moderate humidity levels' : 'low humidity conditions'}.`;
+    }
+    return `I don't have current humidity data for ${station?.name || 'this station'}. The station may need to sync its latest readings.`;
   }
   
   if (message.includes('wind')) {
-    return `Wind conditions at ${station?.name || 'this station'} are part of the comprehensive weather monitoring system. The station tracks wind speed, direction, and patterns that are crucial for understanding local weather dynamics.`;
+    if (weather?.observation?.wind_speed) {
+      return `Wind conditions at ${station?.name || 'this station'}: ${weather.observation.wind_speed} m/s${weather.observation.wind_direction ? ` from ${weather.observation.wind_direction}°` : ''}. ${weather.observation.wind_gust ? `Wind gusts up to ${weather.observation.wind_gust} m/s.` : ''}`;
+    }
+    return `I don't have current wind data for ${station?.name || 'this station'}. Try syncing the station to get updated wind measurements.`;
   }
   
   if (message.includes('rain') || message.includes('precipitation')) {
-    return `Precipitation data from ${station?.name || 'this station'} helps track rainfall patterns and water cycle dynamics in this area. This information is valuable for agriculture, urban planning, and weather forecasting.`;
+    if (weather?.observation?.precipitation_rate !== undefined) {
+      return `Precipitation at ${station?.name || 'this station'}: ${weather.observation.precipitation_rate > 0 ? `Currently ${weather.observation.precipitation_rate} mm/h` : 'No active precipitation'}. ${weather.observation.precipitation_accumulated ? `Total accumulated: ${weather.observation.precipitation_accumulated} mm.` : ''}`;
+    }
+    return `I don't have current precipitation data for ${station?.name || 'this station'}. Sync the station data to check for rainfall information.`;
+  }
+
+  if (message.includes('pressure')) {
+    if (weather?.observation?.pressure) {
+      return `Atmospheric pressure at ${station?.name || 'this station'} is ${weather.observation.pressure} hPa. ${weather.observation.pressure > 1020 ? 'This indicates high pressure conditions.' : weather.observation.pressure < 1000 ? 'This indicates low pressure conditions.' : 'This is within normal pressure range.'}`;
+    }
+    return `I don't have current pressure data for ${station?.name || 'this station'}. Try syncing to get the latest atmospheric pressure readings.`;
+  }
+
+  if (message.includes('health') || message.includes('quality')) {
+    if (weather?.health) {
+      const dataQuality = (weather.health.data_quality.score * 100).toFixed(1);
+      const locationQuality = (weather.health.location_quality.score * 100).toFixed(1);
+      return `Station health for ${station?.name || 'this station'}: Data quality is ${dataQuality}% and location quality is ${locationQuality}%. ${weather.health.location_quality.reason ? `Location status: ${weather.health.location_quality.reason}.` : ''}`;
+    }
+    return `I don't have health data for ${station?.name || 'this station'}. Sync the station to check its operational status.`;
   }
 
   // Default response
-  return `I'm analyzing the weather data from ${station?.name || 'this station'}. The station is providing valuable meteorological information including temperature, humidity, wind, and precipitation data. What specific aspect of the weather conditions would you like me to help you understand better?`;
+  if (weather?.observation) {
+    return `I have weather data for ${station?.name || 'this station'}. The station is monitoring temperature, humidity, wind, and other conditions. What specific weather information would you like to know about?`;
+  } else {
+    return `I'm ready to help you analyze weather data from ${station?.name || 'this station'}. However, I don't have current weather readings. Try syncing the station data first, then ask me about specific conditions like temperature, humidity, wind, or precipitation.`;
+  }
 }

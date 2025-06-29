@@ -1,5 +1,6 @@
-import { action, mutation, query } from "../_generated/server";
+import { action, mutation, query, internalMutation } from "../_generated/server";
 import { v } from "convex/values";
+import { internal } from "../_generated/api";
 import { validateApiKey, getApiHeaders, handleApiError, WEATHERXM_BASE_URL } from "./config";
 
 // Fetch and store latest station data
@@ -7,7 +8,7 @@ export const fetchAndStoreLatestData = action({
   args: {
     stationId: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<any> => {
     validateApiKey();
 
     try {
@@ -50,7 +51,7 @@ export const fetchAndStoreHistoryData = action({
     stationId: v.string(),
     date: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<any> => {
     validateApiKey();
 
     try {
@@ -92,7 +93,7 @@ export const fetchAndStoreHistoryData = action({
 });
 
 // Store latest data in database
-export const storeLatestData = mutation({
+export const storeLatestData = internalMutation({
   args: {
     stationId: v.string(),
     data: v.any(),
@@ -126,7 +127,7 @@ export const storeLatestData = mutation({
 });
 
 // Store history data in database
-export const storeHistoryData = mutation({
+export const storeHistoryData = internalMutation({
   args: {
     stationId: v.string(),
     data: v.any(),
