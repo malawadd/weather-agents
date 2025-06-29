@@ -1,5 +1,5 @@
 // WeatherXM API configuration and constants
-export const WEATHERXM_API_KEY = process.env.WEATHERXM_API_KEY;
+export const WEATHERXM_API_KEY = "099baba1-aa70-4e9d-8f17-afc63da80585";
 export const WEATHERXM_BASE_URL = "https://pro.weatherxm.com/api/v1";
 
 // API key validation helper
