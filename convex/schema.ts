@@ -128,6 +128,39 @@ const applicationTables = {
   })
     .index("by_user", ["userId"])
     .index("by_user_and_timestamp", ["userId", "timestamp"]),
+
+  // WeatherXM user stations
+  userStations: defineTable({
+    userId: v.id("users"),
+    stationId: v.string(), // WeatherXM station ID
+    customName: v.optional(v.string()), // User-defined name for the station
+    addedAt: v.number(),
+    stationData: v.optional(v.object({
+      name: v.optional(v.string()),
+      location: v.optional(v.object({
+        lat: v.number(),
+        lon: v.number(),
+      })),
+      address: v.optional(v.string()),
+      isActive: v.optional(v.boolean()),
+    })),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_and_station", ["userId", "stationId"])
+    .index("by_station", ["stationId"]),
+
+  // WeatherXM AI chat history
+  weatherChatHistory: defineTable({
+    userId: v.id("users"),
+    stationId: v.string(),
+    userMessage: v.string(),
+    aiResponse: v.string(),
+    timestamp: v.number(),
+    weatherData: v.optional(v.any()), // Store the weather data used for context
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_and_station", ["userId", "stationId"])
+    .index("by_timestamp", ["timestamp"]),
 };
 
 export default defineSchema({

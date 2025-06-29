@@ -99,7 +99,14 @@ export function TradingDashboard() {
                   </Link>
                 </>
               )}
-             
+              <Link to="/stations" className="font-bold text-gray-600 hover:text-black hover:underline">
+                Weather Stations
+              </Link>
+              {!isGuest && (
+                <Link to="/my-stations" className="font-bold text-gray-600 hover:text-black hover:underline">
+                  My Stations
+                </Link>
+              )}
             </div>
           </div>
           <div className="flex items-center space-x-4">
@@ -128,13 +135,21 @@ export function TradingDashboard() {
               : "Manage your AI-powered trading agents, monitor your portfolio, and execute trades on the blockchain."
             }
           </p>
-          <button 
-            onClick={handleNavigateToCreateAgent}
-            className="nb-button-accent px-6 py-3 text-lg"
-            disabled={isGuest}
-          >
-            🤖 {isGuest ? 'Demo Mode - View Only' : 'Import Your First Agent'}
-          </button>
+          <div className="flex gap-4">
+            <button 
+              onClick={handleNavigateToCreateAgent}
+              className="nb-button-accent px-6 py-3 text-lg"
+              disabled={isGuest}
+            >
+              🤖 {isGuest ? 'Demo Mode - View Only' : 'Import Your First Agent'}
+            </button>
+            <Link 
+              to="/stations"
+              className="nb-button-success px-6 py-3 text-lg font-bold"
+            >
+              🌤️ Explore Weather Stations
+            </Link>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
