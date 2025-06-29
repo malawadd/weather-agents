@@ -86,14 +86,24 @@ export function useWeatherStations({
 
     setAddingStations(prev => new Set(prev).add(station.id));
     try {
+      // Fixed: Only pass the required fields that match the schema
       await addStationToMyStations({
         sessionId,
         stationId: station.id,
         stationData: {
           name: station.name,
-          location: station.location,
+          location: {
+            lat: station.location.lat,
+            lon: station.location.lon,
+            elevation: station.location.elevation,
+            cellId: station.location.cellId,
+          },
           address: station.location.address,
           isActive: station.isActive,
+          lastDayQod: station.lastDayQod,
+          createdAt: station.createdAt,
+          region: station.region,
+          country: station.country,
         },
       });
     } catch (err: any) {

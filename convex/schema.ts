@@ -129,7 +129,7 @@ const applicationTables = {
     .index("by_user", ["userId"])
     .index("by_user_and_timestamp", ["userId", "timestamp"]),
 
-  // WeatherXM user stations
+  // WeatherXM user stations - UPDATED SCHEMA
   userStations: defineTable({
     userId: v.id("users"),
     stationId: v.string(), // WeatherXM station ID
@@ -140,9 +140,15 @@ const applicationTables = {
       location: v.optional(v.object({
         lat: v.number(),
         lon: v.number(),
+        elevation: v.optional(v.number()),
+        cellId: v.optional(v.string()),
       })),
       address: v.optional(v.string()),
       isActive: v.optional(v.boolean()),
+      lastDayQod: v.optional(v.number()),
+      createdAt: v.optional(v.string()),
+      region: v.optional(v.string()),
+      country: v.optional(v.string()),
     })),
   })
     .index("by_user", ["userId"])
