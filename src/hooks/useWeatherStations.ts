@@ -17,6 +17,7 @@ interface Station {
   lastActivity?: string;
   lastDayQod?: number;
   createdAt?: string;
+  region?: string;
 }
 
 interface UseWeatherStationsProps {
@@ -59,7 +60,7 @@ export function useWeatherStations({
         page: currentPage,
         limit: 20,
         search: searchTerm || undefined,
-        country: selectedRegion || undefined,
+        region: selectedRegion || undefined,
       });
       
       console.log('Stations result:', result);

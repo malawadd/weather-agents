@@ -13,8 +13,9 @@ export function StationsListPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRegion, setSelectedRegion] = useState('');
   const [availableRegions, setAvailableRegions] = useState<string[]>([]);
+  const [regionCounts, setRegionCounts] = useState<Record<string, number>>({});
 
-  const getStationLocations = useAction(api.weatherxmApi.getStationLocations);
+  const getAvailableRegions = useAction(api.weatherxmApi.getAvailableRegions);
 
   const {
     stations,
@@ -32,14 +33,18 @@ export function StationsListPage() {
   useEffect(() => {
     const loadRegions = async () => {
       try {
-        const result = await getStationLocations({});
+        const result = await getAvailableRegions({});
         setAvailableRegions(result.regions);
+        setRegionCounts(result.regionCounts);
+        console.log('Available regions:', result.regions, 'Counts:', result.regionCounts);
       } catch (err) {
         console.error('Failed to load regions:', err);
+        // Set default regions if API fails
+        setAvailableRegions(['Europe', 'North America', 'Asia', 'Africa', 'Australia', 'South America']);
       }
     };
     loadRegions();
-  }, [getStationLocations]);
+  }, [getAvailableRegions]);
 
   useEffect(() => {
     loadStations();
@@ -64,6 +69,12 @@ export function StationsListPage() {
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const clearAllFilters = () => {
+    setSearchTerm('');
+    setSelectedRegion('');
+    setCurrentPage(1);
   };
 
   return (
@@ -120,6 +131,7 @@ export function StationsListPage() {
           {totalStations > 0 && (
             <p className="text-sm text-gray-500 mt-2">
               Showing {stations.length} of {totalStations} stations
+              {selectedRegion && ` in ${selectedRegion}`}
             </p>
           )}
         </div>
@@ -147,7 +159,7 @@ export function StationsListPage() {
                 <option value="">All Regions</option>
                 {availableRegions.map((region) => (
                   <option key={region} value={region}>
-                    {region}
+                    {region} {regionCounts[region] ? `(${regionCounts[region]})` : ''}
                   </option>
                 ))}
               </select>
@@ -195,6 +207,12 @@ export function StationsListPage() {
                   </button>
                 </span>
               )}
+              <button
+                onClick={clearAllFilters}
+                className="nb-button px-3 py-1 text-sm font-bold"
+              >
+                Clear All Filters
+              </button>
             </div>
           )}
         </div>
@@ -229,7 +247,9 @@ export function StationsListPage() {
         {loading && (
           <div className="nb-panel p-8 text-center">
             <p className="font-bold mb-2">🔄 Loading weather stations...</p>
-            <p className="text-sm text-gray-600">Fetching data from WeatherXM API</p>
+            <p className="text-sm text-gray-600">
+              {selectedRegion ? `Filtering stations in ${selectedRegion}...` : 'Fetching data from WeatherXM API...'}
+            </p>
           </div>
         )}
 
@@ -258,12 +278,22 @@ export function StationsListPage() {
                 : 'Click "Search" to load stations from the WeatherXM network.'
               }
             </p>
-            <button
-              onClick={handleRefresh}
-              className="nb-button-accent px-6 py-3 font-bold"
-            >
-              🔄 Load Stations
-            </button>
+            <div className="flex gap-4 justify-center">
+              <button
+                onClick={handleRefresh}
+                className="nb-button-accent px-6 py-3 font-bold"
+              >
+                🔄 Load Stations
+              </button>
+              {(searchTerm || selectedRegion) && (
+                <button
+                  onClick={clearAllFilters}
+                  className="nb-button px-6 py-3 font-bold"
+                >
+                  Clear Filters
+                </button>
+              )}
+            </div>
           </div>
         )}
 
@@ -324,6 +354,7 @@ export function StationsListPage() {
             
             <div className="text-center mt-2 text-sm text-gray-600">
               Page {currentPage} of {totalPages} • {totalStations} total stations
+              {selectedRegion && ` in ${selectedRegion}`}
             </div>
           </div>
         )}
@@ -336,6 +367,11 @@ export function StationsListPage() {
             {totalStations > 0 ? ` ${totalStations} stations available` : ' Ready to load stations'}
             {selectedRegion && ` • Filtered by ${selectedRegion}`}
           </p>
+          {availableRegions.length > 0 && (
+            <p className="text-xs text-gray-600 mt-1">
+              Available regions: {availableRegions.join(', ')}
+            </p>
+          )}
         </div>
       </div>
     </div>
