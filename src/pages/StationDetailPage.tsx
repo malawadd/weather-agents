@@ -26,10 +26,6 @@ export function StationDetailPage() {
   const latestData = useQuery(api.weatherxm.stationDataApi.getLatestData,
     stationId ? { stationId } : "skip"
   );
-  
-  const historyData = useQuery(api.weatherxm.stationDataApi.getHistoryData,
-    stationId ? { stationId, limit: 7 } : "skip"
-  );
 
   const station = savedStations?.find(s => s.stationId === stationId);
 
@@ -136,7 +132,7 @@ export function StationDetailPage() {
         </div>
 
         <HistoricalDataPanel
-          historyData={historyData}
+          stationId={stationId!}
           onSyncData={handleSyncData}
           isSyncing={isSyncing}
         />

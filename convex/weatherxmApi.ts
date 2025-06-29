@@ -9,6 +9,7 @@ export {
   fetchAndStoreLatestData, 
   fetchAndStoreHistoryData, 
   getLatestData, 
-  getHistoryData 
+  getHistoryData,
+  getAvailableDates
 } from "./weatherxm/stationDataApi";
 export { syncStationData, syncAllUserStations } from "./weatherxm/stationSyncApi";

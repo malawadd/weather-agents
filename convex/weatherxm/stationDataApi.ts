@@ -45,21 +45,31 @@ export const fetchAndStoreLatestData = action({
   },
 });
 
-// Fetch and store historical station data
+// Fetch and store historical station data with date parameter
 export const fetchAndStoreHistoryData = action({
   args: {
     stationId: v.string(),
-    date: v.optional(v.string()),
+    date: v.string(), // Now required - format: YYYY-MM-DD
   },
   handler: async (ctx, args): Promise<any> => {
     validateApiKey();
 
     try {
-      let url = `${WEATHERXM_BASE_URL}/stations/${args.stationId}/history`;
-      if (args.date) {
-        url += `?date=${args.date}`;
+      // Validate date format and ensure it's within the last month
+      const selectedDate = new Date(args.date);
+      const today = new Date();
+      const oneMonthAgo = new Date();
+      oneMonthAgo.setMonth(today.getMonth() - 1);
+
+      if (selectedDate > today) {
+        throw new Error('Cannot fetch data for future dates');
       }
-      
+
+      if (selectedDate < oneMonthAgo) {
+        throw new Error('Historical data is only available for the last month');
+      }
+
+      const url = `${WEATHERXM_BASE_URL}/stations/${args.stationId}/history?date=${args.date}`;
       console.log('Fetching history data from:', url);
 
       const response = await fetch(url, {
@@ -223,19 +233,47 @@ export const getLatestData = query({
   },
 });
 
-// Get history data from database
+// Get history data from database with optional date filter
 export const getHistoryData = query({
   args: {
     stationId: v.string(),
+    date: v.optional(v.string()),
     limit: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
     const limit = args.limit || 30;
     
-    return await ctx.db
+    if (args.date) {
+      // Get data for specific date
+      return await ctx.db
+        .query("stationHistoryData")
+        .withIndex("by_station_and_date", (q) => 
+          q.eq("stationId", args.stationId).eq("date", args.date!)
+        )
+        .unique();
+    } else {
+      // Get recent history data
+      return await ctx.db
+        .query("stationHistoryData")
+        .withIndex("by_station", (q) => q.eq("stationId", args.stationId))
+        .order("desc")
+        .take(limit);
+    }
+  },
+});
+
+// Get available dates for a station (last month)
+export const getAvailableDates = query({
+  args: {
+    stationId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const historyData = await ctx.db
       .query("stationHistoryData")
       .withIndex("by_station", (q) => q.eq("stationId", args.stationId))
       .order("desc")
-      .take(limit);
+      .take(31); // Last month
+
+    return historyData.map(data => data.date).sort().reverse();
   },
 });
