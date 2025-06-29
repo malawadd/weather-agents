@@ -1,7 +1,8 @@
 import { action, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-const WEATHERXM_API_KEY = "099baba1-aa70-4e9d-8f17-afc63da80585";
+// Get API key from environment variable
+const WEATHERXM_API_KEY = process.env.WEATHERXM_API_KEY;
 const WEATHERXM_BASE_URL = "https://api.weatherxm.com/api/v1";
 
 // Fetch all stations from WeatherXM API
@@ -13,6 +14,11 @@ export const fetchStations = action({
   },
   handler: async (ctx, args) => {
     const { page = 1, limit = 50, search } = args;
+    
+    // Check if API key is configured
+    if (!WEATHERXM_API_KEY) {
+      throw new Error('WeatherXM API key is not configured. Please set WEATHERXM_API_KEY environment variable.');
+    }
     
     try {
       let url = `${WEATHERXM_BASE_URL}/stations?page=${page}&limit=${limit}`;
@@ -28,13 +34,28 @@ export const fetchStations = action({
       });
 
       if (!response.ok) {
-        throw new Error(`WeatherXM API error: ${response.status} ${response.statusText}`);
+        // Provide more specific error messages based on status code
+        if (response.status === 401) {
+          throw new Error('WeatherXM API authentication failed. Please check your API key.');
+        } else if (response.status === 404) {
+          throw new Error('WeatherXM API endpoint not found. This may indicate an invalid API key or incorrect endpoint URL.');
+        } else if (response.status === 403) {
+          throw new Error('WeatherXM API access forbidden. Please check your API key permissions.');
+        } else if (response.status === 429) {
+          throw new Error('WeatherXM API rate limit exceeded. Please try again later.');
+        } else {
+          throw new Error(`WeatherXM API error: ${response.status} ${response.statusText}`);
+        }
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
       console.error('Error fetching stations:', error);
+      // Re-throw the error with the original message if it's already a descriptive error
+      if (error instanceof Error && error.message.includes('WeatherXM')) {
+        throw error;
+      }
       throw new Error('Failed to fetch stations from WeatherXM API');
     }
   },
@@ -46,6 +67,11 @@ export const fetchStationDetails = action({
     stationId: v.string(),
   },
   handler: async (ctx, args) => {
+    // Check if API key is configured
+    if (!WEATHERXM_API_KEY) {
+      throw new Error('WeatherXM API key is not configured. Please set WEATHERXM_API_KEY environment variable.');
+    }
+
     try {
       const response = await fetch(`${WEATHERXM_BASE_URL}/stations/${args.stationId}`, {
         headers: {
@@ -55,13 +81,28 @@ export const fetchStationDetails = action({
       });
 
       if (!response.ok) {
-        throw new Error(`WeatherXM API error: ${response.status} ${response.statusText}`);
+        // Provide more specific error messages based on status code
+        if (response.status === 401) {
+          throw new Error('WeatherXM API authentication failed. Please check your API key.');
+        } else if (response.status === 404) {
+          throw new Error('Station not found or WeatherXM API endpoint not accessible. Please check your API key.');
+        } else if (response.status === 403) {
+          throw new Error('WeatherXM API access forbidden. Please check your API key permissions.');
+        } else if (response.status === 429) {
+          throw new Error('WeatherXM API rate limit exceeded. Please try again later.');
+        } else {
+          throw new Error(`WeatherXM API error: ${response.status} ${response.statusText}`);
+        }
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
       console.error('Error fetching station details:', error);
+      // Re-throw the error with the original message if it's already a descriptive error
+      if (error instanceof Error && error.message.includes('WeatherXM')) {
+        throw error;
+      }
       throw new Error('Failed to fetch station details from WeatherXM API');
     }
   },
@@ -75,6 +116,11 @@ export const fetchStationWeatherData = action({
     toDate: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
+    // Check if API key is configured
+    if (!WEATHERXM_API_KEY) {
+      throw new Error('WeatherXM API key is not configured. Please set WEATHERXM_API_KEY environment variable.');
+    }
+
     try {
       let url = `${WEATHERXM_BASE_URL}/stations/${args.stationId}/data`;
       const params = new URLSearchParams();
@@ -94,13 +140,28 @@ export const fetchStationWeatherData = action({
       });
 
       if (!response.ok) {
-        throw new Error(`WeatherXM API error: ${response.status} ${response.statusText}`);
+        // Provide more specific error messages based on status code
+        if (response.status === 401) {
+          throw new Error('WeatherXM API authentication failed. Please check your API key.');
+        } else if (response.status === 404) {
+          throw new Error('Weather data not found or WeatherXM API endpoint not accessible. Please check your API key.');
+        } else if (response.status === 403) {
+          throw new Error('WeatherXM API access forbidden. Please check your API key permissions.');
+        } else if (response.status === 429) {
+          throw new Error('WeatherXM API rate limit exceeded. Please try again later.');
+        } else {
+          throw new Error(`WeatherXM API error: ${response.status} ${response.statusText}`);
+        }
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
       console.error('Error fetching weather data:', error);
+      // Re-throw the error with the original message if it's already a descriptive error
+      if (error instanceof Error && error.message.includes('WeatherXM')) {
+        throw error;
+      }
       throw new Error('Failed to fetch weather data from WeatherXM API');
     }
   },
