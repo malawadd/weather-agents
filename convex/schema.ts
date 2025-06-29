@@ -137,12 +137,12 @@ const applicationTables = {
     addedAt: v.number(),
     stationData: v.optional(v.object({
       name: v.optional(v.string()),
-      location: v.object({
+      location: v.optional(v.object({
         lat: v.number(),
         lon: v.number(),
         elevation: v.optional(v.number()),
         cellId: v.optional(v.string()),
-      }),
+      })),
       address: v.optional(v.string()),
       isActive: v.optional(v.boolean()),
       lastDayQod: v.optional(v.number()),
