@@ -5,16 +5,17 @@ import { api } from '../../convex/_generated/api';
 import { useAuth } from '../WalletAuthProvider';
 import { WalletConnection } from '../WalletConnection';
 import { useWeatherChat } from '../hooks/useWeatherChat';
-import { ChatInterface } from '../components/weather/ChatInterface';
-import { StationDetailCard } from '../components/weather/StationDetailCard';
-import { SyncAllStationsButton } from '../components/weather/SyncAllStationsButton';
 import { useToast } from '../hooks/useToast';
 import { ToastContainer } from '../components/ui/ToastContainer';
+import { MyStationsHeader } from '../components/weather/MyStationsHeader';
+import { MyStationsList } from '../components/weather/MyStationsList';
+import { ChatSection } from '../components/weather/ChatSection';
 
 export function MyStationsPage() {
   const { user, isGuest, signOut, sessionId } = useAuth();
   const [selectedStationId, setSelectedStationId] = useState<string | null>(null);
   const [syncingStations, setSyncingStations] = useState<Set<string>>(new Set());
+  const [isSyncingAll, setIsSyncingAll] = useState(false);
   const { toasts, showSuccess, showError, hideToast } = useToast();
 
   const savedStations = useQuery(api.weatherxmApi.getMySavedStations, 
@@ -22,6 +23,7 @@ export function MyStationsPage() {
   );
   const removeStation = useMutation(api.weatherxmApi.removeStationFromMyStations);
   const syncStationData = useAction(api.weatherxm.stationSyncApi.syncStationData);
+  const syncAllStations = useAction(api.weatherxm.stationSyncApi.syncAllUserStations);
 
   const {
     chatMessages,
@@ -63,12 +65,18 @@ export function MyStationsPage() {
     }
   };
 
-  const handleSyncAllComplete = (message: string) => {
-    showSuccess(message);
-  };
-
-  const handleSyncAllError = (error: string) => {
-    showError(error);
+  const handleSyncAll = async () => {
+    if (!sessionId) return;
+    
+    setIsSyncingAll(true);
+    try {
+      const result = await syncAllStations({ sessionId });
+      showSuccess(result.message);
+    } catch (error: any) {
+      showError(error.message || 'Failed to sync all stations');
+    } finally {
+      setIsSyncingAll(false);
+    }
   };
 
   const selectedStation = savedStations?.find(s => s.stationId === selectedStationId);
@@ -99,7 +107,6 @@ export function MyStationsPage() {
 
   return (
     <div className="min-h-screen nb-grid-bg">
-      {/* Navigation */}
       <nav className="nb-panel-white p-4 m-4 mb-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-8">
@@ -133,100 +140,35 @@ export function MyStationsPage() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 space-y-6">
-        {/* Header */}
-        <div className="nb-panel-white p-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">🌤️ My Weather Stations</h1>
-              <p className="text-gray-600">
-                Manage your saved weather stations, sync latest data, and chat with AI about weather patterns.
-              </p>
-            </div>
-            {sessionId && savedStations && savedStations.length > 0 && (
-              <SyncAllStationsButton
-                sessionId={sessionId}
-                onSyncComplete={handleSyncAllComplete}
-                onSyncError={handleSyncAllError}
-              />
-            )}
-          </div>
-        </div>
+        <MyStationsHeader
+          stationsCount={savedStations?.length || 0}
+          onSyncAll={savedStations && savedStations.length > 0 ? handleSyncAll : undefined}
+          isSyncingAll={isSyncingAll}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Stations List */}
           <div className="lg:col-span-1">
-            <div className="nb-panel-white p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">📍 Saved Stations</h2>
-                <Link to="/stations" className="nb-button px-3 py-1 text-sm font-bold">
-                  + Add More
-                </Link>
-              </div>
-
-              {!savedStations && (
-                <div className="text-center py-4">
-                  <p className="font-medium">Loading stations...</p>
-                </div>
-              )}
-
-              {savedStations?.length === 0 && (
-                <div className="text-center py-8">
-                  <p className="text-gray-600 mb-4">No saved stations yet</p>
-                  <Link to="/stations" className="nb-button-accent px-4 py-2 font-bold">
-                    Browse Stations
-                  </Link>
-                </div>
-              )}
-
-              <div className="space-y-3">
-                {savedStations?.map((station) => (
-                  <div
-                    key={station._id}
-                    className={`cursor-pointer transition-all ${
-                      selectedStationId === station.stationId 
-                        ? 'ring-2 ring-blue-500' 
-                        : ''
-                    }`}
-                    onClick={() => setSelectedStationId(station.stationId)}
-                  >
-                    <StationDetailCard
-                      station={station}
-                      onRemove={handleRemoveStation}
-                      onSync={handleSyncStation}
-                      isSyncing={syncingStations.has(station.stationId)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
+            <MyStationsList
+              stations={savedStations}
+              selectedStationId={selectedStationId}
+              syncingStations={syncingStations}
+              onStationSelect={setSelectedStationId}
+              onRemoveStation={handleRemoveStation}
+              onSyncStation={handleSyncStation}
+            />
           </div>
 
-          {/* Chat Interface */}
           <div className="lg:col-span-2">
-            {selectedStationId ? (
-              <ChatInterface
-                messages={chatMessages}
-                newMessage={newMessage}
-                isLoading={isLoading}
-                onMessageChange={setNewMessage}
-                onSendMessage={handleSendMessage}
-                stationName={selectedStation?.customName || selectedStation?.stationData?.name || 'Station'}
-              />
-            ) : (
-              <div className="nb-panel p-8 text-center h-[600px] flex items-center justify-center">
-                <div>
-                  <h3 className="text-2xl font-bold mb-4">🌤️ Select a Weather Station</h3>
-                  <p className="text-gray-600 mb-6">
-                    Choose a station from your saved list to start chatting with AI about weather conditions and insights.
-                  </p>
-                  {savedStations?.length === 0 && (
-                    <Link to="/stations" className="nb-button-accent px-6 py-3 font-bold">
-                      Add Your First Station
-                    </Link>
-                  )}
-                </div>
-              </div>
-            )}
+            <ChatSection
+              selectedStationId={selectedStationId}
+              selectedStationName={selectedStation?.customName || selectedStation?.stationData?.name}
+              chatMessages={chatMessages}
+              newMessage={newMessage}
+              isLoading={isLoading}
+              onMessageChange={setNewMessage}
+              onSendMessage={handleSendMessage}
+              hasStations={!!savedStations && savedStations.length > 0}
+            />
           </div>
         </div>
       </div>
