@@ -2,11 +2,12 @@ import React from 'react';
 import { useAccount, useReadContract } from 'wagmi';
 import { VAULT_CONTRACT_ADDRESS, MTOKEN_CONTRACT_ADDRESS } from '../../constants/contractAddresses';
 import { VAULT_ABI } from '../../constants/vaultAbi';
-import { ERC20_ABI } from '../../constants/erc20Abi';
+import { MTOKEN_ABI } from '../../constants/mtokenAbi';
 import { VaultOverview } from '../../components/betting/vault/VaultOverview';
 import { UserVaultBalance } from '../../components/betting/vault/UserVaultBalance';
 import { DepositDonatePanel } from '../../components/betting/vault/DepositDonatePanel';
 import { RedeemMintPanel } from '../../components/betting/vault/RedeemMintPanel';
+import { MintTokenPanel } from '../../components/betting/vault/MintTokenPanel';
 import { useToast } from '../../hooks/useToast';
 import { ToastContainer } from '../../components/ui/ToastContainer';
 
@@ -42,20 +43,20 @@ export function VaultPage() {
   // MToken contract reads
   const { data: mtokenSymbol = '', isLoading: isLoadingMtokenSymbol } = useReadContract({
     address: MTOKEN_CONTRACT_ADDRESS,
-    abi: ERC20_ABI,
+    abi: MTOKEN_ABI,
     functionName: 'symbol',
   });
 
   const { data: mtokenDecimals = 18, isLoading: isLoadingMtokenDecimals } = useReadContract({
     address: MTOKEN_CONTRACT_ADDRESS,
-    abi: ERC20_ABI,
+    abi: MTOKEN_ABI,
     functionName: 'decimals',
   });
 
   // User balance reads
   const { data: mtokenBalance = 0n, isLoading: isLoadingMtokenBalance, refetch: refetchMtokenBalance } = useReadContract({
     address: MTOKEN_CONTRACT_ADDRESS,
-    abi: ERC20_ABI,
+    abi: MTOKEN_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
   });
@@ -105,7 +106,7 @@ export function VaultPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Column - Vault Overview */}
         <div className="lg:col-span-1">
           <VaultOverview
@@ -117,7 +118,7 @@ export function VaultPage() {
           />
         </div>
 
-        {/* Middle Column - User Balances */}
+        {/* Second Column - User Balances */}
         <div className="lg:col-span-1">
           <UserVaultBalance
             mtokenBalance={mtokenBalance}
@@ -130,7 +131,17 @@ export function VaultPage() {
           />
         </div>
 
-        {/* Right Column - Actions */}
+        {/* Third Column - Mint Tokens */}
+        <div className="lg:col-span-1">
+          <MintTokenPanel
+            mtokenAddress={MTOKEN_CONTRACT_ADDRESS}
+            mtokenSymbol={mtokenSymbol}
+            mtokenDecimals={mtokenDecimals}
+            onTransactionSuccess={handleTransactionSuccess}
+          />
+        </div>
+
+        {/* Fourth Column - Deposit/Donate */}
         <div className="lg:col-span-1 space-y-6">
           <DepositDonatePanel
             vaultAddress={VAULT_CONTRACT_ADDRESS}
@@ -143,7 +154,7 @@ export function VaultPage() {
         </div>
       </div>
 
-      {/* Bottom Section - Mint/Redeem */}
+      {/* Bottom Section - Mint/Redeem Tickets */}
       <div className="max-w-2xl mx-auto">
         <RedeemMintPanel
           vaultAddress={VAULT_CONTRACT_ADDRESS}

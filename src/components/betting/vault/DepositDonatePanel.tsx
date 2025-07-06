@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
 import { VAULT_ABI } from '../../../constants/vaultAbi';
-import { ERC20_ABI } from '../../../constants/erc20Abi';
+import { MTOKEN_ABI } from '../../../constants/mtokenAbi';
 import { useToast } from '../../../hooks/useToast';
 
 interface DepositDonatePanelProps {
@@ -30,7 +30,7 @@ export function DepositDonatePanel({
   // Read current allowance
   const { data: allowance = 0n } = useReadContract({
     address: mtokenAddress,
-    abi: ERC20_ABI,
+    abi: MTOKEN_ABI,
     functionName: 'allowance',
     args: address ? [address, vaultAddress] : undefined,
   });
@@ -90,7 +90,7 @@ export function DepositDonatePanel({
       const amountBigInt = parseUnits(amount, mtokenDecimals);
       writeApprove({
         address: mtokenAddress,
-        abi: ERC20_ABI,
+        abi: MTOKEN_ABI,
         functionName: 'approve',
         args: [vaultAddress, amountBigInt],
       });

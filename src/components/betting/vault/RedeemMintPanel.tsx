@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseUnits, formatUnits } from 'viem';
 import { VAULT_ABI } from '../../../constants/vaultAbi';
-import { ERC20_ABI } from '../../../constants/erc20Abi';
+import { MTOKEN_ABI } from '../../../constants/mtokenAbi';
 import { useToast } from '../../../hooks/useToast';
 
 interface RedeemMintPanelProps {
@@ -49,7 +49,7 @@ export function RedeemMintPanel({
   // Read allowance for minting
   const { data: allowance = 0n } = useReadContract({
     address: mtokenAddress,
-    abi: ERC20_ABI,
+    abi: MTOKEN_ABI,
     functionName: 'allowance',
     args: address ? [address, vaultAddress] : undefined,
   });
@@ -57,7 +57,7 @@ export function RedeemMintPanel({
   // Read mtoken balance for minting
   const { data: mtokenBalance = 0n } = useReadContract({
     address: mtokenAddress,
-    abi: ERC20_ABI,
+    abi: MTOKEN_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
   });
@@ -119,7 +119,7 @@ export function RedeemMintPanel({
       const amountBigInt = parseUnits(amount, mtokenDecimals);
       writeApprove({
         address: mtokenAddress,
-        abi: ERC20_ABI,
+        abi: MTOKEN_ABI,
         functionName: 'approve',
         args: [vaultAddress, amountBigInt],
       });
