@@ -28,9 +28,9 @@ export function PlatformSelectionPage() {
     },
     {
       id: 'future-innovations',
-      title: 'Future Innovations',
-      description: 'Discover what\'s coming next in the world of weather technology and AI.',
-      image: 'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      title: 'Weather Insurance Platform',
+      description: 'Weatherxm X eulerfinance.',
+      image: 'https://images.pexels.com/photos/2496572/pexels-photo-2496572.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/future-platform',
       available: false,
       hoverColor: 'var(--nb-warning)',
