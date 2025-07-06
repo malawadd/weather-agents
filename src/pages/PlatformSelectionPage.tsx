@@ -10,31 +10,31 @@ export function PlatformSelectionPage() {
       id: 'weather-intelligence',
       title: 'Weather Intelligence Platform',
       description: 'Explore global weather stations and get AI-powered insights about weather patterns and conditions.',
-      image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/weather-intelligence',
       available: true,
       hoverColor: '#a589e8',
       buttonClass: 'nb-button-accent',
+      backgroundClass: 'nb-weather-intelligence-bg-animated',
     },
     {
       id: 'weather-betting',
       title: 'Weather Betting Platform',
       description: 'Place bets on weather predictions and compete with other weather enthusiasts.',
-      image: 'https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/weather-betting',
       available: true,
       hoverColor: '#66ccff',
       buttonClass: 'nb-betting-button-accent',
+      backgroundClass: 'nb-weather-betting-bg-animated',
     },
     {
       id: 'future-innovations',
       title: 'Future Innovations',
       description: 'Discover what\'s coming next in the world of weather technology and AI.',
-      image: 'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/future-platform',
       available: false,
       hoverColor: 'var(--nb-warning)',
       buttonClass: 'nb-button',
+      backgroundClass: 'nb-future-innovations-bg-animated',
     },
   ];
 
@@ -81,10 +81,8 @@ export function PlatformSelectionPage() {
                 to={platform.path}
                 className="block w-full h-full relative overflow-hidden"
               >
-                <img
-                  src={platform.image}
-                  alt={platform.title}
-                  className="absolute inset-0 w-full h-full object-cover platform-choice-image transition-all duration-500 group-hover:scale-110"
+                <div 
+                  className={`absolute inset-0 w-full h-full ${platform.backgroundClass}`}
                 />
                 
                 {/* Neobrutalism hover overlay with color */}
@@ -110,10 +108,8 @@ export function PlatformSelectionPage() {
               </Link>
             ) : (
               <div className="w-full h-full relative overflow-hidden">
-                <img
-                  src={platform.image}
-                  alt={platform.title}
-                  className="absolute inset-0 w-full h-full object-cover grayscale"
+                <div 
+                  className={`absolute inset-0 w-full h-full ${platform.backgroundClass} grayscale`}
                 />
                 
                 {/* Coming soon overlay */}
