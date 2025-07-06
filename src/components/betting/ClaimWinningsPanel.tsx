@@ -16,7 +16,7 @@ export function ClaimWinningsPanel({ drawId, isDrawSettled, actualTemp, onClaime
   const { showSuccess, showError } = useToast();
 
   // Check if user has already claimed
-  const { data: hasClaimed = false } = useReadContract({
+  const { data: hasClaimed = false, refetch: refetchClaimed } = useReadContract({
     address: BIDDING_CONTRACT_ADDRESS,
     abi: BIDDING_ABI,
     functionName: 'claimed',
@@ -31,6 +31,7 @@ export function ClaimWinningsPanel({ drawId, isDrawSettled, actualTemp, onClaime
     hash: claimHash,
     onSuccess: () => {
       showSuccess('Winnings claimed successfully! Tokens have been sent to your wallet.');
+      refetchClaimed();
       onClaimed();
     },
     onError: () => {

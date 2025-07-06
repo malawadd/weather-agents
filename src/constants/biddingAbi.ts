@@ -12,7 +12,6 @@ export const BIDDING_ABI = [
   },
   {
     "inputs": [
-      {"internalType": "uint256", "name": "drawId", "type": "uint256"},
       {"internalType": "bytes32", "name": "cityId", "type": "bytes32"},
       {"internalType": "uint256", "name": "endTime", "type": "uint256"},
       {"internalType": "int256[]", "name": "thresholds", "type": "int256[]"}
@@ -54,6 +53,47 @@ export const BIDDING_ABI = [
   },
 
   // Read functions
+  {
+    "inputs": [],
+    "name": "getAllDrawIds",
+    "outputs": [{"internalType": "uint256[]", "name": "", "type": "uint256[]"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "uint256", "name": "drawId", "type": "uint256"}],
+    "name": "getDraw",
+    "outputs": [
+      {"internalType": "bytes32", "name": "cityId", "type": "bytes32"},
+      {"internalType": "uint256", "name": "endTime", "type": "uint256"},
+      {"internalType": "bool", "name": "settled", "type": "bool"},
+      {"internalType": "int256", "name": "actualTemp", "type": "int256"},
+      {"internalType": "uint256", "name": "pot", "type": "uint256"}
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "drawId", "type": "uint256"},
+      {"internalType": "int256", "name": "th", "type": "int256"}
+    ],
+    "name": "getTotalShares",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "drawId", "type": "uint256"},
+      {"internalType": "address", "name": "user", "type": "address"},
+      {"internalType": "int256", "name": "th", "type": "int256"}
+    ],
+    "name": "getUserShares",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
   {
     "inputs": [],
     "name": "asset",

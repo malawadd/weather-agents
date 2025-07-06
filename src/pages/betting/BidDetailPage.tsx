@@ -21,14 +21,14 @@ export function BidDetailPage() {
   const drawId = isContractBid ? Number(bidId) : null;
   
   // Fetch contract draw data
-  const { data: drawData } = useReadContract({
+  const { data: drawData, refetch: refetchDrawData } = useReadContract({
     address: BIDDING_CONTRACT_ADDRESS,
     abi: BIDDING_ABI,
-    functionName: 'draws',
+    functionName: 'getDraw',
     args: drawId !== null ? [BigInt(drawId)] : undefined,
   });
   
-  const { data: thresholds = [] } = useReadContract({
+  const { data: thresholds = [], refetch: refetchThresholds } = useReadContract({
     address: BIDDING_CONTRACT_ADDRESS,
     abi: BIDDING_ABI,
     functionName: 'getThresholds',
@@ -37,10 +37,13 @@ export function BidDetailPage() {
 
   const handleBetPlaced = () => {
     setRefreshKey(prev => prev + 1);
+    refetchDrawData();
+    refetchThresholds();
   };
 
   const handleClaimed = () => {
     setRefreshKey(prev => prev + 1);
+    refetchDrawData();
   };
 
   if (!bid) {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useReadContract } from 'wagmi';
+import { useReadContract, useReadContracts } from 'wagmi';
 import { BidCard } from '../../components/betting/BidCard';
 import { mockActiveBids, Bid } from '../../data/mockBettingData';
 import { BIDDING_CONTRACT_ADDRESS } from '../../constants/contractAddresses';
@@ -8,15 +8,81 @@ import { BIDDING_ABI } from '../../constants/biddingAbi';
 export function ActiveBidsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('volume');
-  const [contractBids, setContractBids] = useState<Bid[]>([]);
 
   const categories = ['All', 'Temperature', 'Precipitation', 'Wind', 'Severe Weather'];
 
-  // Fetch contract draws (checking first 10 draw IDs for demo)
-  const drawIds = Array.from({ length: 10 }, (_, i) => i);
+  // Fetch all draw IDs from contract
+  const { data: allDrawIds = [] } = useReadContract({
+    address: BIDDING_CONTRACT_ADDRESS,
+    abi: BIDDING_ABI,
+    functionName: 'getAllDrawIds',
+  });
+
+  // Fetch draw details for each draw ID
+  const drawContracts = allDrawIds.map((drawId: bigint) => ({
+    address: BIDDING_CONTRACT_ADDRESS,
+    abi: BIDDING_ABI,
+    functionName: 'getDraw',
+    args: [drawId],
+  }));
+
+  const thresholdContracts = allDrawIds.map((drawId: bigint) => ({
+    address: BIDDING_CONTRACT_ADDRESS,
+    abi: BIDDING_ABI,
+    functionName: 'getThresholds',
+    args: [drawId],
+  }));
+
+  const { data: drawsData = [] } = useReadContracts({
+    contracts: drawContracts,
+  });
+
+  const { data: thresholdsData = [] } = useReadContracts({
+    contracts: thresholdContracts,
+  });
+
+  // Transform contract data to Bid format
+  const contractBids: Bid[] = allDrawIds.map((drawId: bigint, index: number) => {
+    const drawData = drawsData[index]?.result;
+    const thresholds = thresholdsData[index]?.result;
+    
+    if (!drawData || !thresholds) return null;
+
+    const [cityId, endTime, settled, actualTemp, pot] = drawData;
+    const now = Math.floor(Date.now() / 1000);
+    const timeRemaining = Number(endTime) > now ? 
+      formatTimeRemaining(Number(endTime) - now) : 'Ended';
+    
+    const isActive = Number(endTime) > now && !settled;
+    const isExpired = Number(endTime) <= now || settled;
+
+    // Create options from thresholds
+    const options = thresholds.map((threshold: bigint) => ({
+      range: `${Number(threshold)}°C`,
+      percentage: Math.floor(Math.random() * 30) + 10, // Mock percentage for now
+      yesPrice: Math.floor(Math.random() * 50) + 25,
+      noPrice: Math.floor(Math.random() * 50) + 25,
+    }));
+
+    return {
+      id: drawId.toString(),
+      question: 'Highest temperature in London this week?',
+      image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
+      options,
+      totalVolume: Number(pot) || Math.floor(Math.random() * 1000000),
+      frequency: 'Weekly' as const,
+      timeRemaining,
+      category: 'Temperature',
+      location: 'London, UK',
+      drawId: Number(drawId),
+      endTime: Number(endTime),
+      isSettled: settled,
+      actualTemp: actualTemp ? Number(actualTemp) : undefined,
+      thresholds: thresholds.map((t: bigint) => Number(t)),
+    };
+  }).filter(Boolean) as Bid[];
   
-  // For demo, we'll use mock data but in a real implementation you'd fetch from contract
-  // This is a placeholder for the contract integration
+  // Combine mock and contract bids
   const allBids = [...mockActiveBids, ...contractBids];
   
   const filteredBids = allBids.filter(bid => 
@@ -35,6 +101,21 @@ export function ActiveBidsPage() {
         return 0;
     }
   });
+
+  // Helper function to format time remaining
+  function formatTimeRemaining(seconds: number): string {
+    const days = Math.floor(seconds / (24 * 60 * 60));
+    const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((seconds % (60 * 60)) / 60);
+    
+    if (days > 0) {
+      return `${days}d ${hours}h ${minutes}m`;
+    } else if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else {
+      return `${minutes}m`;
+    }
+  }
 
   return (
     <div className="w-full px-4 space-y-6">

@@ -26,11 +26,27 @@ export function PlaceBetPanel({ drawId, selectedThreshold, thresholds, onBetPlac
   });
 
   // Get user's ticket balance
-  const { data: ticketBalance = 0n, refetch: refetchBalance } = useReadContract({
+  const { data: ticketBalance = 0n, refetch: refetchTicketBalance } = useReadContract({
     address: ticketsAddress,
     abi: ERC20_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
+  });
+
+  // Get user shares for selected threshold
+  const { data: userShares = 0n, refetch: refetchUserShares } = useReadContract({
+    address: BIDDING_CONTRACT_ADDRESS,
+    abi: BIDDING_ABI,
+    functionName: 'getUserShares',
+    args: address && selectedThreshold !== null ? [BigInt(drawId), address, BigInt(selectedThreshold)] : undefined,
+  });
+
+  // Get total shares for selected threshold
+  const { data: totalShares = 0n, refetch: refetchTotalShares } = useReadContract({
+    address: BIDDING_CONTRACT_ADDRESS,
+    abi: BIDDING_ABI,
+    functionName: 'getTotalShares',
+    args: selectedThreshold !== null ? [BigInt(drawId), BigInt(selectedThreshold)] : undefined,
   });
 
   // Get ticket decimals
@@ -68,7 +84,9 @@ export function PlaceBetPanel({ drawId, selectedThreshold, thresholds, onBetPlac
     onSuccess: () => {
       showSuccess('Bet placed successfully! Good luck with your prediction.');
       setShareAmount('');
-      refetchBalance();
+      refetchTicketBalance();
+      refetchUserShares();
+      refetchTotalShares();
       onBetPlaced();
     },
     onError: () => {
@@ -154,9 +172,27 @@ export function PlaceBetPanel({ drawId, selectedThreshold, thresholds, onBetPlac
       
       {/* Selected Option */}
       {selectedThreshold !== null ? (
-        <div className="nb-betting-panel-accent p-4 mb-4">
-          <h4 className="font-bold text-sm mb-1">Selected Temperature</h4>
-          <p className="text-xl font-bold">{selectedThreshold}°C</p>
+        <div className="space-y-3 mb-4">
+          <div className="nb-betting-panel-accent p-4">
+            <h4 className="font-bold text-sm mb-1">Selected Temperature</h4>
+            <p className="text-xl font-bold">{selectedThreshold}°C</p>
+          </div>
+          
+          {/* Show user's current position */}
+          {userShares > 0n && (
+            <div className="nb-betting-panel-success p-3">
+              <h4 className="font-bold text-xs mb-1">Your Current Position</h4>
+              <p className="text-sm font-bold">
+                {formatUnits(userShares, ticketDecimals)} KITX
+              </p>
+              <p className="text-xs text-gray-600">
+                {totalShares > 0n ? 
+                  `${((Number(userShares) / Number(totalShares)) * 100).toFixed(2)}% of total bets` 
+                  : 'First bet on this option'
+                }
+              </p>
+            </div>
+          )}
         </div>
       ) : (
         <div className="nb-betting-panel p-4 mb-4 text-center">

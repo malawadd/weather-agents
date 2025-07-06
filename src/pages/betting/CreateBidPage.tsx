@@ -54,9 +54,6 @@ export function CreateBidPage() {
         return;
       }
 
-      // Generate next draw ID (simple increment for demo)
-      const drawId = Math.floor(Date.now() / 1000);
-      
       // London city ID (hardcoded as bytes32)
       const londonCityId = '0x4c6f6e646f6e000000000000000000000000000000000000000000000000000';
       
@@ -67,7 +64,7 @@ export function CreateBidPage() {
         address: BIDDING_CONTRACT_ADDRESS,
         abi: BIDDING_ABI,
         functionName: 'createDraw',
-        args: [BigInt(drawId), londonCityId, BigInt(endTime), thresholdArray.map(t => BigInt(t))],
+        args: [londonCityId, BigInt(endTime), thresholdArray.map(t => BigInt(t))],
       });
     } catch (error) {
       showError('Invalid threshold values. Please check your input.');
