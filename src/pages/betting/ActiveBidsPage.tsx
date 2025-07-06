@@ -26,7 +26,7 @@ export function ActiveBidsPage() {
   });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 space-y-6">
+    <div className="w-full px-4 space-y-6">
       {/* Header */}
       <div className="nb-betting-panel-white p-6">
         <h1 className="text-3xl font-bold mb-2">🎲 Active Weather Bets</h1>

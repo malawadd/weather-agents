@@ -13,6 +13,8 @@ export function PlatformSelectionPage() {
       image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/weather-intelligence',
       available: true,
+      hoverColor: 'var(--nb-surface)',
+      buttonClass: 'nb-button-accent',
     },
     {
       id: 'weather-betting',
@@ -20,7 +22,9 @@ export function PlatformSelectionPage() {
       description: 'Place bets on weather predictions and compete with other weather enthusiasts.',
       image: 'https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/weather-betting',
-      available: false,
+      available: true,
+      hoverColor: 'var(--nb-betting-surface)',
+      buttonClass: 'nb-betting-button-accent',
     },
     {
       id: 'future-innovations',
@@ -29,6 +33,8 @@ export function PlatformSelectionPage() {
       image: 'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/future-platform',
       available: false,
+      hoverColor: 'var(--nb-warning)',
+      buttonClass: 'nb-button',
     },
   ];
 
@@ -82,7 +88,12 @@ export function PlatformSelectionPage() {
                 />
                 
                 {/* Neobrutalism hover overlay with color */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#a589e8] via-[#a589e8]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div 
+                  className="absolute inset-0 bg-gradient-to-t to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: `linear-gradient(to top, ${platform.hoverColor}, ${platform.hoverColor}70, transparent)`
+                  }}
+                />
 
                 
                 {/* Neobrutalism border on hover */}
@@ -92,7 +103,7 @@ export function PlatformSelectionPage() {
                 <div className="absolute bottom-8 left-8 right-8 text-black opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                   <h3 className="text-3xl font-bold mb-4 text-shadow-lg">{platform.title}</h3>
                   <p className="text-lg mb-6 text-shadow-md font-bold">{platform.description}</p>
-                  <div className="nb-button-accent px-6 py-3 font-bold text-lg inline-block">
+                  <div className={`${platform.buttonClass} px-6 py-3 font-bold text-lg inline-block`}>
                     Enter Platform →
                   </div>
                 </div>

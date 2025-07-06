@@ -26,7 +26,7 @@ export function BidDetailPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 space-y-6">
+    <div className="w-full px-4 space-y-6">
       {/* Breadcrumb */}
       <div className="flex items-center space-x-2 text-sm">
         <Link to="/weather-betting" className="hover:underline font-bold">Active Bets</Link>
