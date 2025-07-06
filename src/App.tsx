@@ -2,17 +2,39 @@ import { Toaster } from "sonner";
 import { TomoProvider } from "./TomoProvider";
 import { AuthProvider, useAuth } from "./WalletAuthProvider";
 import { WalletSignInForm } from "./WalletSignInForm";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { PlatformSelectionPage } from "./pages/PlatformSelectionPage";
+import { PlaceholderPlatformPage } from "./pages/PlaceholderPlatformPage";
 import { AuthenticatedApp } from "./AuthenticatedApp";
-import { BrowserRouter as Router } from "react-router-dom";
 
-function AppContent() {
+function AppRouterContent() {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
     return <WalletSignInForm />;
   }
 
-  return <AuthenticatedApp />;
+  return (
+    <Routes>
+      {/* Root redirect to platform selection */}
+      <Route path="/" element={<Navigate to="/platform-selection" replace />} />
+      
+      {/* Platform Selection */}
+      <Route path="/platform-selection" element={<PlatformSelectionPage />} />
+      
+      {/* Weather Intelligence Platform */}
+      <Route path="/weather-intelligence/*" element={<AuthenticatedApp />} />
+      
+      {/* Weather Betting Platform (placeholder) */}
+      <Route path="/weather-betting/*" element={<PlaceholderPlatformPage />} />
+      
+      {/* Future Platform (placeholder) */}
+      <Route path="/future-platform/*" element={<PlaceholderPlatformPage />} />
+      
+      {/* Fallback redirect */}
+      <Route path="*" element={<Navigate to="/platform-selection" replace />} />
+    </Routes>
+  );
 }
 
 export default function App() {
@@ -21,7 +43,7 @@ export default function App() {
       <TomoProvider>
         <AuthProvider>
           <div className="min-h-screen nb-grid-bg">
-            <AppContent />
+            <AppRouterContent />
             <Toaster />
           </div>
         </AuthProvider>

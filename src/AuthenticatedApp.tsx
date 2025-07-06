@@ -12,7 +12,7 @@ import { useAuth } from './WalletAuthProvider';
 import { api } from '../convex/_generated/api';
 
 export function AuthenticatedApp() {
-  const { isAuthenticated, isGuest } = useAuth();
+  const { isGuest } = useAuth();
   const initializeDemoData = useMutation(api.demoData.initializeDemoData);
 
   // Initialize demo data when app loads (for guest users)
@@ -22,12 +22,9 @@ export function AuthenticatedApp() {
     }
   }, [isGuest, initializeDemoData]);
 
-  if (!isAuthenticated) {
-    return null;
-  }
-
   return (
     <Routes>
+      {/* Weather Intelligence Platform Routes */}
       <Route path="/" element={<TradingDashboard />} />
       <Route path="/create-agent" element={<CreateAgentPage />} />
       <Route path="/agent/:id" element={<AgentDetailPage />} />
@@ -35,7 +32,7 @@ export function AuthenticatedApp() {
       <Route path="/stations" element={<StationsListPage />} />
       <Route path="/my-stations" element={<MyStationsPage />} />
       <Route path="/station/:stationId" element={<StationDetailPage />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
+      <Route path="*" element={<Navigate to="/weather-intelligence" replace />} />
     </Routes>
   );
 }

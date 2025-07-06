@@ -20,26 +20,31 @@ export function AppNavigation({ user, isGuest, signOut, currentPage = '' }: AppN
     <nav className="nb-panel-white p-4 m-4 mb-6">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-8">
-          <h1 className="text-2xl font-bold">🤖 Kiyan</h1>
+          <div className="flex items-center space-x-4">
+            <h1 className="text-2xl font-bold">🤖 Kiyan</h1>
+            <Link to="/platform-selection" className="nb-button px-3 py-1 text-sm font-bold">
+              ← Platforms
+            </Link>
+          </div>
           <div className="flex space-x-6">
-            <Link to="/" className={getLinkClass('dashboard')}>
+            <Link to="/weather-intelligence" className={getLinkClass('dashboard')}>
               Dashboard
             </Link>
             {!isGuest && (
               <>
-                <Link to="/create-agent" className={getLinkClass('create-agent')}>
+                <Link to="/weather-intelligence/create-agent" className={getLinkClass('create-agent')}>
                   Import Agent
                 </Link>
-                <Link to="/my-agents" className={getLinkClass('my-agents')}>
+                <Link to="/weather-intelligence/my-agents" className={getLinkClass('my-agents')}>
                   My Agents
                 </Link>
               </>
             )}
-            <Link to="/stations" className={getLinkClass('stations')}>
+            <Link to="/weather-intelligence/stations" className={getLinkClass('stations')}>
               Weather Stations
             </Link>
             {!isGuest && (
-              <Link to="/my-stations" className={getLinkClass('my-stations')}>
+              <Link to="/weather-intelligence/my-stations" className={getLinkClass('my-stations')}>
                 My Stations
               </Link>
             )}

@@ -130,6 +130,46 @@ body {
   box-shadow: none;
 }
 
+.nb-button-success {
+  background: var(--nb-success);
+  border: 4px solid var(--nb-border);
+  border-radius: var(--nb-radius);
+  box-shadow: var(--nb-shadow);
+  font-weight: bold;
+  color: var(--nb-text);
+  transition: transform 0.1s ease;
+}
+
+.nb-button-success:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.nb-button-success:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.nb-button-warning {
+  background: var(--nb-warning);
+  border: 4px solid var(--nb-border);
+  border-radius: var(--nb-radius);
+  box-shadow: var(--nb-shadow);
+  font-weight: bold;
+  color: var(--nb-text);
+  transition: transform 0.1s ease;
+}
+
+.nb-button-warning:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.nb-button-warning:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
 .nb-input {
   background: white;
   border: 4px solid var(--nb-border);
@@ -160,6 +200,16 @@ body {
   box-shadow: 2px 2px 0 0 #000;
   margin-right: auto;
   max-width: 70%;
+}
+
+/* Platform Choice Images */
+.platform-choice-image {
+  filter: grayscale(100%);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.platform-choice-image:hover {
+  filter: grayscale(0%);
 }
 
 /* Tomo Modal Overrides for Neobrutalism */
