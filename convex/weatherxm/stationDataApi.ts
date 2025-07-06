@@ -57,6 +57,7 @@ export const fetchAndStoreHistoryData = action({
     try {
       // Validate date format and ensure it's within the last month
       const selectedDate = new Date(args.date);
+      console.log('Selected date for history data:', selectedDate);
       const today = new Date();
       const oneMonthAgo = new Date();
       oneMonthAgo.setMonth(today.getMonth() - 1);

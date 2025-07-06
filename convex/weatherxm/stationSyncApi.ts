@@ -28,7 +28,7 @@ export const syncStationData = action({
 
       // Fetch recent history (last 7 days)
       const historyPromises: Promise<any>[] = [];
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < 3; i++) {
         const date = new Date();
         date.setDate(date.getDate() - i);
         const dateStr = date.toISOString().split('T')[0];

@@ -12,7 +12,7 @@ export const fetchStationDetails = action({
     validateApiKey();
 
     try {
-      const url = `${WEATHERXM_BASE_URL}/stations/${args.stationId}`;
+      const url = `${WEATHERXM_BASE_URL}/stations/${args.stationId}/latest`;
       console.log('Fetching station details from:', url);
 
       const response = await fetch(url, {
@@ -27,6 +27,7 @@ export const fetchStationDetails = action({
       }
 
       const station = await response.json();
+      console.log('Fetched station details:', station);
       
       // Transform the data to match our expected format
       const transformedStation = transformStation(station);

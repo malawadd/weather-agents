@@ -13,7 +13,7 @@ export const fetchStationWeatherData = action({
     validateApiKey();
 
     try {
-      let url = `${WEATHERXM_BASE_URL}/stations/${args.stationId}/data`;
+      let url = `${WEATHERXM_BASE_URL}/stations/${args.stationId}/latest`;
       const params = new URLSearchParams();
       
       if (args.fromDate) params.append('from', args.fromDate);
@@ -29,6 +29,8 @@ export const fetchStationWeatherData = action({
         method: 'GET',
         headers: getApiHeaders(),
       });
+
+      console.log('Weather data response status:', response);
 
       if (!response.ok) {
         const errorText = await response.text();

@@ -30,8 +30,14 @@ export const generateWeatherResponse = action({
       
       // Prepare messages array
       const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
-        { role: "system", content: systemPrompt }
+        { role: "system", content: systemPrompt },
+        { role: "system", content: `STATION_JSON\n${JSON.stringify(args.stationData)}` },
+        { role: "system", content: `WEATHER_JSON\n${JSON.stringify(args.weatherData)}` },
       ];
+
+      console.log("System prompt:", systemPrompt);
+      console.log("stationData:", args.stationData);
+      console.log("weatherData:", args.weatherData);
 
       // Add chat history if provided (last 10 messages to stay within token limits)
       if (args.chatHistory && args.chatHistory.length > 0) {
@@ -79,8 +85,9 @@ export const generateWeatherResponse = action({
 
 function createSystemPrompt(stationData: any, weatherData: any): string {
   const stationName = stationData?.name || stationData?.id || "this weather station";
-  const location = stationData?.location || stationData?.address || "Unknown location";
+  const location = weatherData?.location || weatherData?.address || "Unknown location";
   
+  console.log("stationData:", stationData);
   let weatherInfo = "No current weather data available.";
   
   if (weatherData?.observation) {
@@ -148,6 +155,8 @@ Current Weather Data:
 ${weatherInfo}
 
 ${healthInfo}
+
+${weatherData}
 
 Your role:
 - Provide clear, accurate interpretations of weather data

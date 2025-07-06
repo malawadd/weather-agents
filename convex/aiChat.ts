@@ -1,17 +1,46 @@
 import { action, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
-import { internal } from "./_generated/api";
+import { Id } from "./_generated/dataModel";
+
+interface ChatMessage {
+  userMessage: string;
+  aiResponse: string;
+}
+
+interface WeatherContext {
+  station: {
+    id: string;
+    name: string;
+    [key: string]: unknown;
+  };
+  weatherData: unknown;
+  timestamp: string;
+}
+
+interface Session {
+  userId: string;
+  expiresAt: number;
+}
+
+interface ChatHistoryEntry {
+  userId: string;
+  stationId: string;
+  userMessage: string;
+  aiResponse: string;
+  timestamp: number;
+  weatherData?: WeatherContext;
+}
 
 // Helper query to get session
 export const getSession = query({
   args: { sessionId: v.id("sessions") },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<Session | null> => {
     const session = await ctx.db.get(args.sessionId);
     if (!session || session.expiresAt < Date.now()) {
       return null;
     }
-    return session;
+    return session as Session;
   },
 });
 
@@ -22,7 +51,7 @@ export const chatWithStationAI = action({
     stationId: v.string(),
     userMessage: v.string(),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<string> => {
     // Validate session using a query
     const session = await ctx.runQuery(api.aiChat.getSession, { sessionId: args.sessionId });
     if (!session) {
@@ -31,8 +60,8 @@ export const chatWithStationAI = action({
 
     try {
       // Try to fetch station details and weather data
-      let stationDetails: any = null;
-      let weatherData: any = null;
+      let stationDetails = null;
+      let weatherData = null;
 
       try {
         stationDetails = await ctx.runAction(api.weatherxm.stationDetails.fetchStationDetails, { 
@@ -40,16 +69,15 @@ export const chatWithStationAI = action({
         });
       } catch (error) {
         console.warn('Could not fetch station details:', error);
-        // Continue without station details
       }
 
       try {
-        weatherData = await ctx.runQuery(api.weatherxm.stationDataApi.getLatestData, { 
+        // Using fetchStationWeatherData instead of fetchStationCurrentConditions
+        weatherData = await ctx.runAction(api.weatherxm.weatherDataApi.fetchStationWeatherData, { 
           stationId: args.stationId 
         });
       } catch (error) {
         console.warn('Could not fetch weather data:', error);
-        // Continue without weather data
       }
 
       // Get recent chat history for context
@@ -60,20 +88,20 @@ export const chatWithStationAI = action({
       });
 
       // Convert chat history to OpenAI format
-      const formattedHistory = chatHistory.flatMap(chat => [
+      const formattedHistory = chatHistory.flatMap((chat: ChatMessage) => [
         { role: "user" as const, content: chat.userMessage },
         { role: "assistant" as const, content: chat.aiResponse }
       ]);
 
       // Prepare context for AI
-      const weatherContext = {
+      const weatherContext: WeatherContext = {
         station: stationDetails || { id: args.stationId, name: `Station ${args.stationId}` },
         weatherData: weatherData || null,
         timestamp: new Date().toISOString(),
       };
 
       // Generate AI response using OpenAI
-      const aiResponse = await ctx.runAction(internal.openaiService.generateWeatherResponse, {
+      const aiResponse: string = await ctx.runAction(api.openaiService.generateWeatherResponse, {
         userMessage: args.userMessage,
         stationData: weatherContext.station,
         weatherData: weatherContext.weatherData,
@@ -106,13 +134,13 @@ export const saveChatHistory = mutation({
     aiResponse: v.string(),
     weatherData: v.optional(v.any()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<Id<"weatherChatHistory">> => {
     const session = await ctx.db.get(args.sessionId);
     if (!session || session.expiresAt < Date.now()) {
       throw new Error("Invalid or expired session");
     }
 
-    const chatId = await ctx.db.insert("weatherChatHistory", {
+    return await ctx.db.insert("weatherChatHistory", {
       userId: session.userId,
       stationId: args.stationId,
       userMessage: args.userMessage,
@@ -120,8 +148,6 @@ export const saveChatHistory = mutation({
       timestamp: Date.now(),
       weatherData: args.weatherData,
     });
-
-    return chatId;
   },
 });
 
@@ -132,7 +158,7 @@ export const getChatHistory = query({
     stationId: v.string(),
     limit: v.optional(v.number()),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, args): Promise<ChatHistoryEntry[]> => {
     if (!args.sessionId) return [];
 
     const session = await ctx.db.get(args.sessionId);
