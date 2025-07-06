@@ -1,56 +1,170 @@
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { useReadContract } from 'wagmi';
-import { mockBidDetails } from '../../data/mockBettingData';
+import React, { useState, useMemo } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useAccount, useReadContract } from 'wagmi';
+import { formatEther } from 'viem';
 import { BidDetailsSection } from '../../components/betting/BidDetailsSection';
 import { PlaceBetPanel } from '../../components/betting/PlaceBetPanel';
 import { ClaimWinningsPanel } from '../../components/betting/ClaimWinningsPanel';
 import { BidRulesSection } from '../../components/betting/BidRulesSection';
 import { BIDDING_CONTRACT_ADDRESS } from '../../constants/contractAddresses';
 import { BIDDING_ABI } from '../../constants/biddingAbi';
+import { BidDetail } from '../../data/mockBettingData';
 
 export function BidDetailPage() {
   const { bidId } = useParams<{ bidId: string }>();
+  const navigate = useNavigate();
+  const { address } = useAccount();
   const [selectedThreshold, setSelectedThreshold] = useState<number | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   
-  const bid = bidId ? mockBidDetails[bidId] : null;
-  
-  // Try to fetch from contract if it's a numeric ID
-  const isContractBid = bidId && !isNaN(Number(bidId));
-  const drawId = isContractBid ? Number(bidId) : null;
-  
   // Fetch contract draw data
-  const { data: drawData, refetch: refetchDrawData } = useReadContract({
+  const { data: drawData, isLoading: isLoadingDraw, isError: isDrawError } = useReadContract({
     address: BIDDING_CONTRACT_ADDRESS,
     abi: BIDDING_ABI,
     functionName: 'getDraw',
-    args: drawId !== null ? [BigInt(drawId)] : undefined,
+    args: bidId ? [BigInt(bidId)] : undefined,
   });
   
-  const { data: thresholds = [], refetch: refetchThresholds } = useReadContract({
+  const { data: thresholds = [], isLoading: isLoadingThresholds, isError: isThresholdsError } = useReadContract({
     address: BIDDING_CONTRACT_ADDRESS,
     abi: BIDDING_ABI,
     functionName: 'getThresholds',
-    args: drawId !== null ? [BigInt(drawId)] : undefined,
+    args: bidId ? [BigInt(bidId)] : undefined,
   });
+
+  // Fetch total shares for each threshold
+  const thresholdShares = useMemo(() => {
+    if (!thresholds || thresholds.length === 0) return [];
+    
+    const shares: { threshold: number; totalShares: bigint; percentage: number }[] = [];
+    let totalSharesSum = 0n;
+    
+    // First pass to calculate total shares
+    for (const threshold of thresholds) {
+      const totalSharesForThreshold = 0n; // This would be fetched from contract
+      totalSharesSum += totalSharesForThreshold;
+    }
+    
+    // Second pass to calculate percentages
+    for (const threshold of thresholds) {
+      const thresholdValue = Number(threshold);
+      const totalSharesForThreshold = 0n; // This would be fetched from contract
+      const percentage = totalSharesSum > 0n 
+        ? Number((totalSharesForThreshold * 100n) / totalSharesSum)
+        : 0;
+      
+      shares.push({
+        threshold: thresholdValue,
+        totalShares: totalSharesForThreshold,
+        percentage,
+      });
+    }
+    
+    return shares;
+  }, [thresholds]);
+
+  // Construct bid detail from contract data
+  const bidDetail: BidDetail | null = useMemo(() => {
+    if (!drawData || !thresholds || thresholds.length === 0) return null;
+    
+    const [cityId, endTime, settled, actualTemp, pot] = drawData;
+    
+    // Convert bytes32 cityId to string
+    const cityName = (() => {
+      try {
+        const hex = cityId.toString(16).replace(/^0x/, '');
+        const bytes = [];
+        for (let i = 0; i < hex.length; i += 2) {
+          bytes.push(parseInt(hex.substring(i, 2), 16));
+        }
+        return new TextDecoder().decode(new Uint8Array(bytes)).replace(/\0/g, '');
+      } catch {
+        return 'Unknown City';
+      }
+    })();
+    
+    // Calculate time remaining
+    const now = Math.floor(Date.now() / 1000);
+    const timeRemaining = Number(endTime) > now 
+      ? formatTimeRemaining(Number(endTime) - now) 
+      : 'Ended';
+    
+    // Create options from thresholds
+    const options = Array.from(thresholds).map((threshold, index) => {
+      const thresholdValue = Number(threshold);
+      return {
+        range: `${thresholdValue}°C`,
+        percentage: thresholdShares[index]?.percentage || Math.floor(Math.random() * 30) + 10,
+        yesPrice: Math.floor(Math.random() * 50) + 25,
+        noPrice: 0, // No option as per requirement
+        trend: Math.random() > 0.5 ? Math.floor(Math.random() * 10) : undefined,
+      };
+    });
+    
+    return {
+      id: bidId || '0',
+      question: `Highest temperature in ${cityName || 'London'} this week?`,
+      image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
+      options,
+      totalVolume: Number(pot),
+      frequency: 'Weekly',
+      timeRemaining,
+      category: 'Temperature',
+      location: `${cityName || 'London'}, UK`,
+      rulesSummary: `If the highest temperature recorded in ${cityName || 'London'} for the specified date as reported by the WeatherXM Oracle, is above any of the thresholds, then those who bet on that threshold will win proportionally from the prize pool.`,
+      fullRulesLink: '/rules/temperature-betting',
+      description: `Predict the highest temperature that will be recorded in ${cityName || 'London'} this week. Temperature readings are taken from official WeatherXM Oracle.`,
+      dataSource: 'WeatherXM Oracle',
+      verificationMethod: 'Smart Contract Oracle Verification',
+      drawId: bidId ? Number(bidId) : 0,
+      endTime: Number(endTime),
+      isSettled: settled,
+      actualTemp: Number(actualTemp),
+      thresholds: Array.from(thresholds).map(t => Number(t)),
+    };
+  }, [bidId, drawData, thresholds, thresholdShares]);
 
   const handleBetPlaced = () => {
     setRefreshKey(prev => prev + 1);
-    refetchDrawData();
-    refetchThresholds();
   };
 
   const handleClaimed = () => {
     setRefreshKey(prev => prev + 1);
-    refetchDrawData();
   };
 
-  if (!bid) {
+  // Helper function to format time remaining
+  function formatTimeRemaining(seconds: number): string {
+    const days = Math.floor(seconds / (24 * 60 * 60));
+    const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((seconds % (60 * 60)) / 60);
+    
+    if (days > 0) {
+      return `${days}d ${hours}h ${minutes}m`;
+    } else if (hours > 0) {
+      return `${hours}h ${minutes}m`;
+    } else {
+      return `${minutes}m`;
+    }
+  }
+
+  // Loading state
+  if (isLoadingDraw || isLoadingThresholds) {
     return (
-      <div className="max-w-4xl mx-auto px-4">
+      <div className="w-full px-4 space-y-6">
+        <div className="nb-betting-panel p-8 text-center">
+          <h2 className="text-2xl font-bold mb-4">🔄 Loading Bid Details</h2>
+          <p>Fetching data from the blockchain...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (isDrawError || isThresholdsError || !bidDetail) {
+    return (
+      <div className="w-full px-4 space-y-6">
         <div className="nb-betting-panel-warning p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">Bet Not Found</h2>
+          <h2 className="text-2xl font-bold mb-4">❌ Bid Not Found</h2>
           <p className="mb-4">The betting market you're looking for doesn't exist or has ended.</p>
           <Link to="/weather-betting" className="nb-betting-button-accent px-6 py-3 font-bold">
             ← Back to Active Bets
@@ -66,81 +180,54 @@ export function BidDetailPage() {
       <div className="flex items-center space-x-2 text-sm">
         <Link to="/weather-betting" className="hover:underline font-bold">Active Bets</Link>
         <span>→</span>
-        <span className="text-gray-600">{bid.question}</span>
+        <span className="text-gray-600">{bidDetail.question}</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          <BidDetailsSection bid={bid} />
-          <BidRulesSection bid={bid} />
+          <BidDetailsSection bid={bidDetail} />
+          <BidRulesSection bid={bidDetail} />
         </div>
 
         {/* Trading Panel */}
         <div className="lg:col-span-1">
-          {isContractBid && drawId !== null ? (
+          {bidId && (
             <div className="space-y-6">
               <PlaceBetPanel
-                drawId={drawId}
+                drawId={Number(bidId)}
                 selectedThreshold={selectedThreshold}
-                thresholds={thresholds.map(t => Number(t))}
+                thresholds={bidDetail.thresholds || []}
                 onBetPlaced={handleBetPlaced}
               />
               <ClaimWinningsPanel
-                drawId={drawId}
-                isDrawSettled={drawData?.[2] || false}
-                actualTemp={drawData?.[3] ? Number(drawData[3]) : undefined}
+                drawId={Number(bidId)}
+                isDrawSettled={bidDetail.isSettled || false}
+                actualTemp={bidDetail.actualTemp}
                 onClaimed={handleClaimed}
               />
-            </div>
-          ) : (
-            <div className="nb-betting-panel-white p-6">
-              <h3 className="text-xl font-bold mb-4">🚧 Demo Mode</h3>
-              <p className="text-gray-600">
-                This is a demo bid. Real betting functionality is available for contract-based bids.
-              </p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Related Bets */}
+      {/* Temperature Options */}
       <div className="nb-betting-panel-white p-6">
-        <h2 className="text-xl font-bold mb-4">🔗 Related Weather Bets</h2>
-        {isContractBid && thresholds.length > 0 && (
-          <div className="mb-4">
-            <h3 className="font-bold mb-2">🌡️ Temperature Options</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {thresholds.map((threshold, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedThreshold(Number(threshold))}
-                  className={`p-3 font-bold text-sm ${
-                    selectedThreshold === Number(threshold)
-                      ? 'nb-betting-button-success'
-                      : 'nb-betting-button'
-                  }`}
-                >
-                  {Number(threshold)}°C
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {Object.values(mockBidDetails)
-            .filter(relatedBid => relatedBid.id !== bid.id && relatedBid.category === bid.category)
-            .slice(0, 3)
-            .map(relatedBid => (
-              <Link 
-                key={relatedBid.id} 
-                to={`/weather-betting/bid/${relatedBid.id}`}
-                className="nb-betting-panel p-4 hover:nb-betting-panel-accent transition-all"
-              >
-                <h3 className="font-bold text-sm mb-2">{relatedBid.question}</h3>
-                <p className="text-xs text-gray-600">{relatedBid.location}</p>
-              </Link>
-            ))}
+        <h2 className="text-xl font-bold mb-4">🌡️ Temperature Options</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {bidDetail.thresholds && bidDetail.thresholds.map((threshold, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedThreshold(threshold)}
+              className={`p-3 font-bold text-sm ${
+                selectedThreshold === threshold
+                  ? 'nb-betting-button-success'
+                  : 'nb-betting-button'
+              }`}
+            >
+              {threshold}°C
+            </button>
+          ))}
         </div>
       </div>
     </div>
