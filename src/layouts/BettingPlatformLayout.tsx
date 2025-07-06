@@ -4,6 +4,7 @@ import { BettingHeader } from '../components/betting/BettingHeader';
 import { BettingFooter } from '../components/betting/BettingFooter';
 import { ActiveBidsPage } from '../pages/betting/ActiveBidsPage';
 import { BidDetailPage } from '../pages/betting/BidDetailPage';
+import { VaultPage } from '../pages/betting/VaultPage';
 
 export function BettingPlatformLayout() {
   return (
@@ -14,6 +15,7 @@ export function BettingPlatformLayout() {
         <Routes>
           <Route path="/" element={<ActiveBidsPage />} />
           <Route path="/bid/:bidId" element={<BidDetailPage />} />
+          <Route path="/vault" element={<VaultPage />} />
           <Route path="*" element={<Navigate to="/weather-betting" replace />} />
         </Routes>
       </main>

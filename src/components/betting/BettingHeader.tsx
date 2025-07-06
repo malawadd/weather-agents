@@ -20,6 +20,9 @@ export function BettingHeader() {
             <Link to="/weather-betting" className="font-bold text-black hover:underline">
               Active Bids
             </Link>
+            <Link to="/weather-betting/vault" className="font-bold text-gray-600 hover:text-black hover:underline">
+              Vault
+            </Link>
             <Link to="/weather-betting/my-bets" className="font-bold text-gray-600 hover:text-black hover:underline">
               My Bets
             </Link>
