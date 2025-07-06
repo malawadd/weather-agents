@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useReadContract, useReadContracts } from 'wagmi';
 import { BidCard } from '../../components/betting/BidCard';
-import { mockActiveBids, Bid } from '../../data/mockBettingData';
+import {  Bid } from '../../data/mockBettingData';
 import { BIDDING_CONTRACT_ADDRESS } from '../../constants/contractAddresses';
 import { BIDDING_ABI } from '../../constants/biddingAbi';
 
@@ -84,7 +84,7 @@ export function ActiveBidsPage() {
   }).filter(Boolean) as Bid[];
   
   // Combine mock and contract bids
-  const allBids = [...mockActiveBids, ...contractBids];
+  const allBids = [ ...contractBids];
   
   const filteredBids = allBids.filter(bid => 
     selectedCategory === 'All' || bid.category === selectedCategory
