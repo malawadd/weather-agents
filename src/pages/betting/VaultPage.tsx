@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import React from 'react';
 import { useAccount, useReadContract } from 'wagmi';
 import { VAULT_CONTRACT_ADDRESS, MTOKEN_CONTRACT_ADDRESS } from '../../constants/contractAddresses';
@@ -106,17 +107,9 @@ export function VaultPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Vault Overview */}
-        <div className="lg:col-span-1">
-          <VaultOverview
-            totalAssets={totalAssets}
-            vaultSymbol={vaultSymbol}
-            vaultName={vaultName}
-            vaultDecimals={vaultDecimals}
-            isLoading={isLoading}
-          />
-        </div>
+        
 
         {/* Second Column - User Balances */}
         <div className="lg:col-span-1">
@@ -131,17 +124,19 @@ export function VaultPage() {
           />
         </div>
 
-        {/* Third Column - Mint Tokens */}
         <div className="lg:col-span-1">
-          <MintTokenPanel
-            mtokenAddress={MTOKEN_CONTRACT_ADDRESS}
-            mtokenSymbol={mtokenSymbol}
-            mtokenDecimals={mtokenDecimals}
-            onTransactionSuccess={handleTransactionSuccess}
+          <VaultOverview
+            totalAssets={totalAssets}
+            vaultSymbol={vaultSymbol}
+            vaultName={vaultName}
+            vaultDecimals={vaultDecimals}
+            isLoading={isLoading}
           />
         </div>
 
-        {/* Fourth Column - Deposit/Donate */}
+        {/* Third Column - Mint Tokens */}
+        
+
         <div className="lg:col-span-1 space-y-6">
           <DepositDonatePanel
             vaultAddress={VAULT_CONTRACT_ADDRESS}
@@ -152,10 +147,18 @@ export function VaultPage() {
             onTransactionSuccess={handleTransactionSuccess}
           />
         </div>
-      </div>
 
-      {/* Bottom Section - Mint/Redeem Tickets */}
-      <div className="max-w-2xl mx-auto">
+        {/* Fourth Column - Deposit/Donate */}
+        <div className="lg:col-span-1">
+          <MintTokenPanel
+            mtokenAddress={MTOKEN_CONTRACT_ADDRESS}
+            mtokenSymbol={mtokenSymbol}
+            mtokenDecimals={mtokenDecimals}
+            onTransactionSuccess={handleTransactionSuccess}
+          />
+        </div>
+
+        <div className="lg:col-span-1 space-y-6">
         <RedeemMintPanel
           vaultAddress={VAULT_CONTRACT_ADDRESS}
           mtokenAddress={MTOKEN_CONTRACT_ADDRESS}
@@ -167,6 +170,10 @@ export function VaultPage() {
           onTransactionSuccess={handleTransactionSuccess}
         />
       </div>
+      </div>
+
+      {/* Bottom Section - Mint/Redeem Tickets */}
+     
 
       {/* Information Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
