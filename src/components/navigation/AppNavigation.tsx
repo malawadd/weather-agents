@@ -48,6 +48,9 @@ export function AppNavigation({ user, isGuest, signOut, currentPage = '' }: AppN
                 My Stations
               </Link>
             )}
+            <Link to="/active-bids" className={getLinkClass('active-bids')}>
+              Temperature Bets
+            </Link>
           </div>
         </div>
         <div className="flex items-center space-x-4">

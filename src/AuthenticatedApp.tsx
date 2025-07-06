@@ -9,6 +9,9 @@ import { StationsListPage } from './pages/StationsListPage';
 import { MyStationsPage } from './pages/MyStationsPage';
 import { StationDetailPage } from './pages/StationDetailPage';
 import { useAuth } from './WalletAuthProvider';
+import { ActiveBidsPage } from './pages/ActiveBidsPage';
+import { BidPage } from './pages/BidPage';
+import { CreateBidPage } from './pages/CreateBidPage';
 import { api } from '../convex/_generated/api';
 
 export function AuthenticatedApp() {
@@ -32,6 +35,9 @@ export function AuthenticatedApp() {
       <Route path="/stations" element={<StationsListPage />} />
       <Route path="/my-stations" element={<MyStationsPage />} />
       <Route path="/station/:stationId" element={<StationDetailPage />} />
+      <Route path="/active-bids" element={<ActiveBidsPage />} />
+      <Route path="/bid/:drawId" element={<BidPage />} />
+      <Route path="/create-bid" element={<CreateBidPage />} />
       <Route path="*" element={<Navigate to="/weather-intelligence" replace />} />
     </Routes>
   );

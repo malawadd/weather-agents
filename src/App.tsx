@@ -8,6 +8,9 @@ import { PlaceholderPlatformPage } from "./pages/PlaceholderPlatformPage";
 import { BettingPlatformLayout } from "./layouts/BettingPlatformLayout";
 import { AuthenticatedApp } from "./AuthenticatedApp";
 
+import { ActiveBidsPage } from "./pages/ActiveBidsPage";
+import { BidPage } from "./pages/BidPage";
+import { CreateBidPage } from "./pages/CreateBidPage";
 function AppRouterContent() {
   const { isAuthenticated } = useAuth();
 
