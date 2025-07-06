@@ -302,127 +302,6 @@ body {
   background-size: var(--nb-grid-size) var(--nb-grid-size);
 }
 
-/* Animated Platform Backgrounds */
-.nb-weather-intelligence-bg-animated {
-  background: linear-gradient(
-    135deg,
-    #a589e8 0%,
-    #7c5bd2 25%,
-    #a589e8 50%,
-    #7c5bd2 75%,
-    #a589e8 100%
-  );
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-  position: relative;
-  overflow: hidden;
-}
-
-.nb-weather-intelligence-bg-animated::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  right: -50%;
-  bottom: -50%;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  animation: cloudMove 60s linear infinite;
-  opacity: 0.3;
-}
-
-.nb-weather-betting-bg-animated {
-  background: linear-gradient(
-    135deg,
-    #ff9999 0%,
-    #ff6666 25%,
-    #ff9999 50%,
-    #ff6666 75%,
-    #ff9999 100%
-  );
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-  position: relative;
-  overflow: hidden;
-}
-
-.nb-weather-betting-bg-animated::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  right: -50%;
-  bottom: -50%;
-  background: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  animation: diceMove 40s linear infinite;
-  opacity: 0.3;
-}
-
-.nb-future-innovations-bg-animated {
-  background: linear-gradient(
-    135deg,
-    #ffffb3 0%,
-    #ffff66 25%,
-    #ffffb3 50%,
-    #ffff66 75%,
-    #ffffb3 100%
-  );
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-  position: relative;
-  overflow: hidden;
-}
-
-.nb-future-innovations-bg-animated::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  right: -50%;
-  bottom: -50%;
-  background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M0 0h20L0 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  animation: futurismMove 50s linear infinite;
-  opacity: 0.3;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-@keyframes cloudMove {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  100% {
-    transform: translate(20%, 20%) rotate(10deg);
-  }
-}
-
-@keyframes diceMove {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  100% {
-    transform: translate(-20%, -20%) rotate(-10deg);
-  }
-}
-
-@keyframes futurismMove {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-  }
-  100% {
-    transform: translate(10%, -10%) rotate(5deg);
-  }
-}
-
 .nb-input {
   background: white;
   border: 4px solid var(--nb-border);
@@ -456,9 +335,18 @@ body {
 }
 
 /* Platform Choice Images */
-.platform-choice {
-  transition: transform 0.3s ease;
-  overflow: hidden;
+.platform-choice-image {
+  filter: grayscale(100%);
+  transition: filter 0.5s ease, transform 0.5s ease;
+}
+
+.platform-choice-image:hover {
+  filter: grayscale(0%);
+}
+
+/* Platform choice hover effects */
+.platform-choice:hover .platform-choice-image {
+  filter: grayscale(0%) brightness(1.1);
 }
 
 /* Text shadow utilities */

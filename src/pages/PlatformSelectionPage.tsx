@@ -10,31 +10,31 @@ export function PlatformSelectionPage() {
       id: 'weather-intelligence',
       title: 'Weather Intelligence Platform',
       description: 'Explore global weather stations and get AI-powered insights about weather patterns and conditions.',
+      image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/weather-intelligence',
       available: true,
       hoverColor: '#a589e8',
       buttonClass: 'nb-button-accent',
-      backgroundClass: 'nb-weather-intelligence-bg-animated',
     },
     {
       id: 'weather-betting',
       title: 'Weather Betting Platform',
       description: 'Place bets on weather predictions and compete with other weather enthusiasts.',
+      image: 'https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/weather-betting',
       available: true,
       hoverColor: '#66ccff',
       buttonClass: 'nb-betting-button-accent',
-      backgroundClass: 'nb-weather-betting-bg-animated',
     },
     {
       id: 'future-innovations',
       title: 'Future Innovations',
       description: 'Discover what\'s coming next in the world of weather technology and AI.',
+      image: 'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/future-platform',
       available: false,
       hoverColor: 'var(--nb-warning)',
       buttonClass: 'nb-button',
-      backgroundClass: 'nb-future-innovations-bg-animated',
     },
   ];
 
@@ -55,20 +55,30 @@ export function PlatformSelectionPage() {
 </div>
         
         {/* User info in top right */}
-        <div className="absolute top-8 right-8 pointer-events-auto">
-          <div className="flex items-center space-x-4 bg-black/50 backdrop-blur-sm rounded-lg px-4 py-2">
-            <span className="text-white font-bold text-sm">
-              Welcome, {user?.name || 'Explorer'}!
-              {isGuest && <span className="text-gray-300"> (Guest)</span>}
-            </span>
-            <button 
-              onClick={signOut}
-              className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded font-bold text-sm transition-colors"
-            >
-              Sign Out
-            </button>
-          </div>
-        </div>
+        <div className="absolute top-8 right-8 pointer-events-auto z-40">
+  <div
+    className="flex items-center space-x-4
+               bg-white
+               border-4 border-black
+               
+               px-5 py-3
+               shadow-[4px_4px_0_#111]
+               font-bold"
+    style={{ fontFamily: "Montserrat, Arial Black, sans-serif" }}
+  >
+    <span className="text-black text-sm font-extrabold">
+      Welcome, {user?.name || 'Explorer'}!
+      {isGuest && <span className="text-gray-500 font-normal"> (Guest)</span>}
+    </span>
+    <button
+      onClick={signOut}
+      className="bg-[#ffe066] border-2 border-black text-black px-4 py-1.5 rounded-xl font-bold text-sm shadow-[2px_2px_0_#111] hover:bg-[#ffd23f] active:translate-y-1 active:shadow-none transition-all"
+      style={{ fontFamily: "Montserrat, Arial Black, sans-serif" }}
+    >
+      Sign Out
+    </button>
+  </div>
+</div>
       </div>
 
       {/* Platform Selection Grid - Full Screen */}
@@ -81,8 +91,10 @@ export function PlatformSelectionPage() {
                 to={platform.path}
                 className="block w-full h-full relative overflow-hidden"
               >
-                <div 
-                  className={`absolute inset-0 w-full h-full ${platform.backgroundClass}`}
+                <img
+                  src={platform.image}
+                  alt={platform.title}
+                  className="absolute inset-0 w-full h-full object-cover platform-choice-image transition-all duration-500 group-hover:scale-110"
                 />
                 
                 {/* Neobrutalism hover overlay with color */}
@@ -108,8 +120,10 @@ export function PlatformSelectionPage() {
               </Link>
             ) : (
               <div className="w-full h-full relative overflow-hidden">
-                <div 
-                  className={`absolute inset-0 w-full h-full ${platform.backgroundClass} grayscale`}
+                <img
+                  src={platform.image}
+                  alt={platform.title}
+                  className="absolute inset-0 w-full h-full object-cover grayscale"
                 />
                 
                 {/* Coming soon overlay */}
