@@ -52,7 +52,7 @@ export function BidDetailsSection({ bid }: BidDetailsSectionProps) {
         </div>
         <div className="nb-betting-panel-warning p-4 text-center">
           <p className="font-bold text-sm">DATA SOURCE</p>
-          <p className="text-sm font-bold">{bid.dataSource}</p>
+          <p className="text-sm font-bold">WeatherXM</p>
         </div>
       </div>
 

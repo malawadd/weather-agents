@@ -19,7 +19,7 @@ export function BidRulesSection({ bid }: BidRulesSectionProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="nb-betting-panel p-3">
             <h4 className="font-bold text-sm mb-1">Data Source</h4>
-            <p className="text-sm">{bid.dataSource}</p>
+            <p className="text-sm">WeatherXM</p>
           </div>
           <div className="nb-betting-panel p-3">
             <h4 className="font-bold text-sm mb-1">Verification</h4>

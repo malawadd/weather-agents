@@ -13,7 +13,7 @@ export function PlatformSelectionPage() {
       image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/weather-intelligence',
       available: true,
-      hoverColor: 'var(--nb-surface)',
+      hoverColor: '#a589e8',
       buttonClass: 'nb-button-accent',
     },
     {
@@ -23,7 +23,7 @@ export function PlatformSelectionPage() {
       image: 'https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
       path: '/weather-betting',
       available: true,
-      hoverColor: 'var(--nb-betting-surface)',
+      hoverColor: '#66ccff',
       buttonClass: 'nb-betting-button-accent',
     },
     {
