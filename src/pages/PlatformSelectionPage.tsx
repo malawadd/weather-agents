@@ -33,116 +33,80 @@ export function PlatformSelectionPage() {
   ];
 
   return (
-    <div className="min-h-screen nb-grid-bg">
-      {/* Header */}
-      <nav className="nb-panel-white p-4 m-4 mb-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">🤖 Kiyan</h1>
-          <div className="flex items-center space-x-4">
-            <span className="font-bold">
+    <div className="min-h-screen flex flex-col relative">
+      {/* Overlay Title */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
+        <h1 className="text-6xl md:text-8xl font-bold text-white text-shadow-lg mb-4">
+          Choose Your Kiyan
+        </h1>
+        <p className="text-xl md:text-2xl text-white text-shadow-md font-medium">
+          Select the platform that matches your interests
+        </p>
+        
+        {/* User info in top right */}
+        <div className="absolute top-8 right-8 pointer-events-auto">
+          <div className="flex items-center space-x-4 bg-black/50 backdrop-blur-sm rounded-lg px-4 py-2">
+            <span className="text-white font-bold text-sm">
               Welcome, {user?.name || 'Explorer'}!
-              {isGuest && <span className="text-sm text-gray-600"> (Guest)</span>}
+              {isGuest && <span className="text-gray-300"> (Guest)</span>}
             </span>
             <button 
               onClick={signOut}
-              className="nb-button px-4 py-2 text-sm font-bold"
+              className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded font-bold text-sm transition-colors"
             >
               Sign Out
             </button>
           </div>
         </div>
-      </nav>
+      </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 space-y-8">
-        {/* Welcome Section */}
-        <div className="nb-panel-white p-8 text-center">
-          <h1 className="text-4xl font-bold mb-4">Choose Your Kiyan</h1>
-          <p className="text-xl text-gray-600 mb-2">
-            Select the platform that matches your interests
-          </p>
-          <p className="text-sm text-gray-500">
-            Each platform offers unique features and experiences powered by AI and weather data
-          </p>
-        </div>
-
-        {/* Platform Selection Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {platforms.map((platform) => (
-            <div key={platform.id} className="relative">
-              {platform.available ? (
-                <Link
-                  to={platform.path}
-                  className="block nb-panel-white p-0 overflow-hidden group hover:scale-105 transition-all duration-300"
-                >
-                  <div className="relative">
-                    <img
-                      src={platform.image}
-                      alt={platform.title}
-                      className="w-full h-64 object-cover platform-choice-image"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute bottom-4 left-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <h3 className="text-lg font-bold mb-1">{platform.title}</h3>
-                      <p className="text-sm">{platform.description}</p>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2">{platform.title}</h3>
-                    <p className="text-gray-600 mb-4">{platform.description}</p>
-                    <div className="nb-button-accent px-4 py-2 text-center font-bold">
-                      Enter Platform →
-                    </div>
-                  </div>
-                </Link>
-              ) : (
-                <div className="nb-panel p-0 overflow-hidden opacity-75">
-                  <div className="relative">
-                    <img
-                      src={platform.image}
-                      alt={platform.title}
-                      className="w-full h-64 object-cover platform-choice-image grayscale"
-                    />
-                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                      <div className="nb-panel-warning px-4 py-2">
-                        <span className="font-bold text-sm">🚧 Coming Soon</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-gray-500">{platform.title}</h3>
-                    <p className="text-gray-400 mb-4">{platform.description}</p>
-                    <div className="nb-panel px-4 py-2 text-center font-bold text-gray-500">
-                      Under Development
-                    </div>
+      {/* Platform Selection Grid - Full Screen */}
+      <div className="flex-1 flex">
+        {platforms.map((platform) => (
+          <div key={platform.id} className="flex-1 h-screen relative group">
+            {platform.available ? (
+              <Link
+                to={platform.path}
+                className="block w-full h-full relative overflow-hidden"
+              >
+                <img
+                  src={platform.image}
+                  alt={platform.title}
+                  className="absolute inset-0 w-full h-full object-cover platform-choice-image transition-all duration-500 group-hover:scale-110"
+                />
+                
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                
+                {/* Platform info - appears on hover */}
+                <div className="absolute bottom-8 left-8 right-8 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
+                  <h3 className="text-3xl font-bold mb-4 text-shadow-lg">{platform.title}</h3>
+                  <p className="text-lg mb-6 text-shadow-md">{platform.description}</p>
+                  <div className="bg-white/20 backdrop-blur-sm border-2 border-white/50 px-6 py-3 rounded-lg font-bold text-lg hover:bg-white/30 transition-colors inline-block">
+                    Enter Platform →
                   </div>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-
-        {/* Info Section */}
-        <div className="nb-panel-accent p-6">
-          <h3 className="text-xl font-bold mb-4 text-center">🌟 What Makes Kiyan Special</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="text-3xl mb-2">🤖</div>
-              <h4 className="font-bold mb-2">AI-Powered</h4>
-              <p className="text-sm">Advanced artificial intelligence analyzes weather patterns and provides intelligent insights.</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl mb-2">🌍</div>
-              <h4 className="font-bold mb-2">Global Network</h4>
-              <p className="text-sm">Access data from weather stations worldwide through the decentralized WeatherXM network.</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl mb-2">🔮</div>
-              <h4 className="font-bold mb-2">Future Ready</h4>
-              <p className="text-sm">Built for the future with blockchain integration and innovative weather applications.</p>
-            </div>
+              </Link>
+            ) : (
+              <div className="w-full h-full relative overflow-hidden">
+                <img
+                  src={platform.image}
+                  alt={platform.title}
+                  className="absolute inset-0 w-full h-full object-cover grayscale"
+                />
+                
+                {/* Coming soon overlay */}
+                <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center">
+                  <div className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-bold text-xl mb-6 border-4 border-black shadow-lg">
+                    🚧 Coming Soon
+                  </div>
+                  <h3 className="text-3xl font-bold mb-4 text-white text-shadow-lg text-center">{platform.title}</h3>
+                  <p className="text-lg text-gray-300 text-shadow-md text-center max-w-md px-4">{platform.description}</p>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
