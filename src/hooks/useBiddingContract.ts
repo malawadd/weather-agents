@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useReadContract, useWriteContract, useAccount } from 'wagmi';
 import { parseEther, formatEther } from 'viem';
 
-const TEMP_BID_MODULE_ADDRESS = '0x1234567890123456789012345678901234567890'; // Replace with actual address
+const TEMP_BID_MODULE_ADDRESS = '0x45347D26863DB2bd23E821f0ed12C321509C1DCD'; // Replace with actual address
 const TEMP_BID_MODULE_ABI = [
   {
     "inputs": [

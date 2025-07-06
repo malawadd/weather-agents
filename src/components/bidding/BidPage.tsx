@@ -178,7 +178,7 @@ export function BidPage() {
                   <div className="flex justify-between items-center">
                     <div>
                       <h4 className="text-lg font-bold">
-                        Temperature > {formatTemperature(threshold.threshold)}
+                        Temperature &gt; {formatTemperature(threshold.threshold)}
                       </h4>
                       <p className="text-sm text-gray-600">
                         Bet that the temperature will be above this threshold
@@ -217,7 +217,7 @@ export function BidPage() {
               <div className="space-y-4">
                 <div className="nb-panel-accent p-4">
                   <p className="font-bold">
-                    Selected: Temperature > {formatTemperature(selectedThreshold)}
+                    Selected: Temperature &gt; {formatTemperature(selectedThreshold)}
                   </p>
                 </div>
 

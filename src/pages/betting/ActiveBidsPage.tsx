@@ -17,6 +17,7 @@ export function ActiveBidsPage() {
     abi: BIDDING_ABI,
     functionName: 'getAllDrawIds',
   });
+  console.log('All Draw IDs:', allDrawIds);
 
   // Fetch draw details for each draw ID
   const drawContracts = allDrawIds.map((drawId: bigint) => ({
