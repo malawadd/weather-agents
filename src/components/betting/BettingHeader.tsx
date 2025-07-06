@@ -41,7 +41,7 @@ export function BettingHeader() {
             <Link to="/weather-betting/vault" className="font-bold text-gray-600 hover:text-black hover:underline">
               Vault
             </Link>
-            <Link to="/weather-betting/my-bets" className="font-bold text-gray-600 hover:text-black hover:underline">
+            {/* <Link to="/weather-betting/my-bets" className="font-bold text-gray-600 hover:text-black hover:underline">
               My Bets
             </Link>
             <Link to="/weather-betting/leaderboard" className="font-bold text-gray-600 hover:text-black hover:underline">
@@ -49,7 +49,7 @@ export function BettingHeader() {
             </Link>
             <Link to="/weather-betting/rules" className="font-bold text-gray-600 hover:text-black hover:underline">
               Rules
-            </Link>
+            </Link> */}
           </div>
         </div>
         <div className="flex items-center space-x-4">

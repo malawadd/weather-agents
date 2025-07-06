@@ -17,6 +17,7 @@ export function BidPage() {
   const [error, setError] = useState<string | null>(null);
 
   const draw = drawId ? getDrawById(parseInt(drawId)) : null;
+  console.log('Draw Data:', draw);
 
   useEffect(() => {
     if (draw) {
@@ -26,7 +27,7 @@ export function BidPage() {
 
   const loadThresholdData = async () => {
     if (!draw) return;
-    
+    console.log('Draw Data:', draw);
     setLoading(true);
     try {
       const data = await getThresholdData(draw.id);

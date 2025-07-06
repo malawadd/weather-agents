@@ -187,6 +187,24 @@ export function BidDetailPage() {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           <BidDetailsSection bid={bidDetail} />
+          <div className="nb-betting-panel-white p-6">
+        <h2 className="text-xl font-bold mb-4">🌡️ Temperature Options</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {bidDetail.thresholds && bidDetail.thresholds.map((threshold, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedThreshold(threshold)}
+              className={`p-3 font-bold text-sm ${
+                selectedThreshold === threshold
+                  ? 'nb-betting-button-success'
+                  : 'nb-betting-button'
+              }`}
+            >
+              {threshold}°C
+            </button>
+          ))}
+        </div>
+      </div>
           <BidRulesSection bid={bidDetail} />
         </div>
 
@@ -212,7 +230,7 @@ export function BidDetailPage() {
       </div>
 
       {/* Temperature Options */}
-      <div className="nb-betting-panel-white p-6">
+      {/* <div className="nb-betting-panel-white p-6">
         <h2 className="text-xl font-bold mb-4">🌡️ Temperature Options</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {bidDetail.thresholds && bidDetail.thresholds.map((threshold, index) => (
@@ -229,7 +247,7 @@ export function BidDetailPage() {
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

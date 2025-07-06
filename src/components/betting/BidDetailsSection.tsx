@@ -14,6 +14,7 @@ export function BidDetailsSection({ bid }: BidDetailsSectionProps) {
     return `$${volume.toLocaleString()}`;
   };
 
+  console.log('Bid Details:', bid);
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -57,14 +58,14 @@ export function BidDetailsSection({ bid }: BidDetailsSectionProps) {
       </div>
 
       {/* Betting Options */}
-      <div className="nb-betting-panel-white p-6">
+      {/* <div className="nb-betting-panel-white p-6">
         <h2 className="text-xl font-bold mb-4">Betting Options</h2>
         <div className="space-y-3">
           {bid.options.map((option, index) => (
             <BidOption key={index} option={option} />
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
