@@ -5,6 +5,7 @@ import { WalletSignInForm } from "./WalletSignInForm";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { PlatformSelectionPage } from "./pages/PlatformSelectionPage";
 import { PlaceholderPlatformPage } from "./pages/PlaceholderPlatformPage";
+import { BettingPlatformLayout } from "./layouts/BettingPlatformLayout";
 import { AuthenticatedApp } from "./AuthenticatedApp";
 
 function AppRouterContent() {
@@ -26,7 +27,7 @@ function AppRouterContent() {
       <Route path="/weather-intelligence/*" element={<AuthenticatedApp />} />
       
       {/* Weather Betting Platform (placeholder) */}
-      <Route path="/weather-betting/*" element={<PlaceholderPlatformPage />} />
+      <Route path="/weather-betting/*" element={<BettingPlatformLayout />} />
       
       {/* Future Platform (placeholder) */}
       <Route path="/future-platform/*" element={<PlaceholderPlatformPage />} />

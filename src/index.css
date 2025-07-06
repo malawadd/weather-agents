@@ -21,6 +21,19 @@
   --nb-grid-size: 60px;
 }
 
+/* Betting Platform Color Scheme */
+:root {
+  --nb-betting-bg: #FFE5E5;
+  --nb-betting-surface: #FF9999;
+  --nb-betting-accent: #66CCFF;
+  --nb-betting-success: #99FF99;
+  --nb-betting-warning: #FFFF99;
+  --nb-betting-text: #000;
+  --nb-betting-border: #000;
+  --nb-betting-radius: 5px;
+  --nb-betting-shadow: 4px 4px 0 0 #000;
+}
+
 .accent-text {
   @apply text-slate-600;
 }
@@ -168,6 +181,125 @@ body {
 .nb-button-warning:active {
   transform: translate(4px, 4px);
   box-shadow: none;
+}
+
+/* Betting Platform Components */
+.nb-betting-panel {
+  background: var(--nb-betting-surface);
+  border: 4px solid var(--nb-betting-border);
+  border-radius: var(--nb-betting-radius);
+  box-shadow: var(--nb-betting-shadow);
+}
+
+.nb-betting-panel-white {
+  background: white;
+  border: 4px solid var(--nb-betting-border);
+  border-radius: var(--nb-betting-radius);
+  box-shadow: var(--nb-betting-shadow);
+}
+
+.nb-betting-panel-accent {
+  background: var(--nb-betting-accent);
+  border: 4px solid var(--nb-betting-border);
+  border-radius: var(--nb-betting-radius);
+  box-shadow: var(--nb-betting-shadow);
+}
+
+.nb-betting-panel-success {
+  background: var(--nb-betting-success);
+  border: 4px solid var(--nb-betting-border);
+  border-radius: var(--nb-betting-radius);
+  box-shadow: var(--nb-betting-shadow);
+}
+
+.nb-betting-panel-warning {
+  background: var(--nb-betting-warning);
+  border: 4px solid var(--nb-betting-border);
+  border-radius: var(--nb-betting-radius);
+  box-shadow: var(--nb-betting-shadow);
+}
+
+.nb-betting-button {
+  background: var(--nb-betting-surface);
+  border: 4px solid var(--nb-betting-border);
+  border-radius: var(--nb-betting-radius);
+  box-shadow: var(--nb-betting-shadow);
+  font-weight: bold;
+  color: var(--nb-betting-text);
+  transition: transform 0.1s ease;
+}
+
+.nb-betting-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.nb-betting-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.nb-betting-button-accent {
+  background: var(--nb-betting-accent);
+  border: 4px solid var(--nb-betting-border);
+  border-radius: var(--nb-betting-radius);
+  box-shadow: var(--nb-betting-shadow);
+  font-weight: bold;
+  color: var(--nb-betting-text);
+  transition: transform 0.1s ease;
+}
+
+.nb-betting-button-accent:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.nb-betting-button-accent:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.nb-betting-button-success {
+  background: var(--nb-betting-success);
+  border: 4px solid var(--nb-betting-border);
+  border-radius: var(--nb-betting-radius);
+  box-shadow: var(--nb-betting-shadow);
+  font-weight: bold;
+  color: var(--nb-betting-text);
+  transition: transform 0.1s ease;
+}
+
+.nb-betting-button-success:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.nb-betting-button-success:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.nb-betting-input {
+  background: white;
+  border: 4px solid var(--nb-betting-border);
+  border-radius: var(--nb-betting-radius);
+  box-shadow: inset 2px 2px 0 0 rgba(0,0,0,0.1);
+  font-weight: 500;
+  color: var(--nb-betting-text);
+}
+
+.nb-betting-input:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 0 0 rgba(0,0,0,0.2), 0 0 0 2px var(--nb-betting-surface);
+}
+
+/* Betting Grid Background */
+.nb-betting-grid-bg {
+  background: var(--nb-betting-bg);
+  background-image: 
+    linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
+  background-size: var(--nb-grid-size) var(--nb-grid-size);
 }
 
 .nb-input {
