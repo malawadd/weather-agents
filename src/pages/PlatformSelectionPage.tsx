@@ -36,12 +36,17 @@ export function PlatformSelectionPage() {
     <div className="min-h-screen flex flex-col relative">
       {/* Overlay Title */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
-        <h1 className="text-6xl md:text-8xl font-bold text-white text-shadow-xl mb-4">
-          Choose Your Kiyan
-        </h1>
-        <p className="text-xl md:text-2xl text-white text-shadow-lg font-medium">
-          Select the platform that matches your interests
-        </p>
+      <div className="absolute top-8 left-1/2 z-30"
+     style={{ transform: 'translateX(-50%)' }}>
+  <div
+    className="bg-[#ffb3ba] border-4 border-black px-8 py-3  shadow-[4px_4px_0_#111]
+                text-black text-xl md:text-2xl font-extrabold uppercase tracking-wide"
+    
+  >
+    Choose Your Kiyan
+  </div>
+  
+</div>
         
         {/* User info in top right */}
         <div className="absolute top-8 right-8 pointer-events-auto">
@@ -61,6 +66,7 @@ export function PlatformSelectionPage() {
       </div>
 
       {/* Platform Selection Grid - Full Screen */}
+      
       <div className="flex-1 flex">
         {platforms.map((platform) => (
           <div key={platform.id} className="flex-1 h-screen relative group">
@@ -76,7 +82,8 @@ export function PlatformSelectionPage() {
                 />
                 
                 {/* Neobrutalism hover overlay with color */}
-                <div className="absolute inset-0 bg-gradient-to-t from-green-400/90 via-green-400/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#a589e8] via-[#a589e8]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                 
                 {/* Neobrutalism border on hover */}
                 <div className="absolute inset-4 border-8 border-black opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
