@@ -205,11 +205,16 @@ body {
 /* Platform Choice Images */
 .platform-choice-image {
   filter: grayscale(100%);
-  transition: filter 0.3s ease, transform 0.3s ease;
+  transition: filter 0.5s ease, transform 0.5s ease;
 }
 
 .platform-choice-image:hover {
   filter: grayscale(0%);
+}
+
+/* Platform choice hover effects */
+.platform-choice:hover .platform-choice-image {
+  filter: grayscale(0%) brightness(1.1);
 }
 
 /* Text shadow utilities */
@@ -227,6 +232,11 @@ body {
 
 .text-shadow-xl {
   text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.9);
+}
+
+/* Enhanced text shadows for better visibility */
+.text-shadow-2xl {
+  text-shadow: 6px 6px 12px rgba(0, 0, 0, 0.95);
 }
 
 /* Tomo Modal Overrides for Neobrutalism */

@@ -36,10 +36,10 @@ export function PlatformSelectionPage() {
     <div className="min-h-screen flex flex-col relative">
       {/* Overlay Title */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
-        <h1 className="text-6xl md:text-8xl font-bold text-white text-shadow-lg mb-4">
+        <h1 className="text-6xl md:text-8xl font-bold text-white text-shadow-xl mb-4">
           Choose Your Kiyan
         </h1>
-        <p className="text-xl md:text-2xl text-white text-shadow-md font-medium">
+        <p className="text-xl md:text-2xl text-white text-shadow-lg font-medium">
           Select the platform that matches your interests
         </p>
         
@@ -75,14 +75,17 @@ export function PlatformSelectionPage() {
                   className="absolute inset-0 w-full h-full object-cover platform-choice-image transition-all duration-500 group-hover:scale-110"
                 />
                 
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                {/* Neobrutalism hover overlay with color */}
+                <div className="absolute inset-0 bg-gradient-to-t from-green-400/90 via-green-400/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
-                {/* Platform info - appears on hover */}
-                <div className="absolute bottom-8 left-8 right-8 text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
+                {/* Neobrutalism border on hover */}
+                <div className="absolute inset-4 border-8 border-black opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                
+                {/* Platform info - appears on hover with neobrutalism styling */}
+                <div className="absolute bottom-8 left-8 right-8 text-black opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
                   <h3 className="text-3xl font-bold mb-4 text-shadow-lg">{platform.title}</h3>
-                  <p className="text-lg mb-6 text-shadow-md">{platform.description}</p>
-                  <div className="bg-white/20 backdrop-blur-sm border-2 border-white/50 px-6 py-3 rounded-lg font-bold text-lg hover:bg-white/30 transition-colors inline-block">
+                  <p className="text-lg mb-6 text-shadow-md font-bold">{platform.description}</p>
+                  <div className="nb-button-accent px-6 py-3 font-bold text-lg inline-block">
                     Enter Platform →
                   </div>
                 </div>
@@ -97,7 +100,8 @@ export function PlatformSelectionPage() {
                 
                 {/* Coming soon overlay */}
                 <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center">
-                  <div className="bg-yellow-400 text-black px-6 py-3 rounded-lg font-bold text-xl mb-6 border-4 border-black shadow-lg">
+                  {/* Neobrutalism Coming Soon badge */}
+                  <div className="nb-panel-warning px-6 py-3 font-bold text-xl mb-6 transform -rotate-12">
                     🚧 Coming Soon
                   </div>
                   <h3 className="text-3xl font-bold mb-4 text-white text-shadow-lg text-center">{platform.title}</h3>
