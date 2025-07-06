@@ -1,6 +1,7 @@
 import { action, mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
+import { internal } from "./_generated/api";
 
 // Helper query to get session
 export const getSession = query({
@@ -51,6 +52,19 @@ export const chatWithStationAI = action({
         // Continue without weather data
       }
 
+      // Get recent chat history for context
+      const chatHistory = await ctx.runQuery(api.aiChat.getChatHistory, {
+        sessionId: args.sessionId,
+        stationId: args.stationId,
+        limit: 10
+      });
+
+      // Convert chat history to OpenAI format
+      const formattedHistory = chatHistory.flatMap(chat => [
+        { role: "user" as const, content: chat.userMessage },
+        { role: "assistant" as const, content: chat.aiResponse }
+      ]);
+
       // Prepare context for AI
       const weatherContext = {
         station: stationDetails || { id: args.stationId, name: `Station ${args.stationId}` },
@@ -58,8 +72,13 @@ export const chatWithStationAI = action({
         timestamp: new Date().toISOString(),
       };
 
-      // Generate AI response based on available data
-      const aiResponse = await generateMockAIResponse(args.userMessage, weatherContext);
+      // Generate AI response using OpenAI
+      const aiResponse = await ctx.runAction(internal.openaiService.generateWeatherResponse, {
+        userMessage: args.userMessage,
+        stationData: weatherContext.station,
+        weatherData: weatherContext.weatherData,
+        chatHistory: formattedHistory,
+      });
 
       // Save chat history
       await ctx.runMutation(api.aiChat.saveChatHistory, {
@@ -134,61 +153,5 @@ export const getChatHistory = query({
   },
 });
 
-// Mock AI response generator (replace with real AI integration)
-async function generateMockAIResponse(userMessage: string, weatherContext: any): Promise<string> {
-  const message = userMessage.toLowerCase();
-  const station = weatherContext.station;
-  const weather = weatherContext.weatherData;
 
-  // Simple pattern matching for demo
-  if (message.includes('temperature') || message.includes('temp')) {
-    if (weather?.observation?.temperature) {
-      return `The current temperature at ${station?.name || 'this station'} is ${weather.observation.temperature}°C. ${weather.observation.feels_like ? `It feels like ${weather.observation.feels_like}°C.` : ''} This data was last updated at ${new Date(weather.observation.timestamp).toLocaleString()}.`;
-    }
-    return `I don't have current temperature data for ${station?.name || 'this station'}. Try syncing the station data to get the latest readings.`;
-  }
-  
-  if (message.includes('humidity')) {
-    if (weather?.observation?.humidity) {
-      return `The humidity at ${station?.name || 'this station'} is currently ${weather.observation.humidity}%. This indicates ${weather.observation.humidity > 70 ? 'high humidity conditions' : weather.observation.humidity > 40 ? 'moderate humidity levels' : 'low humidity conditions'}.`;
-    }
-    return `I don't have current humidity data for ${station?.name || 'this station'}. The station may need to sync its latest readings.`;
-  }
-  
-  if (message.includes('wind')) {
-    if (weather?.observation?.wind_speed) {
-      return `Wind conditions at ${station?.name || 'this station'}: ${weather.observation.wind_speed} m/s${weather.observation.wind_direction ? ` from ${weather.observation.wind_direction}°` : ''}. ${weather.observation.wind_gust ? `Wind gusts up to ${weather.observation.wind_gust} m/s.` : ''}`;
-    }
-    return `I don't have current wind data for ${station?.name || 'this station'}. Try syncing the station to get updated wind measurements.`;
-  }
-  
-  if (message.includes('rain') || message.includes('precipitation')) {
-    if (weather?.observation?.precipitation_rate !== undefined) {
-      return `Precipitation at ${station?.name || 'this station'}: ${weather.observation.precipitation_rate > 0 ? `Currently ${weather.observation.precipitation_rate} mm/h` : 'No active precipitation'}. ${weather.observation.precipitation_accumulated ? `Total accumulated: ${weather.observation.precipitation_accumulated} mm.` : ''}`;
-    }
-    return `I don't have current precipitation data for ${station?.name || 'this station'}. Sync the station data to check for rainfall information.`;
-  }
 
-  if (message.includes('pressure')) {
-    if (weather?.observation?.pressure) {
-      return `Atmospheric pressure at ${station?.name || 'this station'} is ${weather.observation.pressure} hPa. ${weather.observation.pressure > 1020 ? 'This indicates high pressure conditions.' : weather.observation.pressure < 1000 ? 'This indicates low pressure conditions.' : 'This is within normal pressure range.'}`;
-    }
-    return `I don't have current pressure data for ${station?.name || 'this station'}. Try syncing to get the latest atmospheric pressure readings.`;
-  }
-
-  if (message.includes('health') || message.includes('quality')) {
-    if (weather?.health) {
-      const dataQuality = (weather.health.data_quality.score * 100).toFixed(1);
-      const locationQuality = (weather.health.location_quality.score * 100).toFixed(1);
-      return `Station health for ${station?.name || 'this station'}: Data quality is ${dataQuality}% and location quality is ${locationQuality}%. ${weather.health.location_quality.reason ? `Location status: ${weather.health.location_quality.reason}.` : ''}`;
-    }
-    return `I don't have health data for ${station?.name || 'this station'}. Sync the station to check its operational status.`;
-  }
-
-  // Default response
-  if (weather?.observation) {
-    return `I have weather data for ${station?.name || 'this station'}. The station is monitoring temperature, humidity, wind, and other conditions. What specific weather information would you like to know about?`;
-  } else {
-    return `I'm ready to help you analyze weather data from ${station?.name || 'this station'}. However, I don't have current weather readings. Try syncing the station data first, then ask me about specific conditions like temperature, humidity, wind, or precipitation.`;
-  }
-}

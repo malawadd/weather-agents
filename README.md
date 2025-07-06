@@ -7,13 +7,21 @@
    npm install
    ```
 
-2. **Run the development server:**
+2. **Set up environment variables:**
+   ```bash
+   cp .env.local.example .env.local
+   ```
+   Then edit `.env.local` and add your API keys:
+   - `WEATHERXM_API_KEY`: Get from https://developers.weatherxm.com/
+   - `OPENAI_API_KEY`: Get from https://platform.openai.com/api-keys
+
+3. **Run the development server:**
    ```bash
    npm run dev
    ```
    The app will be available at http://localhost:5173
 
-3. **Run Convex locally:**
+4. **Run Convex locally:**
    - Install the Convex CLI if you haven't:
      ```bash
      npm install -g convex@latest
@@ -22,7 +30,7 @@
      ```bash
      npx convex dev
      ```
-   - Make sure your `.env.local` is set up.
+   - Make sure your `.env.local` is set up with all required API keys.
 
 ---
 

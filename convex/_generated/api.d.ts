@@ -20,6 +20,7 @@ import type * as demoData from "../demoData.js";
 import type * as fleekAgents from "../fleekAgents.js";
 import type * as funds from "../funds.js";
 import type * as http from "../http.js";
+import type * as openaiService from "../openaiService.js";
 import type * as portfolio from "../portfolio.js";
 import type * as router from "../router.js";
 import type * as transactions from "../transactions.js";
@@ -55,6 +56,7 @@ declare const fullApi: ApiFromModules<{
   fleekAgents: typeof fleekAgents;
   funds: typeof funds;
   http: typeof http;
+  openaiService: typeof openaiService;
   portfolio: typeof portfolio;
   router: typeof router;
   transactions: typeof transactions;
