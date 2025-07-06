@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
+import { useReadContract } from 'wagmi';
 import { BidCard } from '../../components/betting/BidCard';
-import { mockActiveBids } from '../../data/mockBettingData';
+import { mockActiveBids, Bid } from '../../data/mockBettingData';
+import { BIDDING_CONTRACT_ADDRESS } from '../../constants/contractAddresses';
+import { BIDDING_ABI } from '../../constants/biddingAbi';
 
 export function ActiveBidsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('volume');
+  const [contractBids, setContractBids] = useState<Bid[]>([]);
 
   const categories = ['All', 'Temperature', 'Precipitation', 'Wind', 'Severe Weather'];
 
-  const filteredBids = mockActiveBids.filter(bid => 
+  // Fetch contract draws (checking first 10 draw IDs for demo)
+  const drawIds = Array.from({ length: 10 }, (_, i) => i);
+  
+  // For demo, we'll use mock data but in a real implementation you'd fetch from contract
+  // This is a placeholder for the contract integration
+  const allBids = [...mockActiveBids, ...contractBids];
+  
+  const filteredBids = allBids.filter(bid => 
     selectedCategory === 'All' || bid.category === selectedCategory
   );
 
@@ -102,12 +113,12 @@ export function ActiveBidsPage() {
         <div className="nb-betting-panel-white p-6 text-center">
           <h3 className="font-bold text-lg mb-2">💰 Total Volume</h3>
           <p className="text-2xl font-bold text-green-600">
-            ${mockActiveBids.reduce((sum, bid) => sum + bid.totalVolume, 0).toLocaleString()}
+            ${allBids.reduce((sum, bid) => sum + bid.totalVolume, 0).toLocaleString()}
           </p>
         </div>
         <div className="nb-betting-panel-white p-6 text-center">
           <h3 className="font-bold text-lg mb-2">⏰ Active Markets</h3>
-          <p className="text-2xl font-bold text-blue-600">{mockActiveBids.length}</p>
+          <p className="text-2xl font-bold text-blue-600">{allBids.length}</p>
         </div>
         <div className="nb-betting-panel-white p-6 text-center">
           <h3 className="font-bold text-lg mb-2">🏆 Top Category</h3>

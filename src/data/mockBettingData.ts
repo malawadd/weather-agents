@@ -16,6 +16,12 @@ export interface Bid {
   timeRemaining: string;
   category: string;
   location: string;
+  // Contract-specific fields
+  drawId?: number;
+  endTime?: number;
+  isSettled?: boolean;
+  actualTemp?: number;
+  thresholds?: number[];
 }
 
 export interface BidDetail extends Bid {

@@ -1,10 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useAccount, useReadContract } from 'wagmi';
 import { useAuth } from '../../WalletAuthProvider';
 import { WalletConnection } from '../../WalletConnection';
+import { BIDDING_CONTRACT_ADDRESS } from '../../constants/contractAddresses';
+import { BIDDING_ABI } from '../../constants/biddingAbi';
 
 export function BettingHeader() {
   const { user, isGuest, signOut } = useAuth();
+  const { address } = useAccount();
+
+  // Check if user is contract owner
+  const { data: contractOwner } = useReadContract({
+    address: BIDDING_CONTRACT_ADDRESS,
+    abi: BIDDING_ABI,
+    functionName: 'owner',
+  });
+
+  const isOwner = address && contractOwner && address.toLowerCase() === contractOwner.toLowerCase();
 
   return (
     <nav className="nb-betting-panel-white p-4 m-4 mb-6">
@@ -20,6 +33,11 @@ export function BettingHeader() {
             <Link to="/weather-betting" className="font-bold text-black hover:underline">
               Active Bids
             </Link>
+            {isOwner && (
+              <Link to="/weather-betting/create-bid" className="font-bold text-gray-600 hover:text-black hover:underline">
+                Create Bid
+              </Link>
+            )}
             <Link to="/weather-betting/vault" className="font-bold text-gray-600 hover:text-black hover:underline">
               Vault
             </Link>
