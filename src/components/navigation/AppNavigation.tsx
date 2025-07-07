@@ -32,12 +32,12 @@ export function AppNavigation({ user, isGuest, signOut, currentPage = '' }: AppN
             </Link>
             {!isGuest && (
               <>
-                <Link to="/weather-intelligence/create-agent" className={getLinkClass('create-agent')}>
+                {/* <Link to="/weather-intelligence/create-agent" className={getLinkClass('create-agent')}>
                   Import Agent
                 </Link>
                 <Link to="/weather-intelligence/my-agents" className={getLinkClass('my-agents')}>
                   My Agents
-                </Link>
+                </Link> */}
               </>
             )}
             <Link to="/weather-intelligence/stations" className={getLinkClass('stations')}>
