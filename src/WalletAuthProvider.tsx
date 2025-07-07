@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAccount, useSignMessage } from 'wagmi';
 import { useMutation, useQuery, useAction } from 'convex/react';
 import { api } from '../convex/_generated/api';
-import { Id } from '../convex/_generated/dataModel';
+import { Id, Doc } from '../convex/_generated/dataModel';
 
 interface AuthContextType {
   user: any;
@@ -40,7 +40,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const loginWithWallet = useAction(api.walletAuth.loginWithWallet);
   const logoutMutation = useMutation(api.walletAuth.logout);
   const user = useQuery(api.walletAuth.getCurrentUser, 
-    sessionId ? { sessionId } : "skip"
+    sessionId ? { sessionId } : "skip",
+    {
+      onError: (error) => {
+        // Check if the error is related to an invalid session ID
+        if (error.message.includes("ArgumentValidationError") && 
+            error.message.includes("Path: .sessionId")) {
+          console.error("Invalid session ID detected, clearing session data", error);
+          // Clear the invalid session from localStorage
+          localStorage.removeItem('sessionId');
+          localStorage.removeItem('isGuest');
+          // Reset the state
+          setSessionId(null);
+          setIsGuest(false);
+        }
+      }
+    }
   );
 
   // Load session from localStorage on mount
