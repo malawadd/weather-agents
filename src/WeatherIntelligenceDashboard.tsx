@@ -33,11 +33,11 @@ export function WeatherIntelligenceDashboard() {
   const selectedStation = savedStations?.find(s => s.stationId === selectedStationId);
 
   const handleNavigateToStations = () => {
-    void navigate('/weather-intelligence/stations');
+    navigate('/weather-intelligence/stations');
   };
 
   const handleNavigateToMyStations = () => {
-    void navigate('/weather-intelligence/my-stations');
+    navigate('/weather-intelligence/my-stations');
   };
 
   return (

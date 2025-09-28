@@ -54,7 +54,7 @@ export function MyStationsList({
         </div>
         <div className="text-center py-8">
           <p className="text-gray-600 mb-4">No saved stations yet</p>
-          <Link to="/stations" className="nb-button-accent px-4 py-2 font-bold">
+          <Link to="/weather-intelligence/stations" className="nb-button-accent px-4 py-2 font-bold">
             Browse Stations
           </Link>
         </div>
@@ -66,7 +66,7 @@ export function MyStationsList({
     <div className="nb-panel-white p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">📍 Saved Stations</h2>
-        <Link to="/stations" className="nb-button px-3 py-1 text-sm font-bold">
+        <Link to="/weather-intelligence/stations" className="nb-button px-3 py-1 text-sm font-bold">
           + Add More
         </Link>
       </div>
