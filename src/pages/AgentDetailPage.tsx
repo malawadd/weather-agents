@@ -5,13 +5,12 @@ import { useAccount } from 'wagmi';
 import { api } from '../../convex/_generated/api';
 import { useAuth } from '../WalletAuthProvider';
 import { Id } from "../../convex/_generated/dataModel";
-import { AppNavigation } from '../components/navigation/AppNavigation';
 import { AgentProfile } from '../components/AgentProfile';
 import { MintLicenseTokensPanel } from '../components/MintLicenseTokensPanel';
 
 export function AgentDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { user, isGuest, signOut, sessionId } = useAuth();
+  const { sessionId } = useAuth();
   const { address } = useAccount();
   const [buyAmount, setBuyAmount] = useState(1);
   const [error, setError] = useState<string | null>(null);
@@ -44,32 +43,16 @@ export function AgentDetailPage() {
 
   if (!agent) {
     return (
-      <div className="min-h-screen nb-grid-bg">
-        <AppNavigation 
-          user={user} 
-          isGuest={isGuest} 
-          signOut={signOut} 
-          currentPage=""
-        />
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="nb-panel p-6 text-center">
-            Loading...
-          </div>
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="nb-panel p-6 text-center">
+          Loading...
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen nb-grid-bg">
-      <AppNavigation 
-        user={user} 
-        isGuest={isGuest} 
-        signOut={signOut} 
-        currentPage=""
-      />
-
-      <div className="max-w-6xl mx-auto space-y-6 px-4">
+    <div className="max-w-6xl mx-auto space-y-6 px-4 py-8">
         {/* Header */}
         <div className="nb-panel-white p-6">
           <h1 className="text-2xl font-bold mb-2">{agent.name}</h1>
@@ -185,7 +168,6 @@ export function AgentDetailPage() {
             <p className="text-sm font-bold">Error: {error}</p>
           </div>
         )}
-      </div>
     </div>
   );
 }

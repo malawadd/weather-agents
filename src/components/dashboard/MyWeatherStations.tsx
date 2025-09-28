@@ -70,7 +70,7 @@ export function MyWeatherStations({
                 </div>
                 <div className="text-right">
                   <Link
-                    to={`/station/${station.stationId}`}
+                    to={`/weather-intelligence/station/${station.stationId}`}
                     className="text-xs nb-button px-2 py-1"
                     onClick={(e) => e.stopPropagation()}
                   >

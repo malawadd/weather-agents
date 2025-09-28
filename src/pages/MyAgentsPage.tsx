@@ -3,11 +3,10 @@ import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useAuth } from '../WalletAuthProvider';
 import { WalletConnection } from '../WalletConnection';
-import { AppNavigation } from '../components/navigation/AppNavigation';
 import { AgentEditor } from '../components/AgentEditor';
 
 export function MyAgentsPage() {
-  const { user, isGuest, signOut, sessionId } = useAuth();
+  const { isGuest, sessionId } = useAuth();
   const [apiKey, setApiKey] = useState('');
 
   const agents = useQuery(api.agents.getUserAgents, sessionId ? { 
@@ -16,33 +15,17 @@ export function MyAgentsPage() {
 
   if (!sessionId || isGuest) {
     return (
-      <div className="min-h-screen nb-grid-bg">
-        <AppNavigation 
-          user={user} 
-          isGuest={isGuest} 
-          signOut={signOut} 
-          currentPage="my-agents"
-        />
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="nb-panel p-6 text-center">
-            <p className="text-gray-500 mb-4">Please sign in to access your agents</p>
-            <WalletConnection />
-          </div>
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="nb-panel p-6 text-center">
+          <p className="text-gray-500 mb-4">Please sign in to access your agents</p>
+          <WalletConnection />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen nb-grid-bg">
-      <AppNavigation 
-        user={user} 
-        isGuest={isGuest} 
-        signOut={signOut} 
-        currentPage="my-agents"
-      />
-
-      <div className="max-w-6xl mx-auto px-4 space-y-6">
+    <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
         {/* API Key Input */}
         <div className="nb-panel-white p-6">
           <h2 className="text-xl font-bold mb-4">Fleek API Key</h2>
@@ -100,7 +83,6 @@ export function MyAgentsPage() {
             </div>
           ))}
         </div>
-      </div>
     </div>
   );
 }

@@ -4,13 +4,12 @@ import { useAction, useMutation } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 import { useAuth } from '../WalletAuthProvider';
 import { Id } from "../../convex/_generated/dataModel";
-import { AppNavigation } from '../components/navigation/AppNavigation';
 import RegisterOnStoryProtocolPanel from "../components/RegisterOnStoryProtocolPanel";
 import CreateNftCollectionPanel from "../components/CreateNftCollectionPanel";
 
 export function CreateAgentPage() {
   const navigate = useNavigate();
-  const { user, isGuest, signOut, sessionId } = useAuth();
+  const { sessionId } = useAuth();
   const [step, setStep] = useState(1);
   const [error, setError] = useState<string | null>(null);
 
@@ -83,15 +82,7 @@ export function CreateAgentPage() {
   }
 
   return (
-    <div className="min-h-screen nb-grid-bg">
-      <AppNavigation 
-        user={user} 
-        isGuest={isGuest} 
-        signOut={signOut} 
-        currentPage="create-agent"
-      />
-
-      <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
         {/* Header */}
         <div className="nb-panel-white p-6">
           <h1 className="text-2xl font-bold mb-2">🤖 Import Fleek Agent</h1>
@@ -281,7 +272,6 @@ export function CreateAgentPage() {
             <p className="text-sm font-bold">Error: {error}</p>
           </div>
         )}
-      </div>
     </div>
   );
 }

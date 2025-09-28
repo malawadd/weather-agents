@@ -39,7 +39,7 @@ export function ChatSection({
             Choose a station from your saved list to start chatting with AI about weather conditions and insights.
           </p>
           {!hasStations && (
-            <Link to="/stations" className="nb-button-accent px-6 py-3 font-bold">
+            <Link to="/weather-intelligence/stations" className="nb-button-accent px-6 py-3 font-bold">
               Add Your First Station
             </Link>
           )}

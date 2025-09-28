@@ -80,7 +80,7 @@ export function StationDetailCard({ station, onRemove, onSync, isSyncing }: Stat
 
       <div className="space-y-2">
         <Link
-          to={`/station/${station.stationId}`}
+          to={`/weather-intelligence/station/${station.stationId}`}
           className="w-full nb-button-accent py-2 font-bold text-sm block text-center"
         >
           📊 View Details & Data

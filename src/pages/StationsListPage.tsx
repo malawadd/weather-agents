@@ -5,7 +5,6 @@ import { useAuth } from '../WalletAuthProvider';
 import { useWeatherStations } from '../hooks/useWeatherStations';
 import { useToast } from '../hooks/useToast';
 import { ToastContainer } from '../components/ui/ToastContainer';
-import { StationsNavigation } from '../components/weather/StationsNavigation';
 import { StationsHeader } from '../components/weather/StationsHeader';
 import { StationFilters } from '../components/weather/StationFilters';
 import { StationsErrorDisplay } from '../components/weather/StationsErrorDisplay';
@@ -16,7 +15,7 @@ import { StationsPagination } from '../components/weather/StationsPagination';
 import { StationsApiInfo } from '../components/weather/StationsApiInfo';
 
 export function StationsListPage() {
-  const { user, isGuest, signOut, sessionId } = useAuth();
+  const { isGuest, sessionId } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRegion, setSelectedRegion] = useState('');
@@ -101,10 +100,7 @@ export function StationsListPage() {
   };
 
   return (
-    <div className="min-h-screen nb-grid-bg">
-      <StationsNavigation user={user} isGuest={isGuest} signOut={signOut} />
-
-      <div className="max-w-6xl mx-auto px-4 space-y-6">
+    <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
         <StationsHeader 
           totalStations={totalStations}
           selectedRegion={selectedRegion}
@@ -168,7 +164,6 @@ export function StationsListPage() {
       </div>
 
       {/* Toast Container */}
-      <ToastContainer toasts={toasts} onHideToast={hideToast} />
     </div>
   );
 }

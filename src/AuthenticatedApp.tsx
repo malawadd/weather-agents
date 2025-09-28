@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useMutation } from 'convex/react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { WeatherIntelligenceLayout } from './layouts/WeatherIntelligenceLayout';
 import { TradingDashboard } from './TradingDashboard';
 import { CreateAgentPage } from './pages/CreateAgentPage';
 import { AgentDetailPage } from './pages/AgentDetailPage';
@@ -9,9 +10,6 @@ import { StationsListPage } from './pages/StationsListPage';
 import { MyStationsPage } from './pages/MyStationsPage';
 import { StationDetailPage } from './pages/StationDetailPage';
 import { useAuth } from './WalletAuthProvider';
-import { ActiveBidsPage } from './pages/ActiveBidsPage';
-import { BidPage } from './pages/BidPage';
-import { CreateBidPage } from './pages/CreateBidPage';
 import { api } from '../convex/_generated/api';
 
 export function AuthenticatedApp() {
@@ -27,17 +25,16 @@ export function AuthenticatedApp() {
 
   return (
     <Routes>
-      {/* Weather Intelligence Platform Routes */}
-      <Route path="/" element={<TradingDashboard />} />
-      <Route path="/create-agent" element={<CreateAgentPage />} />
-      <Route path="/agent/:id" element={<AgentDetailPage />} />
-      <Route path="/my-agents" element={<MyAgentsPage />} />
-      <Route path="/stations" element={<StationsListPage />} />
-      <Route path="/my-stations" element={<MyStationsPage />} />
-      <Route path="/station/:stationId" element={<StationDetailPage />} />
-      <Route path="/active-bids" element={<ActiveBidsPage />} />
-      <Route path="/bid/:drawId" element={<BidPage />} />
-      <Route path="/create-bid" element={<CreateBidPage />} />
+      <Route path="/" element={<WeatherIntelligenceLayout />}>
+        {/* Weather Intelligence Platform Routes */}
+        <Route index element={<TradingDashboard />} />
+        <Route path="create-agent" element={<CreateAgentPage />} />
+        <Route path="agent/:id" element={<AgentDetailPage />} />
+        <Route path="my-agents" element={<MyAgentsPage />} />
+        <Route path="stations" element={<StationsListPage />} />
+        <Route path="my-stations" element={<MyStationsPage />} />
+        <Route path="station/:stationId" element={<StationDetailPage />} />
+      </Route>
       <Route path="*" element={<Navigate to="/weather-intelligence" replace />} />
     </Routes>
   );

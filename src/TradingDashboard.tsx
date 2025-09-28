@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../convex/_generated/api';
 import { useAuth } from "./WalletAuthProvider";
 import { useWeatherChat } from './hooks/useWeatherChat';
-import { AppNavigation } from './components/navigation/AppNavigation';
 import { WelcomePanel } from './components/dashboard/WelcomePanel';
 import { GuestModeNotice } from './components/dashboard/GuestModeNotice';
 import { WeatherAIChat } from './components/dashboard/WeatherAIChat';
@@ -16,7 +15,7 @@ import { PlatformFeatures } from './components/dashboard/PlatformFeatures';
 export function TradingDashboard() {
   const navigate = useNavigate();
   const [selectedStationId, setSelectedStationId] = useState<string | null>(null);
-  const { user, isGuest, signOut, sessionId } = useAuth();
+  const { isGuest, signOut, sessionId } = useAuth();
 
   // Fetch weather data
   const savedStations = useQuery(api.weatherxmApi.getMySavedStations, 
@@ -34,23 +33,15 @@ export function TradingDashboard() {
   const selectedStation = savedStations?.find(s => s.stationId === selectedStationId);
 
   const handleNavigateToStations = () => {
-    void navigate('/stations');
+    void navigate('/weather-intelligence/stations');
   };
 
   const handleNavigateToMyStations = () => {
-    void navigate('/my-stations');
+    void navigate('/weather-intelligence/my-stations');
   };
 
   return (
-    <div className="min-h-screen nb-grid-bg">
-      <AppNavigation 
-        user={user} 
-        isGuest={isGuest} 
-        signOut={signOut} 
-        currentPage="dashboard"
-      />
-
-      <div className="p-4 space-y-6">
+    <div className="p-4 space-y-6">
         <WelcomePanel
           isGuest={isGuest}
           savedStationsCount={savedStations?.length || 0}
@@ -102,7 +93,6 @@ export function TradingDashboard() {
         </div>
 
         <PlatformFeatures />
-      </div>
     </div>
   );
 }

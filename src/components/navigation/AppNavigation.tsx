@@ -1,17 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { WalletConnection } from '../../WalletConnection';
 
 interface AppNavigationProps {
   user: any;
   isGuest: boolean;
   signOut: () => void;
-  currentPage?: string;
 }
 
-export function AppNavigation({ user, isGuest, signOut, currentPage = '' }: AppNavigationProps) {
-  const getLinkClass = (page: string) => {
-    return currentPage === page 
+export function AppNavigation({ user, isGuest, signOut }: AppNavigationProps) {
+  const location = useLocation();
+  
+  const getLinkClass = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(path + '/')
       ? "font-bold text-black hover:underline" 
       : "font-bold text-gray-600 hover:text-black hover:underline";
   };
@@ -27,30 +28,23 @@ export function AppNavigation({ user, isGuest, signOut, currentPage = '' }: AppN
             </Link>
           </div>
           <div className="flex space-x-6">
-            <Link to="/weather-intelligence" className={getLinkClass('dashboard')}>
+            <Link to="/weather-intelligence" className={getLinkClass('/weather-intelligence')}>
               Dashboard
             </Link>
-            {!isGuest && (
-              <>
-                {/* <Link to="/weather-intelligence/create-agent" className={getLinkClass('create-agent')}>
-                  Import Agent
-                </Link>
-                <Link to="/weather-intelligence/my-agents" className={getLinkClass('my-agents')}>
-                  My Agents
-                </Link> */}
-              </>
-            )}
-            <Link to="/weather-intelligence/stations" className={getLinkClass('stations')}>
+            <Link to="/weather-intelligence/create-agent" className={getLinkClass('/weather-intelligence/create-agent')}>
+              Import Agent
+            </Link>
+            <Link to="/weather-intelligence/my-agents" className={getLinkClass('/weather-intelligence/my-agents')}>
+              My Agents
+            </Link>
+            <Link to="/weather-intelligence/stations" className={getLinkClass('/weather-intelligence/stations')}>
               Weather Stations
             </Link>
             {!isGuest && (
-              <Link to="/weather-intelligence/my-stations" className={getLinkClass('my-stations')}>
+              <Link to="/weather-intelligence/my-stations" className={getLinkClass('/weather-intelligence/my-stations')}>
                 My Stations
               </Link>
             )}
-            <Link to="/active-bids" className={getLinkClass('active-bids')}>
-              Temperature Bets
-            </Link>
           </div>
         </div>
         <div className="flex items-center space-x-4">
