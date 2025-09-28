@@ -72,7 +72,8 @@ export function StationDetailPage() {
   const location = latestData?.location || station.stationData?.location;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+    <>
+      <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
         <StationDetailHeader
           stationName={stationName}
           stationId={stationId!}
@@ -102,8 +103,9 @@ export function StationDetailPage() {
           </Link>
         </div>
       </div>
+      </div>
 
       <ToastContainer toasts={toasts} onHideToast={hideToast} />
-    </div>
+    </>
   );
 }
