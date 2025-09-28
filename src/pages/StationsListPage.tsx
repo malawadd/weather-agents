@@ -100,7 +100,8 @@ export function StationsListPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
+    <>
+      <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
         <StationsHeader 
           totalStations={totalStations}
           selectedRegion={selectedRegion}
@@ -163,7 +164,7 @@ export function StationsListPage() {
         />
       </div>
 
-      {/* Toast Container */}
-    </div>
+      <ToastContainer toasts={toasts} onHideToast={hideToast} />
+    </>
   );
 }

@@ -17,16 +17,6 @@ export function PlatformSelectionPage() {
       buttonClass: 'nb-button-accent',
     },
     {
-      id: 'weather-betting',
-      title: 'Weather Betting Platform',
-      description: 'Place bets on weather predictions and compete with other weather enthusiasts.',
-      image: 'https://images.pexels.com/photos/6801648/pexels-photo-6801648.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      path: '/weather-betting',
-      available: true,
-      hoverColor: '#66ccff',
-      buttonClass: 'nb-betting-button-accent',
-    },
-    {
       id: 'future-innovations',
       title: 'Weather Insurance Platform',
       description: 'Weatherxm X eulerfinance.',

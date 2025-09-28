@@ -43,7 +43,7 @@ export function WalletSignInForm() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-4">🤖 Kiyan</h1>
           <p className="text-lg font-medium">
-            Your AI-powered weather intelligence platform
+            AI-powered weather intelligence platform
           </p>
           <p className="text-sm text-gray-600 mt-2">
             Explore global weather stations and get AI insights

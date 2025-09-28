@@ -127,8 +127,7 @@ export function MyStationsPage() {
             />
           </div>
         </div>
-      </div>
-
+      <ToastContainer toasts={toasts} onHideToast={hideToast} />
     </div>
   );
 }

@@ -12,7 +12,7 @@ export function GuestModeNotice({ onSignIn }: GuestModeNoticeProps) {
           <div>
             <h3 className="text-xl font-bold mb-2">👤 Guest Mode Active</h3>
             <p className="font-medium">
-              Sign in to save weather stations and access personalized AI insights.
+              Sign in with your wallet to save weather stations and access personalized AI insights.
             </p>
           </div>
           <button 

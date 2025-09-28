@@ -2,10 +2,7 @@ import { useEffect } from 'react';
 import { useMutation } from 'convex/react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { WeatherIntelligenceLayout } from './layouts/WeatherIntelligenceLayout';
-import { TradingDashboard } from './TradingDashboard';
-import { CreateAgentPage } from './pages/CreateAgentPage';
-import { AgentDetailPage } from './pages/AgentDetailPage';
-import { MyAgentsPage } from './pages/MyAgentsPage';
+import { WeatherIntelligenceDashboard } from './WeatherIntelligenceDashboard';
 import { StationsListPage } from './pages/StationsListPage';
 import { MyStationsPage } from './pages/MyStationsPage';
 import { StationDetailPage } from './pages/StationDetailPage';
@@ -27,10 +24,7 @@ export function AuthenticatedApp() {
     <Routes>
       <Route path="/" element={<WeatherIntelligenceLayout />}>
         {/* Weather Intelligence Platform Routes */}
-        <Route index element={<TradingDashboard />} />
-        <Route path="create-agent" element={<CreateAgentPage />} />
-        <Route path="agent/:id" element={<AgentDetailPage />} />
-        <Route path="my-agents" element={<MyAgentsPage />} />
+        <Route index element={<WeatherIntelligenceDashboard />} />
         <Route path="stations" element={<StationsListPage />} />
         <Route path="my-stations" element={<MyStationsPage />} />
         <Route path="station/:stationId" element={<StationDetailPage />} />

@@ -31,12 +31,6 @@ export function AppNavigation({ user, isGuest, signOut }: AppNavigationProps) {
             <Link to="/weather-intelligence" className={getLinkClass('/weather-intelligence')}>
               Dashboard
             </Link>
-            <Link to="/weather-intelligence/create-agent" className={getLinkClass('/weather-intelligence/create-agent')}>
-              Import Agent
-            </Link>
-            <Link to="/weather-intelligence/my-agents" className={getLinkClass('/weather-intelligence/my-agents')}>
-              My Agents
-            </Link>
             <Link to="/weather-intelligence/stations" className={getLinkClass('/weather-intelligence/stations')}>
               Weather Stations
             </Link>
@@ -49,7 +43,7 @@ export function AppNavigation({ user, isGuest, signOut }: AppNavigationProps) {
         </div>
         <div className="flex items-center space-x-4">
           <span className="font-bold">
-            Welcome, {user?.name || 'Explorer'}!
+            Welcome, {user?.name || 'Weather Explorer'}!
             {isGuest && <span className="text-sm text-gray-600"> (Guest)</span>}
           </span>
           {!isGuest && <WalletConnection />}

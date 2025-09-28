@@ -103,6 +103,7 @@ export function StationDetailPage() {
         </div>
       </div>
 
+      <ToastContainer toasts={toasts} onHideToast={hideToast} />
     </div>
   );
 }
