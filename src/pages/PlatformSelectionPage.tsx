@@ -151,7 +151,7 @@ export function PlatformSelectionPage() {
           <div className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full md:w-auto">
             <button 
               onClick={openWeatherIntelligenceModal}
-              className="nb-panel-white p-4 md:p-6 hover:nb-panel-accent transition-all duration-200 group w-full sm:w-auto"
+              className="nb-panel-white p-4 md:p-6 hover:nb-panel-accent platform-choice-button group w-full sm:w-auto"
             >
               <div className="text-center">
                 <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 nb-panel flex items-center justify-center">
@@ -163,7 +163,7 @@ export function PlatformSelectionPage() {
 
             <button 
               onClick={openWeatherBettingModal}
-              className="nb-panel-white p-4 md:p-6 hover:nb-panel-accent transition-all duration-200 group w-full sm:w-auto"
+              className="nb-panel-white p-4 md:p-6 hover:nb-panel-accent platform-choice-button group w-full sm:w-auto"
             >
               <div className="text-center">
                 <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 nb-panel flex items-center justify-center">
