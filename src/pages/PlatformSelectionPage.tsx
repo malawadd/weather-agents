@@ -28,13 +28,15 @@ export function PlatformSelectionPage() {
     platformLink: string;
     platformName: string;
     features: string[];
+    theme?: 'default' | 'insurance';
   }>({
     isOpen: false,
     title: '',
     description: '',
     platformLink: '',
     platformName: '',
-    features: []
+    features: [],
+    theme: 'default'
   });
 
   const openWeatherIntelligenceModal = () => {
@@ -51,7 +53,8 @@ export function PlatformSelectionPage() {
         'Historical weather analysis',
         'Personalized station management',
         'Interactive weather chat'
-      ]
+      ],
+      theme: 'default'
     });
   };
 
@@ -69,7 +72,8 @@ export function PlatformSelectionPage() {
         'Natural disaster protection',
         'Automated claim payouts',
         'Blockchain-secured policies'
-      ]
+      ],
+      theme: 'insurance'
     });
   };
 
@@ -186,6 +190,7 @@ export function PlatformSelectionPage() {
         platformLink={modalData.platformLink}
         platformName={modalData.platformName}
         features={modalData.features}
+        theme={modalData.theme}
       />
     </div>
   );
