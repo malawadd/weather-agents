@@ -158,7 +158,6 @@ export function PurchasePolicyPanel({ policyId, selectedThreshold, thresholds, o
         <h3 className="text-xl font-bold mb-4">🛡️ Purchase Policy</h3>
         <div className="text-center py-8">
           <p className="text-gray-600 mb-4">Connect your wallet to purchase insurance policies</p>
-          <div className="nb-betting-panel-warning p-3">
           <div className="nb-insurance-panel-warning p-3">
             <p className="text-sm font-bold">Wallet connection required</p>
           </div>
@@ -226,7 +225,6 @@ export function PurchasePolicyPanel({ policyId, selectedThreshold, thresholds, o
             value={shareAmount}
             onChange={(e) => setShareAmount(e.target.value)}
             placeholder="0.0"
-            className="nb-betting-input flex-1 px-4 py-3"
             className="nb-insurance-input flex-1 px-4 py-3"
             disabled={isApproving || isPurchasing}
           />
