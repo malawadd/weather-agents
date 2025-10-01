@@ -15,6 +15,14 @@ export function PolicyCard({ policy }: PolicyCardProps) {
   };
 
   const getTopOption = () => {
+    if (!policy.options || policy.options.length === 0) {
+      return {
+        range: 'No data',
+        percentage: 0,
+        premiumRate: 0,
+        coverageRatio: 0
+      };
+    }
     return policy.options.reduce((prev, current) => 
       prev.percentage > current.percentage ? prev : current
     );

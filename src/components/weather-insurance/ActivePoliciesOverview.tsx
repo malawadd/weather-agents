@@ -43,7 +43,7 @@ export function ActivePoliciesOverview() {
   // Transform contract data to Policy format
   const contractPolicies: Policy[] = limitedPolicyIds.map((policyId: bigint, index: number) => {
     const policyData = policiesData[index]?.result;
-    const thresholds = thresholdsData[index]?.result;
+    const thresholds = thresholdsData[index]?.result || [];
     
     if (!policyData || !thresholds) return null;
 
@@ -53,12 +53,12 @@ export function ActivePoliciesOverview() {
       formatTimeRemaining(Number(endTime) - now) : 'Expired';
 
     // Create coverage options from thresholds
-    const options = thresholds.map((threshold: bigint) => ({
+    const options = Array.isArray(thresholds) ? thresholds.map((threshold: bigint) => ({
       range: `${Number(threshold)}°C`,
       percentage: Math.floor(Math.random() * 30) + 10,
       premiumRate: Math.floor(Math.random() * 15) + 5,
       coverageRatio: Math.floor(Math.random() * 50) + 100,
-    }));
+    })) : [];
 
     return {
       id: policyId.toString(),
@@ -74,7 +74,7 @@ export function ActivePoliciesOverview() {
       endTime: Number(endTime),
       isSettled: settled,
       actualTemp: actualTemp ? Number(actualTemp) : undefined,
-      thresholds: thresholds.map((t: bigint) => Number(t)),
+      thresholds: Array.isArray(thresholds) ? thresholds.map((t: bigint) => Number(t)) : [],
     };
   }).filter(Boolean) as Policy[];
 
