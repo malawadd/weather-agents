@@ -58,17 +58,17 @@ export function PlatformSelectionPage() {
   const openWeatherBettingModal = () => {
     setModalData({
       isOpen: true,
-      title: '🎲 Weather Betting Platform',
-      description: 'Place bets on weather predictions and compete with other weather enthusiasts worldwide.',
-      platformLink: '/weather-betting',
-      platformName: 'Weather Betting',
+      title: '☔ Weather Insurance Platform',
+      description: 'Protect yourself against natural disasters with parametric weather insurance policies.',
+      platformLink: '/weather-insurance',
+      platformName: 'Weather Insurance',
       features: [
-        'Temperature prediction markets',
-        'Real-time betting odds',
-        'Prize pool competitions',
-        'Smart contract security',
-        'Community leaderboards',
-        'Weather-based gaming'
+        'Parametric insurance policies',
+        'Drought protection coverage',
+        'Rainfall insurance plans',
+        'Natural disaster protection',
+        'Automated claim payouts',
+        'Blockchain-secured policies'
       ]
     });
   };
@@ -163,9 +163,9 @@ export function PlatformSelectionPage() {
             >
               <div className="text-center">
                 <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 nb-panel flex items-center justify-center">
-                  <span className="text-xl md:text-2xl">🎲</span>
+                  <span className="text-xl md:text-2xl">☔</span>
                 </div>
-                <p className="font-bold text-sm md:text-base">Weather Betting</p>
+                <p className="font-bold text-sm md:text-base">Weather Insurance</p>
               </div>
             </button>
           </div>

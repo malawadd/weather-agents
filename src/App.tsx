@@ -5,7 +5,7 @@ import { WalletSignInForm } from "./WalletSignInForm";
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { PlatformSelectionPage } from "./pages/PlatformSelectionPage";
 import { PlaceholderPlatformPage } from "./pages/PlaceholderPlatformPage";
-import { BettingPlatformLayout } from "./layouts/BettingPlatformLayout";
+import { WeatherInsurancePlatformLayout } from "./layouts/WeatherInsurancePlatformLayout";
 import { AuthenticatedApp } from "./AuthenticatedApp";
 
 import { ActiveBidsPage } from "./pages/ActiveBidsPage";
@@ -31,8 +31,8 @@ function AppRouterContent() {
       {/* Weather Intelligence Platform */}
       <Route path="/weather-intelligence/*" element={<AuthenticatedApp />} />
       
-      {/* Weather Betting Platform (placeholder) */}
-      <Route path="/weather-betting/*" element={<BettingPlatformLayout />} />
+      {/* Weather Insurance Platform */}
+      <Route path="/weather-insurance/*" element={<WeatherInsurancePlatformLayout />} />
       
       {/* Future Platform (placeholder) */}
       <Route path="/future-platform/*" element={<PlaceholderPlatformPage />} />
