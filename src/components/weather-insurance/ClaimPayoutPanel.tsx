@@ -94,6 +94,7 @@ export function ClaimPayoutPanel({ policyId, isPolicySettled, actualTemp, onClai
     <div className="nb-insurance-panel-white p-6">
       <h3 className="text-xl font-bold mb-4">🏆 Claim Payout</h3>
       <div className="nb-insurance-panel-success p-4 text-center">
+      </div>
       {/* Policy Results */}
       {actualTemp !== undefined && (
         <div className="nb-insurance-panel-accent p-4 mb-4">

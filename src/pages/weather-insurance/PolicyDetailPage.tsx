@@ -134,7 +134,6 @@ export function PolicyDetailPage() {
         <div className="nb-insurance-panel-warning p-8 text-center">
           <h2 className="text-2xl font-bold mb-4">❌ Policy Not Found</h2>
           <p className="mb-4">The insurance policy you're looking for doesn't exist or has expired.</p>
-          <Link to="/weather-insurance" className="nb-betting-button-accent px-6 py-3 font-bold">
           <Link to="/weather-insurance" className="nb-insurance-button-accent px-6 py-3 font-bold">
             ← Back to Active Policies
           </Link>
@@ -156,7 +155,6 @@ export function PolicyDetailPage() {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           <PolicyDetailsSection policy={policyDetail} />
-          <div className="nb-betting-panel-white p-6">
           <div className="nb-insurance-panel-white p-6">
             <h2 className="text-xl font-bold mb-4">🌡️ Coverage Options</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
