@@ -101,7 +101,7 @@ export function PlatformSelectionPage() {
         playsInline
       >
         <source 
-          src="https://videos.pexels.com/video-files/2795405/2795405-uhd_3840_2160_25fps.mp4" 
+          src="https://videos.pexels.com/video-files/854002/854002-hd_1920_1080_24fps.mp4" 
           type="video/mp4" 
         />
         {/* Fallback for browsers that don't support video */}
