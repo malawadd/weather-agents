@@ -78,7 +78,6 @@ export function MintTicketTokenPanel({
             value={mintAmount}
             onChange={(e) => setMintAmount(e.target.value)}
             placeholder="1000"
-            className="nb-betting-input w-full px-4 py-3"
             className="nb-insurance-input w-full px-4 py-3"
             disabled={isMinting}
           />
