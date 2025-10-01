@@ -15,7 +15,9 @@ export function ActivePoliciesPage() {
       case 'coverage':
         return b.totalCoverage - a.totalCoverage;
       case 'time':
-        return a.timeRemaining.localeCompare(b.timeRemaining);
+  
+  )
+}      return a.timeRemaining.localeCompare(b.timeRemaining);
       case 'activity':
         return b.options.length - a.options.length;
       default:
