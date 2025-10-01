@@ -20,12 +20,13 @@ export function WeatherInsuranceHeader() {
   const isOwner = address && contractOwner && address.toLowerCase() === contractOwner.toLowerCase();
 
   return (
-    <nav className="nb-betting-panel-white p-4 m-4 mb-6">
+    <nav className="nb-insurance-panel-white p-4 m-4 mb-6">
       <div className="flex justify-between items-center">
         <div className="flex items-center space-x-8">
           <div className="flex items-center space-x-4">
             <h1 className="text-2xl font-bold">☔ Kiyan Insurance</h1>
             <Link to="/platform-selection" className="nb-betting-button px-3 py-1 text-sm font-bold">
+            <Link to="/platform-selection" className="nb-insurance-button px-3 py-1 text-sm font-bold">
               ← Platforms
             </Link>
           </div>
@@ -51,7 +52,7 @@ export function WeatherInsuranceHeader() {
           {!isGuest && <WalletConnection />}
           <button 
             onClick={signOut}
-            className="nb-betting-button px-4 py-2 text-sm font-bold"
+            className="nb-insurance-button px-4 py-2 text-sm font-bold"
           >
             Sign Out
           </button>

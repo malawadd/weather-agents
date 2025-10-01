@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export function WeatherInsuranceFooter() {
   return (
-    <footer className="nb-betting-panel-white p-6 m-4 mt-8">
+    <footer className="nb-insurance-panel-white p-6 m-4 mt-8">
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div>

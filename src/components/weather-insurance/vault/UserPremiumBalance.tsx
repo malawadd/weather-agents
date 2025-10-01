@@ -32,12 +32,12 @@ export function UserPremiumBalance({
   }
 
   return (
-    <div className="nb-betting-panel-white p-6">
+    <div className="nb-insurance-panel-white p-6">
       <h3 className="text-xl font-bold mb-4">💰 Your Insurance Balances</h3>
       
       <div className="space-y-4">
         {/* MToken Balance */}
-        <div className="nb-betting-panel-success p-4">
+        <div className="nb-insurance-panel-success p-4">
           <h4 className="font-bold text-sm mb-1">💎 {mtokenSymbol} Tokens</h4>
           <p className="text-2xl font-bold">
             {formatUnits(mtokenBalance, mtokenDecimals)}
@@ -46,7 +46,7 @@ export function UserPremiumBalance({
         </div>
 
         {/* Vault Tickets Balance */}
-        <div className="nb-betting-panel-accent p-4">
+        <div className="nb-insurance-panel-accent p-4">
           <h4 className="font-bold text-sm mb-1">🎫 {vaultSymbol} Insurance Tickets</h4>
           <p className="text-2xl font-bold">
             {formatUnits(vaultBalance, vaultDecimals)}

@@ -9,7 +9,7 @@ import { PremiumVaultPage } from '../pages/weather-insurance/PremiumVaultPage';
 
 export function WeatherInsurancePlatformLayout() {
   return (
-    <div className="min-h-screen nb-betting-grid-bg flex flex-col">
+    <div className="min-h-screen nb-insurance-grid-bg flex flex-col">
       <WeatherInsuranceHeader />
       
       <main className="flex-1">

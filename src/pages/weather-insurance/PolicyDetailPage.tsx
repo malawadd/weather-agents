@@ -119,7 +119,7 @@ export function PolicyDetailPage() {
   if (isLoadingPolicy || isLoadingThresholds) {
     return (
       <div className="w-full px-4 space-y-6">
-        <div className="nb-betting-panel p-8 text-center">
+        <div className="nb-insurance-panel p-8 text-center">
           <h2 className="text-2xl font-bold mb-4">🔄 Loading Policy Details</h2>
           <p>Fetching data from the blockchain...</p>
         </div>
@@ -131,10 +131,11 @@ export function PolicyDetailPage() {
   if (isPolicyError || isThresholdsError || !policyDetail) {
     return (
       <div className="w-full px-4 space-y-6">
-        <div className="nb-betting-panel-warning p-8 text-center">
+        <div className="nb-insurance-panel-warning p-8 text-center">
           <h2 className="text-2xl font-bold mb-4">❌ Policy Not Found</h2>
           <p className="mb-4">The insurance policy you're looking for doesn't exist or has expired.</p>
           <Link to="/weather-insurance" className="nb-betting-button-accent px-6 py-3 font-bold">
+          <Link to="/weather-insurance" className="nb-insurance-button-accent px-6 py-3 font-bold">
             ← Back to Active Policies
           </Link>
         </div>
@@ -156,6 +157,7 @@ export function PolicyDetailPage() {
         <div className="lg:col-span-2 space-y-6">
           <PolicyDetailsSection policy={policyDetail} />
           <div className="nb-betting-panel-white p-6">
+          <div className="nb-insurance-panel-white p-6">
             <h2 className="text-xl font-bold mb-4">🌡️ Coverage Options</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {policyDetail.thresholds && policyDetail.thresholds.map((threshold, index) => (
@@ -164,8 +166,8 @@ export function PolicyDetailPage() {
                   onClick={() => setSelectedThreshold(threshold)}
                   className={`p-3 font-bold text-sm ${
                     selectedThreshold === threshold
-                      ? 'nb-betting-button-success'
-                      : 'nb-betting-button'
+                     ? 'nb-insurance-button-success'
+                     : 'nb-insurance-button'
                   }`}
                 >
                   {threshold}°C

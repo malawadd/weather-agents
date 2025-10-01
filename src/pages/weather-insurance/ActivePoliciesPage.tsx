@@ -117,7 +117,7 @@ export function ActivePoliciesPage() {
   return (
     <div className="w-full px-4 space-y-6">
       {/* Header */}
-      <div className="nb-betting-panel-white p-6">
+      <div className="nb-insurance-panel-white p-6">
         <h1 className="text-3xl font-bold mb-2">☔ Active Weather Insurance Policies</h1>
         <p className="text-gray-600">
           Protect yourself against weather risks with parametric insurance policies backed by real weather data.
@@ -126,14 +126,14 @@ export function ActivePoliciesPage() {
 
       {/* Filters and Stats */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        <div className="lg:col-span-3 nb-betting-panel-accent p-4">
+        <div className="lg:col-span-3 nb-insurance-panel-accent p-4">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center space-x-2">
               <span className="font-bold">Category:</span>
               <select 
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="nb-betting-input px-3 py-1 text-sm"
+                className="nb-insurance-input px-3 py-1 text-sm"
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
@@ -145,7 +145,7 @@ export function ActivePoliciesPage() {
               <select 
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="nb-betting-input px-3 py-1 text-sm"
+                className="nb-insurance-input px-3 py-1 text-sm"
               >
                 <option value="coverage">Coverage Amount</option>
                 <option value="time">Time Remaining</option>
@@ -155,7 +155,7 @@ export function ActivePoliciesPage() {
           </div>
         </div>
 
-        <div className="nb-betting-panel-success p-4">
+        <div className="nb-insurance-panel-success p-4">
           <div className="text-center">
             <p className="font-bold text-sm">TOTAL POLICIES</p>
             <p className="text-2xl font-bold">{filteredPolicies.length}</p>
@@ -165,7 +165,7 @@ export function ActivePoliciesPage() {
 
       {/* Policies Grid */}
       {filteredPolicies.length === 0 ? (
-        <div className="nb-betting-panel p-8 text-center">
+        <div className="nb-insurance-panel p-8 text-center">
           <h3 className="text-xl font-bold mb-4">📭 No Policies Found</h3>
           <p className="text-gray-600 mb-6">
             {selectedCategory === 'All' 
@@ -175,7 +175,7 @@ export function ActivePoliciesPage() {
           </p>
           <button 
             onClick={() => setSelectedCategory('All')}
-            className="nb-betting-button-accent px-6 py-3 font-bold"
+            className="nb-insurance-button-accent px-6 py-3 font-bold"
           >
             Show All Policies
           </button>
@@ -190,17 +190,17 @@ export function ActivePoliciesPage() {
 
       {/* Platform Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="nb-betting-panel-white p-6 text-center">
+        <div className="nb-insurance-panel-white p-6 text-center">
           <h3 className="font-bold text-lg mb-2">💰 Total Coverage</h3>
           <p className="text-2xl font-bold text-green-600">
             ${allPolicies.reduce((sum, policy) => sum + policy.totalCoverage, 0).toLocaleString()}
           </p>
         </div>
-        <div className="nb-betting-panel-white p-6 text-center">
+        <div className="nb-insurance-panel-white p-6 text-center">
           <h3 className="font-bold text-lg mb-2">📋 Active Policies</h3>
           <p className="text-2xl font-bold text-blue-600">{allPolicies.length}</p>
         </div>
-        <div className="nb-betting-panel-white p-6 text-center">
+        <div className="nb-insurance-panel-white p-6 text-center">
           <h3 className="font-bold text-lg mb-2">🏆 Top Category</h3>
           <p className="text-2xl font-bold text-purple-600">Drought Protection</p>
         </div>

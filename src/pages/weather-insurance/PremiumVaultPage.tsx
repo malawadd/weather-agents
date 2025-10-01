@@ -83,7 +83,7 @@ export function PremiumVaultPage() {
   if (!isConnected) {
     return (
       <div className="w-full px-4">
-        <div className="nb-betting-panel-warning p-8 text-center max-w-2xl mx-auto">
+        <div className="nb-insurance-panel-warning p-8 text-center max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">🔒 Wallet Connection Required</h2>
           <p className="mb-4">
             Please connect your wallet to access the premium vault and manage your insurance tokens.
@@ -99,7 +99,7 @@ export function PremiumVaultPage() {
   return (
     <div className="w-full px-4 space-y-6">
       {/* Page Header */}
-      <div className="nb-betting-panel-white p-6">
+      <div className="nb-insurance-panel-white p-6">
         <h1 className="text-3xl font-bold mb-2">🏦 Kiyan Premium Vault</h1>
         <p className="text-gray-600">
           Deposit tokens to mint Kiyan tickets for purchasing weather insurance policies, or contribute to the community coverage pool.
@@ -171,7 +171,7 @@ export function PremiumVaultPage() {
 
       {/* Information Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="nb-betting-panel-accent p-6">
+        <div className="nb-insurance-panel-accent p-6">
           <h3 className="text-xl font-bold mb-4">☔ How Insurance Works</h3>
           <ul className="space-y-2 text-sm">
             <li className="flex items-start space-x-2">
@@ -193,7 +193,7 @@ export function PremiumVaultPage() {
           </ul>
         </div>
 
-        <div className="nb-betting-panel-success p-6">
+        <div className="nb-insurance-panel-success p-6">
           <h3 className="text-xl font-bold mb-4">💝 Community Coverage Pool</h3>
           <ul className="space-y-2 text-sm">
             <li className="flex items-start space-x-2">
@@ -217,7 +217,7 @@ export function PremiumVaultPage() {
       </div>
 
       {/* Contract Information */}
-      <div className="nb-betting-panel p-6">
+      <div className="nb-insurance-panel p-6">
         <h3 className="text-lg font-bold mb-4">📋 Contract Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>

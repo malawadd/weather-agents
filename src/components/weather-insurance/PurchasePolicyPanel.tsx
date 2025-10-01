@@ -159,6 +159,7 @@ export function PurchasePolicyPanel({ policyId, selectedThreshold, thresholds, o
         <div className="text-center py-8">
           <p className="text-gray-600 mb-4">Connect your wallet to purchase insurance policies</p>
           <div className="nb-betting-panel-warning p-3">
+          <div className="nb-insurance-panel-warning p-3">
             <p className="text-sm font-bold">Wallet connection required</p>
           </div>
         </div>
@@ -167,20 +168,20 @@ export function PurchasePolicyPanel({ policyId, selectedThreshold, thresholds, o
   }
 
   return (
-    <div className="nb-betting-panel-white p-6">
+    <div className="nb-insurance-panel-white p-6">
       <h3 className="text-xl font-bold mb-4">🛡️ Purchase Policy</h3>
       
       {/* Selected Option */}
       {selectedThreshold !== null ? (
         <div className="space-y-3 mb-4">
-          <div className="nb-betting-panel-accent p-4">
+          <div className="nb-insurance-panel-accent p-4">
             <h4 className="font-bold text-sm mb-1">Selected Coverage</h4>
             <p className="text-xl font-bold">{selectedThreshold}°C threshold</p>
           </div>
           
           {/* Show user's current coverage */}
           {userShares > 0n && (
-            <div className="nb-betting-panel-success p-3">
+            <div className="nb-insurance-panel-success p-3">
               <h4 className="font-bold text-xs mb-1">Your Current Coverage</h4>
               <p className="text-sm font-bold">
                 {formatUnits(userShares, ticketDecimals)} KITX
@@ -195,13 +196,13 @@ export function PurchasePolicyPanel({ policyId, selectedThreshold, thresholds, o
           )}
         </div>
       ) : (
-        <div className="nb-betting-panel p-4 mb-4 text-center">
+        <div className="nb-insurance-panel p-4 mb-4 text-center">
           <p className="text-gray-600">Select a temperature threshold to purchase coverage</p>
         </div>
       )}
 
       {/* Ticket Balance */}
-      <div className="nb-betting-panel-success p-4 mb-4">
+      <div className="nb-insurance-panel-success p-4 mb-4">
         <div className="flex justify-between items-center">
           <div>
             <h4 className="font-bold text-sm mb-1">🎫 Your Tickets</h4>
@@ -226,11 +227,12 @@ export function PurchasePolicyPanel({ policyId, selectedThreshold, thresholds, o
             onChange={(e) => setShareAmount(e.target.value)}
             placeholder="0.0"
             className="nb-betting-input flex-1 px-4 py-3"
+            className="nb-insurance-input flex-1 px-4 py-3"
             disabled={isApproving || isPurchasing}
           />
           <button
             onClick={handleMaxClick}
-            className="nb-betting-button px-4 py-3 font-bold"
+            className="nb-insurance-button px-4 py-3 font-bold"
             disabled={isApproving || isPurchasing}
           >
             MAX
@@ -247,7 +249,7 @@ export function PurchasePolicyPanel({ policyId, selectedThreshold, thresholds, o
           <button
             onClick={handleApprove}
             disabled={!isValidAmount() || isApproving || isPurchasing}
-            className="nb-betting-button-warning w-full py-3 font-bold disabled:opacity-50"
+            className="nb-insurance-button-warning w-full py-3 font-bold disabled:opacity-50"
           >
             {isApproving ? '⏳ Approving...' : '🔓 Approve Tickets'}
           </button>
@@ -256,14 +258,14 @@ export function PurchasePolicyPanel({ policyId, selectedThreshold, thresholds, o
         <button
           onClick={handlePurchasePolicy}
           disabled={!isValidAmount() || needsApproval() || selectedThreshold === null || isApproving || isPurchasing}
-          className="nb-betting-button-success w-full py-3 font-bold disabled:opacity-50"
+          className="nb-insurance-button-success w-full py-3 font-bold disabled:opacity-50"
         >
           {isPurchasing ? '⏳ Purchasing...' : '🛡️ Purchase Policy'}
         </button>
       </div>
 
       {/* Help Text */}
-      <div className="nb-betting-panel p-3 mt-4">
+      <div className="nb-insurance-panel p-3 mt-4">
         <h4 className="font-bold text-sm mb-2">💡 How to purchase:</h4>
         <ul className="text-xs space-y-1">
           <li>• Select a temperature threshold above</li>

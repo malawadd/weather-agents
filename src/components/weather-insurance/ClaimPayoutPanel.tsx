@@ -82,7 +82,7 @@ export function ClaimPayoutPanel({ policyId, isPolicySettled, actualTemp, onClai
           <p className="text-xs mt-1">You have already claimed your payout for this policy</p>
         </div>
         {actualTemp !== undefined && (
-          <div className="nb-betting-panel-accent p-3 mt-4">
+          <div className="nb-insurance-panel-accent p-3 mt-4">
             <p className="text-sm font-bold">🌡️ Final Temperature: {actualTemp}°C</p>
           </div>
         )}
@@ -91,19 +91,19 @@ export function ClaimPayoutPanel({ policyId, isPolicySettled, actualTemp, onClai
   }
 
   return (
-    <div className="nb-betting-panel-white p-6">
+    <div className="nb-insurance-panel-white p-6">
       <h3 className="text-xl font-bold mb-4">🏆 Claim Payout</h3>
-      
+      <div className="nb-insurance-panel-success p-4 text-center">
       {/* Policy Results */}
       {actualTemp !== undefined && (
-        <div className="nb-betting-panel-accent p-4 mb-4">
+        <div className="nb-insurance-panel-accent p-4 mb-4">
           <h4 className="font-bold text-sm mb-1">📊 Final Results</h4>
           <p className="text-xl font-bold">Actual Temperature: {actualTemp}°C</p>
         </div>
       )}
 
       {/* Claim Status */}
-      <div className="nb-betting-panel-success p-4 mb-4">
+      <div className="nb-insurance-panel-success p-4 mb-4">
         <h4 className="font-bold text-sm mb-1">🛡️ Claim Status</h4>
         <p className="text-sm">
           {isPolicySettled ? 'Policy has been settled - you can claim any eligible payouts' : 'Waiting for policy settlement'}
@@ -114,13 +114,13 @@ export function ClaimPayoutPanel({ policyId, isPolicySettled, actualTemp, onClai
       <button
         onClick={handleClaim}
         disabled={isClaiming || hasClaimed}
-        className="nb-betting-button-success w-full py-3 font-bold disabled:opacity-50"
+        className="nb-insurance-button-success w-full py-3 font-bold disabled:opacity-50"
       >
         {isClaiming ? '⏳ Claiming...' : '🏆 Claim Insurance Payout'}
       </button>
 
       {/* Info */}
-      <div className="nb-betting-panel p-3 mt-4">
+      <div className="nb-insurance-panel p-3 mt-4">
         <h4 className="font-bold text-sm mb-2">ℹ️ About claiming:</h4>
         <ul className="text-xs space-y-1">
           <li>• Only policies meeting trigger conditions are eligible</li>

@@ -24,7 +24,7 @@ export function PolicyCard({ policy }: PolicyCardProps) {
 
   return (
     <Link to={`/weather-insurance/policy/${policy.id}`}>
-      <div className="nb-betting-panel-white p-4 hover:nb-betting-panel-accent transition-all duration-200 cursor-pointer">
+      <div className="nb-insurance-panel-white p-4 hover:nb-insurance-panel-accent transition-all duration-200 cursor-pointer">
         {/* Image and Question */}
         <div className="flex items-start space-x-4 mb-4">
           <img 
@@ -45,10 +45,10 @@ export function PolicyCard({ policy }: PolicyCardProps) {
             <span className="text-lg font-bold">{topOption.percentage}% coverage</span>
           </div>
           <div className="flex space-x-2">
-            <div className="nb-betting-button-success px-3 py-1 text-sm font-bold flex-1 text-center">
+            <div className="nb-insurance-button-success px-3 py-1 text-sm font-bold flex-1 text-center">
               {topOption.premiumRate}% premium
             </div>
-            <div className="nb-betting-button px-3 py-1 text-sm font-bold flex-1 text-center">
+            <div className="nb-insurance-button px-3 py-1 text-sm font-bold flex-1 text-center">
               {topOption.coverageRatio}% payout
             </div>
           </div>

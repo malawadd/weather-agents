@@ -17,7 +17,7 @@ export function PolicyOption({ option }: PolicyOptionProps) {
   };
 
   return (
-    <div className="nb-betting-panel p-4">
+    <div className="nb-insurance-panel p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <span className="font-bold text-lg">{option.range}</span>
@@ -32,10 +32,10 @@ export function PolicyOption({ option }: PolicyOptionProps) {
         </div>
         
         <div className="flex space-x-3">
-          <div className="nb-betting-button-success px-6 py-2 font-bold text-center">
+          <div className="nb-insurance-button-success px-6 py-2 font-bold text-center">
             {option.premiumRate}% premium
           </div>
-          <div className="nb-betting-button px-6 py-2 font-bold text-center">
+          <div className="nb-insurance-button px-6 py-2 font-bold text-center">
             {option.coverageRatio}% payout
           </div>
         </div>

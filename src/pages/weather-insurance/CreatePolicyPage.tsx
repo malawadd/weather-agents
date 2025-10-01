@@ -75,10 +75,10 @@ export function CreatePolicyPage() {
   if (!address) {
     return (
       <div className="w-full px-4">
-        <div className="nb-betting-panel-warning p-8 text-center max-w-2xl mx-auto">
+        <div className="nb-insurance-panel-warning p-8 text-center max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">🔒 Wallet Connection Required</h2>
           <p className="mb-4">Please connect your wallet to access policy creation.</p>
-          <Link to="/weather-insurance" className="nb-betting-button-accent px-6 py-3 font-bold">
+          <Link to="/weather-insurance" className="nb-insurance-button-accent px-6 py-3 font-bold">
             ← Back to Active Policies
           </Link>
         </div>
@@ -89,13 +89,13 @@ export function CreatePolicyPage() {
   if (!isOwner) {
     return (
       <div className="w-full px-4">
-        <div className="nb-betting-panel-warning p-8 text-center max-w-2xl mx-auto">
+        <div className="nb-insurance-panel-warning p-8 text-center max-w-2xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">🚫 Access Denied</h2>
           <p className="mb-4">Only the contract owner can create new insurance policies.</p>
           <p className="text-sm text-gray-600 mb-4">
             Contract Owner: {contractOwner ? `${contractOwner.slice(0, 6)}...${contractOwner.slice(-4)}` : 'Loading...'}
           </p>
-          <Link to="/weather-insurance" className="nb-betting-button-accent px-6 py-3 font-bold">
+          <Link to="/weather-insurance" className="nb-insurance-button-accent px-6 py-3 font-bold">
             ← Back to Active Policies
           </Link>
         </div>
@@ -113,7 +113,7 @@ export function CreatePolicyPage() {
       </div>
 
       {/* Header */}
-      <div className="nb-betting-panel-white p-6">
+      <div className="nb-insurance-panel-white p-6">
         <h1 className="text-3xl font-bold mb-2">☔ Create Weather Insurance Policy</h1>
         <p className="text-gray-600">
           Create a new parametric weather insurance policy for the community to purchase.
@@ -122,17 +122,17 @@ export function CreatePolicyPage() {
 
       {/* Create Policy Form */}
       <div className="max-w-2xl mx-auto">
-        <div className="nb-betting-panel-white p-6">
+        <div className="nb-insurance-panel-white p-6">
           <h2 className="text-xl font-bold mb-6">📋 Policy Configuration</h2>
           
           {/* Hardcoded Policy Info */}
           <div className="space-y-4 mb-6">
-            <div className="nb-betting-panel-accent p-4">
+            <div className="nb-insurance-panel-accent p-4">
               <h3 className="font-bold mb-2">☔ Coverage Type</h3>
               <p className="text-lg font-bold">Temperature Insurance for London</p>
             </div>
 
-            <div className="nb-betting-panel-success p-4">
+            <div className="nb-insurance-panel-success p-4">
               <h3 className="font-bold mb-2">📝 Description</h3>
               <p className="text-sm">
                 Parametric insurance policy that provides automatic payouts when temperature 
@@ -142,11 +142,11 @@ export function CreatePolicyPage() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div className="nb-betting-panel p-3">
+              <div className="nb-insurance-panel p-3">
                 <h4 className="font-bold text-sm mb-1">📍 Location</h4>
                 <p className="text-sm">London, UK</p>
               </div>
-              <div className="nb-betting-panel p-3">
+              <div className="nb-insurance-panel p-3">
                 <h4 className="font-bold text-sm mb-1">⏰ Duration</h4>
                 <p className="text-sm">7 days</p>
               </div>
@@ -163,7 +163,7 @@ export function CreatePolicyPage() {
               value={thresholds}
               onChange={(e) => setThresholds(e.target.value)}
               placeholder="20, 21, 22, 23, 24"
-              className="nb-betting-input w-full px-4 py-3"
+              className="nb-insurance-input w-full px-4 py-3"
               disabled={isCreating || isCreatingPolicy}
             />
             <p className="text-xs text-gray-600 mt-1">
@@ -172,7 +172,7 @@ export function CreatePolicyPage() {
           </div>
 
           {/* Preview */}
-          <div className="nb-betting-panel-warning p-4 mb-6">
+          <div className="nb-insurance-panel-warning p-4 mb-6">
             <h4 className="font-bold text-sm mb-2">📋 Policy Preview</h4>
             <ul className="text-sm space-y-1">
               <li>• Coverage: "Temperature insurance for London this week"</li>
@@ -186,13 +186,13 @@ export function CreatePolicyPage() {
           <button
             onClick={handleCreatePolicy}
             disabled={!thresholds.trim() || isCreating || isCreatingPolicy}
-            className="nb-betting-button-success w-full py-4 font-bold text-lg disabled:opacity-50"
+            className="nb-insurance-button-success w-full py-4 font-bold text-lg disabled:opacity-50"
           >
             {isCreating || isCreatingPolicy ? '⏳ Creating Policy...' : '☔ Create Insurance Policy'}
           </button>
 
           {/* Info */}
-          <div className="nb-betting-panel p-4 mt-6">
+          <div className="nb-insurance-panel p-4 mt-6">
             <h4 className="font-bold text-sm mb-2">ℹ️ Important Notes:</h4>
             <ul className="text-xs space-y-1">
               <li>• Once created, the policy cannot be modified</li>

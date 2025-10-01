@@ -22,16 +22,156 @@
 }
 
 /* Betting Platform Color Scheme */
+/* Weather Insurance Platform Color Scheme */
 :root {
-  --nb-betting-bg: #FFE5E5;
-  --nb-betting-surface: #FF9999;
-  --nb-betting-accent: #66CCFF;
-  --nb-betting-success: #99FF99;
-  --nb-betting-warning: #FFFF99;
-  --nb-betting-text: #000;
-  --nb-betting-border: #000;
-  --nb-betting-radius: 5px;
-  --nb-betting-shadow: 4px 4px 0 0 #000;
+  --nb-insurance-bg: #E8F4FD;
+  --nb-insurance-surface: #87CEEB;
+  --nb-insurance-accent: #FFD700;
+  --nb-insurance-success: #98FB98;
+  --nb-insurance-warning: #FFA07A;
+  --nb-insurance-text: #000;
+  --nb-insurance-border: #000;
+  --nb-insurance-radius: 5px;
+  --nb-insurance-shadow: 4px 4px 0 0 #000;
+}
+
+/* Weather Insurance Grid Background */
+.nb-insurance-grid-bg {
+  background: var(--nb-insurance-bg);
+  background-image: 
+    linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
+  background-size: var(--nb-grid-size) var(--nb-grid-size);
+}
+
+/* Weather Insurance Components */
+.nb-insurance-panel {
+  background: var(--nb-insurance-surface);
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: var(--nb-insurance-shadow);
+}
+
+.nb-insurance-panel-white {
+  background: white;
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: var(--nb-insurance-shadow);
+}
+
+.nb-insurance-panel-accent {
+  background: var(--nb-insurance-accent);
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: var(--nb-insurance-shadow);
+}
+
+.nb-insurance-panel-success {
+  background: var(--nb-insurance-success);
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: var(--nb-insurance-shadow);
+}
+
+.nb-insurance-panel-warning {
+  background: var(--nb-insurance-warning);
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: var(--nb-insurance-shadow);
+}
+
+.nb-insurance-button {
+  background: var(--nb-insurance-surface);
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: var(--nb-insurance-shadow);
+  font-weight: bold;
+  color: var(--nb-insurance-text);
+  transition: transform 0.1s ease;
+}
+
+.nb-insurance-button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.nb-insurance-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.nb-insurance-button-accent {
+  background: var(--nb-insurance-accent);
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: var(--nb-insurance-shadow);
+  font-weight: bold;
+  color: var(--nb-insurance-text);
+  transition: transform 0.1s ease;
+}
+
+.nb-insurance-button-accent:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.nb-insurance-button-accent:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.nb-insurance-button-success {
+  background: var(--nb-insurance-success);
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: var(--nb-insurance-shadow);
+  font-weight: bold;
+  color: var(--nb-insurance-text);
+  transition: transform 0.1s ease;
+}
+
+.nb-insurance-button-success:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.nb-insurance-button-success:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.nb-insurance-button-warning {
+  background: var(--nb-insurance-warning);
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: var(--nb-insurance-shadow);
+  font-weight: bold;
+  color: var(--nb-insurance-text);
+  transition: transform 0.1s ease;
+}
+
+.nb-insurance-button-warning:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 #000;
+}
+
+.nb-insurance-button-warning:active {
+  transform: translate(4px, 4px);
+  box-shadow: none;
+}
+
+.nb-insurance-input {
+  background: white;
+  border: 4px solid var(--nb-insurance-border);
+  border-radius: var(--nb-insurance-radius);
+  box-shadow: inset 2px 2px 0 0 rgba(0,0,0,0.1);
+  font-weight: 500;
+  color: var(--nb-insurance-text);
+}
+
+.nb-insurance-input:focus {
+  outline: none;
+  box-shadow: inset 2px 2px 0 0 rgba(0,0,0,0.2), 0 0 0 2px var(--nb-insurance-surface);
 }
 
 .accent-text {
