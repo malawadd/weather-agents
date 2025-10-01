@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { WeatherInsuranceHeader } from '../components/weather-insurance/WeatherInsuranceHeader';
 import { WeatherInsuranceFooter } from '../components/weather-insurance/WeatherInsuranceFooter';
+import { InsuranceLandingPage } from '../pages/weather-insurance/InsuranceLandingPage';
 import { ActivePoliciesPage } from '../pages/weather-insurance/ActivePoliciesPage';
 import { PolicyDetailPage } from '../pages/weather-insurance/PolicyDetailPage';
 import { CreatePolicyPage } from '../pages/weather-insurance/CreatePolicyPage';
@@ -14,7 +15,8 @@ export function WeatherInsurancePlatformLayout() {
       
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<ActivePoliciesPage />} />
+          <Route path="/" element={<InsuranceLandingPage />} />
+          <Route path="/policies" element={<ActivePoliciesPage />} />
           <Route path="/policy/:policyId" element={<PolicyDetailPage />} />
           <Route path="/create-policy" element={<CreatePolicyPage />} />
           <Route path="/premium-vault" element={<PremiumVaultPage />} />

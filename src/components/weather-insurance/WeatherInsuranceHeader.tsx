@@ -31,6 +31,9 @@ export function WeatherInsuranceHeader() {
           </div>
           <div className="flex space-x-6">
             <Link to="/weather-insurance" className="font-bold text-black hover:underline">
+              Home
+            </Link>
+            <Link to="/weather-insurance/policies" className="font-bold text-gray-600 hover:text-black hover:underline">
               Active Policies
             </Link>
             {isOwner && (

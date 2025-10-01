@@ -118,9 +118,9 @@ export function ActivePoliciesPage() {
     <div className="w-full px-4 space-y-6">
       {/* Header */}
       <div className="nb-insurance-panel-white p-6">
-        <h1 className="text-3xl font-bold mb-2">☔ Active Weather Insurance Policies</h1>
+        <h1 className="text-3xl font-bold mb-2">☔ All Weather Insurance Policies</h1>
         <p className="text-gray-600">
-          Protect yourself against weather risks with parametric insurance policies backed by real weather data.
+          Browse all available weather insurance policies and find the perfect protection for your needs.
         </p>
       </div>
 
@@ -173,12 +173,17 @@ export function ActivePoliciesPage() {
               : `No ${selectedCategory.toLowerCase()} insurance policies found.`
             }
           </p>
-          <button 
-            onClick={() => setSelectedCategory('All')}
-            className="nb-insurance-button-accent px-6 py-3 font-bold"
-          >
-            Show All Policies
-          </button>
+          <div className="flex gap-4 justify-center">
+            <button 
+              onClick={() => setSelectedCategory('All')}
+              className="nb-insurance-button-accent px-6 py-3 font-bold"
+            >
+              Show All Policies
+            </button>
+            <Link to="/weather-insurance/create-policy" className="nb-insurance-button px-6 py-3 font-bold">
+              Create New Policy
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -202,8 +207,15 @@ export function ActivePoliciesPage() {
         </div>
         <div className="nb-insurance-panel-white p-6 text-center">
           <h3 className="font-bold text-lg mb-2">🏆 Top Category</h3>
-          <p className="text-2xl font-bold text-purple-600">Drought Protection</p>
+          <p className="text-2xl font-bold text-purple-600">Temperature</p>
         </div>
+      </div>
+
+      {/* Back to Home */}
+      <div className="text-center">
+        <Link to="/weather-insurance" className="nb-insurance-button px-6 py-3 font-bold">
+          ← Back to Insurance Home
+        </Link>
       </div>
     </div>
   );
