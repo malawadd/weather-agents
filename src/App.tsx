@@ -2,7 +2,7 @@ import { Toaster } from "sonner";
 import { TomoProvider } from "./TomoProvider";
 import { AuthProvider, useAuth } from "./WalletAuthProvider";
 import { WalletSignInForm } from "./WalletSignInForm";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { PlatformSelectionPage } from "./pages/PlatformSelectionPage";
 import { PlaceholderPlatformPage } from "./pages/PlaceholderPlatformPage";
 import { BettingPlatformLayout } from "./layouts/BettingPlatformLayout";
@@ -13,8 +13,10 @@ import { BidPage } from "./pages/BidPage";
 import { CreateBidPage } from "./pages/CreateBidPage";
 function AppRouterContent() {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
 
-  if (!isAuthenticated) {
+  // Allow platform selection page for everyone
+  if (!isAuthenticated && location.pathname !== "/platform-selection") {
     return <WalletSignInForm />;
   }
 

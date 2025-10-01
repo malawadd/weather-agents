@@ -1,10 +1,26 @@
 import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../WalletAuthProvider';
 import { NewsSlider } from '../components/NewsSlider';
 import { PlatformIntroModal } from '../components/PlatformIntroModal';
 
 export function PlatformSelectionPage() {
-  const { user, isGuest, signOut } = useAuth();
+  const location = useLocation();
+  
+  // Only use auth if we're in an authenticated context
+  let user = null;
+  let isGuest = true;
+  let signOut = () => {};
+  
+  try {
+    const auth = useAuth();
+    user = auth.user;
+    isGuest = auth.isGuest;
+    signOut = auth.signOut;
+  } catch (error) {
+    // Auth context not available, use defaults
+  }
+  
   const [modalData, setModalData] = useState<{
     isOpen: boolean;
     title: string;
@@ -96,9 +112,15 @@ export function PlatformSelectionPage() {
               <span className="font-bold text-xs md:text-sm">PORTAL</span>
             </div>
             <div className="nb-panel-white px-4 py-2 flex items-center space-x-2">
-              <span className="font-bold text-xs md:text-sm">{user?.name || 'Explorer'}</span>
-              {isGuest && <span className="text-xs text-gray-600">(Guest)</span>}
-              <button onClick={signOut} className="text-xs font-bold text-red-600">✕</button>
+              {user ? (
+                <>
+                  <span className="font-bold text-xs md:text-sm">{user?.name || 'Explorer'}</span>
+                  {isGuest && <span className="text-xs text-gray-600">(Guest)</span>}
+                  <button onClick={signOut} className="text-xs font-bold text-red-600">✕</button>
+                </>
+              ) : (
+                <span className="font-bold text-xs md:text-sm">Welcome, Visitor!</span>
+              )}
             </div>
           </div>
         </div>
