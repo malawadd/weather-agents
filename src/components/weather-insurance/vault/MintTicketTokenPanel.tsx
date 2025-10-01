@@ -64,7 +64,7 @@ export function MintTicketTokenPanel({
   };
 
   return (
-    <div className="nb-betting-panel-warning p-6">
+    <div className="nb-insurance-panel-warning p-6">
       <h3 className="text-xl font-bold mb-4">🪙 Mint {mtokenSymbol} Tokens</h3>
       <p className="text-sm text-gray-600 mb-4">
         Mint {mtokenSymbol} tokens for testing purposes. In production, you would acquire these through legitimate means for insurance premiums.
@@ -79,6 +79,7 @@ export function MintTicketTokenPanel({
             onChange={(e) => setMintAmount(e.target.value)}
             placeholder="1000"
             className="nb-betting-input w-full px-4 py-3"
+            className="nb-insurance-input w-full px-4 py-3"
             disabled={isMinting}
           />
           <p className="text-xs text-gray-600 mt-1">
@@ -89,14 +90,14 @@ export function MintTicketTokenPanel({
         <button
           onClick={handleMint}
           disabled={!isValidAmount() || isMinting}
-          className="nb-betting-button-warning w-full py-3 font-bold disabled:opacity-50"
+          className="nb-insurance-button-warning w-full py-3 font-bold disabled:opacity-50"
         >
           {isMinting ? '⏳ Minting...' : `🪙 Mint ${mtokenSymbol} Tokens`}
         </button>
       </div>
 
       {/* Warning */}
-      <div className="nb-betting-panel p-3 mt-4">
+      <div className="nb-insurance-panel p-3 mt-4">
         <h4 className="font-bold text-sm mb-2">⚠️ Testing Only:</h4>
         <p className="text-xs">
           This minting function is for testing purposes only. In a production environment, 

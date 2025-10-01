@@ -119,7 +119,7 @@ export function RedeemMintTicketPanel({
   return (
     <div className="space-y-6">
       {/* Redeem Panel */}
-      <div className="nb-betting-panel-white p-6">
+      <div className="nb-insurance-panel-white p-6">
         <h3 className="text-xl font-bold mb-4">💸 Redeem Insurance Tickets</h3>
         <p className="text-sm text-gray-600 mb-4">
           Convert your Kiyan insurance tickets back to {mtokenSymbol} tokens.
@@ -134,12 +134,12 @@ export function RedeemMintTicketPanel({
                 value={redeemAmount}
                 onChange={(e) => setRedeemAmount(e.target.value)}
                 placeholder="0.0"
-                className="nb-betting-input flex-1 px-4 py-3"
+                className="nb-insurance-input flex-1 px-4 py-3"
                 disabled={isRedeeming}
               />
               <button
                 onClick={handleMaxRedeem}
-                className="nb-betting-button px-4 py-3 font-bold"
+                className="nb-insurance-button px-4 py-3 font-bold"
                 disabled={isRedeeming}
               >
                 MAX
@@ -153,7 +153,7 @@ export function RedeemMintTicketPanel({
           <button
             onClick={handleRedeem}
             disabled={!isValidRedeemAmount() || isRedeeming}
-            className="nb-betting-button w-full py-3 font-bold disabled:opacity-50"
+            className="nb-insurance-button w-full py-3 font-bold disabled:opacity-50"
           >
             {isRedeeming ? '⏳ Redeeming...' : `💸 Redeem to ${mtokenSymbol}`}
           </button>
@@ -161,7 +161,7 @@ export function RedeemMintTicketPanel({
       </div>
 
       {/* Mint Panel */}
-      <div className="nb-betting-panel-accent p-6">
+      <div className="nb-insurance-panel-accent p-6">
         <h3 className="text-xl font-bold mb-4">🎫 Mint Additional Insurance Tickets</h3>
         <p className="text-sm text-gray-600 mb-4">
           Mint additional Kiyan insurance tickets using the vault's mint function.
@@ -175,7 +175,7 @@ export function RedeemMintTicketPanel({
               value={mintAmount}
               onChange={(e) => setMintAmount(e.target.value)}
               placeholder="0.0"
-              className="nb-betting-input w-full px-4 py-3"
+              className="nb-insurance-input w-full px-4 py-3"
               disabled={isMinting}
             />
           </div>
@@ -183,7 +183,7 @@ export function RedeemMintTicketPanel({
           <button
             onClick={handleMint}
             disabled={!isValidMintAmount() || isMinting}
-            className="nb-betting-button-accent w-full py-3 font-bold disabled:opacity-50"
+            className="nb-insurance-button-accent w-full py-3 font-bold disabled:opacity-50"
           >
             {isMinting ? '⏳ Minting...' : '🎫 Mint Insurance Tickets'}
           </button>

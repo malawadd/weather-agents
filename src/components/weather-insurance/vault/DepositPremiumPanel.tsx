@@ -133,7 +133,7 @@ export function DepositPremiumPanel({
   return (
     <div className="space-y-6">
       {/* Deposit Panel */}
-      <div className="nb-betting-panel-white p-6">
+      <div className="nb-insurance-panel-white p-6">
         <h3 className="text-xl font-bold mb-4">💎 Deposit for Insurance Tickets</h3>
         <p className="text-sm text-gray-600 mb-4">
           Deposit {mtokenSymbol} tokens to mint Kiyan insurance tickets for purchasing weather protection policies.
@@ -148,12 +148,12 @@ export function DepositPremiumPanel({
                 value={depositAmount}
                 onChange={(e) => setDepositAmount(e.target.value)}
                 placeholder="0.0"
-                className="nb-betting-input flex-1 px-4 py-3"
+                className="nb-insurance-input flex-1 px-4 py-3"
                 disabled={isApproving || isDepositing}
               />
               <button
                 onClick={() => handleMaxClick(setDepositAmount)}
-                className="nb-betting-button px-4 py-3 font-bold"
+                className="nb-insurance-button px-4 py-3 font-bold"
                 disabled={isApproving || isDepositing}
               >
                 MAX
@@ -165,7 +165,7 @@ export function DepositPremiumPanel({
             <button
               onClick={() => handleApprove(depositAmount)}
               disabled={!isValidAmount(depositAmount) || isApproving || isDepositing}
-              className="nb-betting-button-warning w-full py-2 font-bold disabled:opacity-50"
+              className="nb-insurance-button-warning w-full py-2 font-bold disabled:opacity-50"
             >
               {isApproving ? '⏳ Approving...' : '🔓 Approve Tokens'}
             </button>
@@ -173,7 +173,7 @@ export function DepositPremiumPanel({
             <button
               onClick={handleDeposit}
               disabled={!isValidAmount(depositAmount) || isDepositing}
-              className="nb-betting-button-success w-full py-3 font-bold disabled:opacity-50"
+              className="nb-insurance-button-success w-full py-3 font-bold disabled:opacity-50"
             >
               {isDepositing ? '⏳ Depositing...' : '💎 Deposit & Mint Insurance Tickets'}
             </button>
@@ -182,7 +182,7 @@ export function DepositPremiumPanel({
       </div>
 
       {/* Donate Panel */}
-      <div className="nb-betting-panel-accent p-6">
+      <div className="nb-insurance-panel-accent p-6">
         <h3 className="text-xl font-bold mb-4">💝 Contribute to Coverage Pool</h3>
         <p className="text-sm text-gray-600 mb-4">
           Donate {mtokenSymbol} tokens to increase the community coverage pool and help other policyholders.
@@ -197,12 +197,12 @@ export function DepositPremiumPanel({
                 value={donateAmount}
                 onChange={(e) => setDonateAmount(e.target.value)}
                 placeholder="0.0"
-                className="nb-betting-input flex-1 px-4 py-3"
+                className="nb-insurance-input flex-1 px-4 py-3"
                 disabled={isApproving || isDonating}
               />
               <button
                 onClick={() => handleMaxClick(setDonateAmount)}
-                className="nb-betting-button px-4 py-3 font-bold"
+                className="nb-insurance-button px-4 py-3 font-bold"
                 disabled={isApproving || isDonating}
               >
                 MAX
@@ -214,7 +214,7 @@ export function DepositPremiumPanel({
             <button
               onClick={() => handleApprove(donateAmount)}
               disabled={!isValidAmount(donateAmount) || isApproving || isDonating}
-              className="nb-betting-button-warning w-full py-2 font-bold disabled:opacity-50"
+              className="nb-insurance-button-warning w-full py-2 font-bold disabled:opacity-50"
             >
               {isApproving ? '⏳ Approving...' : '🔓 Approve Tokens'}
             </button>
@@ -222,7 +222,7 @@ export function DepositPremiumPanel({
             <button
               onClick={handleDonate}
               disabled={!isValidAmount(donateAmount) || isDonating}
-              className="nb-betting-button-accent w-full py-3 font-bold disabled:opacity-50"
+              className="nb-insurance-button-accent w-full py-3 font-bold disabled:opacity-50"
             >
               {isDonating ? '⏳ Contributing...' : '💝 Contribute to Coverage Pool'}
             </button>
