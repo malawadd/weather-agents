@@ -1,89 +1,12 @@
 import React, { useState } from 'react';
-import { useReadContract, useReadContracts } from 'wagmi';
 import { PolicyCard } from '../../components/weather-insurance/PolicyCard';
-import { Policy } from '../../data/mockInsuranceData';
-import { BIDDING_CONTRACT_ADDRESS } from '../../constants/contractAddresses';
-import { BIDDING_ABI } from '../../constants/biddingAbi';
+import { PolicyCard } from '../../components/weather-insurance/PolicyCard';
+import { mockActivePolicies } from '../../data/mockInsuranceData';
 
 export function ActivePoliciesPage() {
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [sortBy, setSortBy] = useState('coverage');
-
   const categories = ['All', 'Drought', 'Rainfall', 'Temperature', 'Natural Disasters'];
-
-  // Fetch all policy IDs from contract
-  const { data: allPolicyIds = [] } = useReadContract({
-    address: BIDDING_CONTRACT_ADDRESS,
-    abi: BIDDING_ABI,
-    functionName: 'getAllDrawIds',
-  });
-
-  // Fetch policy details for each policy ID
-  const policyContracts = allPolicyIds.map((policyId: bigint) => ({
-    address: BIDDING_CONTRACT_ADDRESS,
-    abi: BIDDING_ABI,
-    functionName: 'getDraw',
-    args: [policyId],
-  }));
-
-  const thresholdContracts = allPolicyIds.map((policyId: bigint) => ({
-    address: BIDDING_CONTRACT_ADDRESS,
-    abi: BIDDING_ABI,
-    functionName: 'getThresholds',
-    args: [policyId],
-  }));
-
-  const { data: policiesData = [] } = useReadContracts({
-    contracts: policyContracts,
-  });
-
-  const { data: thresholdsData = [] } = useReadContracts({
-    contracts: thresholdContracts,
-  });
-
-  // Transform contract data to Policy format
-  const contractPolicies: Policy[] = allPolicyIds.map((policyId: bigint, index: number) => {
-    const policyData = policiesData[index]?.result;
-    const thresholds = thresholdsData[index]?.result || [];
-    
-    if (!policyData || !thresholds) return null;
-
-    const [cityId, endTime, settled, actualTemp, coverageAmount] = policyData;
-    const now = Math.floor(Date.now() / 1000);
-    const timeRemaining = Number(endTime) > now ? 
-      formatTimeRemaining(Number(endTime) - now) : 'Expired';
-    
-    const isActive = Number(endTime) > now && !settled;
-
-    // Create coverage options from thresholds
-    const options = Array.isArray(thresholds) ? thresholds.map((threshold: bigint) => ({
-      range: `${Number(threshold)}°C`,
-      percentage: Math.floor(Math.random() * 30) + 10,
-      premiumRate: Math.floor(Math.random() * 15) + 5,
-      coverageRatio: Math.floor(Math.random() * 50) + 100,
-    })) : [];
-
-    return {
-      id: policyId.toString(),
-      question: 'Temperature insurance for London this week?',
-      image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=2',
-      options,
-      totalCoverage: Number(coverageAmount) || Math.floor(Math.random() * 1000000),
-      frequency: 'Weekly' as const,
-      timeRemaining,
-      category: 'Temperature',
-      location: 'London, UK',
-      policyId: Number(policyId),
-      endTime: Number(endTime),
-      isSettled: settled,
-      actualTemp: actualTemp ? Number(actualTemp) : undefined,
-      thresholds: Array.isArray(thresholds) ? thresholds.map((t: bigint) => Number(t)) : [],
-    };
-  }).filter(Boolean) as Policy[];
   
-  const allPolicies = [...contractPolicies];
-  
-  const filteredPolicies = allPolicies.filter(policy => 
+  const filteredPolicies = mockActivePolicies.filter(policy => 
     selectedCategory === 'All' || policy.category === selectedCategory
   );
 
@@ -100,26 +23,11 @@ export function ActivePoliciesPage() {
     }
   });
 
-  function formatTimeRemaining(seconds: number): string {
-    const days = Math.floor(seconds / (24 * 60 * 60));
-    const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
-    const minutes = Math.floor((seconds % (60 * 60)) / 60);
-    
-    if (days > 0) {
-      return `${days}d ${hours}h ${minutes}m`;
-    } else if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    } else {
-      return `${minutes}m`;
-    }
-  }
-
-  return (
     <div className="w-full px-4 space-y-6">
       {/* Header */}
       <div className="nb-insurance-panel-white p-6">
+      <div className="nb-insurance-panel-white p-6">
         <h1 className="text-3xl font-bold mb-2">☔ All Weather Insurance Policies</h1>
-        <p className="text-gray-600">
           Browse all available weather insurance policies and find the perfect protection for your needs.
         </p>
       </div>
@@ -180,9 +88,6 @@ export function ActivePoliciesPage() {
             >
               Show All Policies
             </button>
-            <Link to="/weather-insurance/create-policy" className="nb-insurance-button px-6 py-3 font-bold">
-              Create New Policy
-            </Link>
           </div>
         </div>
       ) : (
@@ -192,11 +97,41 @@ export function ActivePoliciesPage() {
           ))}
         </div>
       )}
-
+              ? 'No insurance policies are currently available.'
+              : `No ${selectedCategory.toLowerCase()} insurance policies found.`
+            }
+          </p>
+          <div className="flex gap-4 justify-center">
+            <button 
+              onClick={() => setSelectedCategory('All')}
+              className="nb-insurance-button-accent px-6 py-3 font-bold"
       {/* Platform Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="nb-insurance-panel-white p-6 text-center">
           <h3 className="font-bold text-lg mb-2">💰 Total Coverage</h3>
+          <p className="text-2xl font-bold text-green-600">
+            ${mockActivePolicies.reduce((sum, policy) => sum + policy.totalCoverage, 0).toLocaleString()}
+          </p>
+        </div>
+        <div className="nb-insurance-panel-white p-6 text-center">
+          <h3 className="font-bold text-lg mb-2">📋 Active Policies</h3>
+          <p className="text-2xl font-bold text-blue-600">{mockActivePolicies.length}</p>
+        </div>
+        <div className="nb-insurance-panel-white p-6 text-center">
+          <h3 className="font-bold text-lg mb-2">🏆 Top Category</h3>
+          <p className="text-2xl font-bold text-purple-600">Temperature</p>
+        </div>
+      </div>
+
+      {/* Back to Home */}
+      <div className="text-center">
+        <Link to="/weather-insurance" className="nb-insurance-button px-6 py-3 font-bold">
+          ← Back to Insurance Home
+        </Link>
+      </div>
+    </div>
+  );
+}
           <p className="text-2xl font-bold text-green-600">
             ${allPolicies.reduce((sum, policy) => sum + policy.totalCoverage, 0).toLocaleString()}
           </p>
