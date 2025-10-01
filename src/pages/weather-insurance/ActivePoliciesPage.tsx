@@ -163,19 +163,15 @@ export function ActivePoliciesPage() {
         </div>
       </div>
 
-      {/* Active Policies Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedPolicies.map((policy) => (
-          <PolicyCard key={policy.id} policy={policy} />
-        ))}
-      </div>
-
-      {/* Empty State */}
-      {filteredPolicies.length === 0 && (
+      {/* Policies Grid */}
+      {filteredPolicies.length === 0 ? (
         <div className="nb-betting-panel p-8 text-center">
-          <h3 className="text-xl font-bold mb-2">No policies found</h3>
-          <p className="text-gray-600 mb-4">
-            Try adjusting your filters or check back later for new insurance opportunities.
+          <h3 className="text-xl font-bold mb-4">📭 No Policies Found</h3>
+          <p className="text-gray-600 mb-6">
+            {selectedCategory === 'All' 
+              ? 'No insurance policies are currently available.'
+              : `No ${selectedCategory.toLowerCase()} insurance policies found.`
+            }
           </p>
           <button 
             onClick={() => setSelectedCategory('All')}
@@ -183,6 +179,12 @@ export function ActivePoliciesPage() {
           >
             Show All Policies
           </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {sortedPolicies.map((policy) => (
+            <PolicyCard key={policy.id} policy={policy} />
+          ))}
         </div>
       )}
 
