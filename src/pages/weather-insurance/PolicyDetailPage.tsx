@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { mockPolicyDetails } from '../../data/mockInsuranceData';
 
 export function PolicyDetailPage() {
-  const [selectedThreshold, setSelectedThreshold] = useState<number | null>(null);
+  const { policyId } = useParams<{ policyId: string }>();
 
   // Get policy detail from mock data
   const policyDetail = policyId ? mockPolicyDetails[policyId] : null;
