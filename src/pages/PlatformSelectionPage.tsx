@@ -100,8 +100,9 @@ export function PlatformSelectionPage() {
         muted
         playsInline
       >
+        {/* alterntaive //https://videos.pexels.com/video-files/854002/854002-hd_1920_1080_24fps.mp4 */}
         <source 
-          src="https://videos.pexels.com/video-files/854002/854002-hd_1920_1080_24fps.mp4" 
+          src="https://videos.pexels.com/video-files/9341428/9341428-uhd_3840_2160_24fps.mp4" 
           type="video/mp4" 
         />
         {/* Fallback for browsers that don't support video */}
