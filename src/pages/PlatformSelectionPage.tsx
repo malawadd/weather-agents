@@ -92,11 +92,11 @@ export function PlatformSelectionPage() {
       <div className="relative z-30 p-4 md:p-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="nb-panel-white px-6 py-3">
-            <h1 className="text-xl md:text-2xl font-bold">🤖 KIYAN ECOSYSTEM</h1>
+            <h1 className="text-xl md:text-2xl font-bold">🤖 KIYAN PORTAL</h1>
           </div>
           
           <div className="flex flex-wrap items-center gap-2 md:gap-4">
-            <div className="nb-panel px-3 py-2">
+            {/* <div className="nb-panel px-3 py-2">
               <span className="text-white font-bold text-xs md:text-sm">STORE</span>
             </div>
             <div className="nb-panel px-3 py-2">
@@ -107,9 +107,9 @@ export function PlatformSelectionPage() {
             </div>
             <div className="nb-panel px-3 py-2">
               <span className="text-white font-bold text-xs md:text-sm">WORLD</span>
-            </div>
+            </div> */}
             <div className="nb-panel-accent px-3 py-2">
-              <span className="font-bold text-xs md:text-sm">PORTAL</span>
+              <span className="font-bold text-xs md:text-sm">Blog</span>
             </div>
             <div className="nb-panel-white px-4 py-2 flex items-center space-x-2">
               {user ? (
