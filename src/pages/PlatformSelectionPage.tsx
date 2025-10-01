@@ -84,12 +84,35 @@ export function PlatformSelectionPage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Background */}
-      <div 
+      {/* Static Background - Commented out for video background */}
+      {/* <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: 'url(https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=2)',
         }}
-      />
+      /> */}
+      
+      {/* Video Background */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        autoPlay
+        loop
+        muted
+        playsInline
+      >
+        <source 
+          src="https://videos.pexels.com/video-files/2795405/2795405-uhd_3840_2160_25fps.mp4" 
+          type="video/mp4" 
+        />
+        {/* Fallback for browsers that don't support video */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=2)',
+          }}
+        />
+      </video>
+      
       <div className="absolute inset-0 bg-black/70" />
 
       {/* Top Navigation Bar */}
