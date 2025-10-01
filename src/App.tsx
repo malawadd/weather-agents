@@ -46,7 +46,7 @@ export default function App() {
     <Router>
       <TomoProvider>
         <AuthProvider>
-          <div className="min-h-screen nb-grid-bg">
+          <div className="min-h-screen">
             <AppRouterContent />
             <Toaster />
           </div>

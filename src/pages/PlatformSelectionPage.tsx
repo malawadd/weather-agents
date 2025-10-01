@@ -5,130 +5,119 @@ import { useAuth } from '../WalletAuthProvider';
 export function PlatformSelectionPage() {
   const { user, isGuest, signOut } = useAuth();
 
-  const platforms = [
-    {
-      id: 'weather-intelligence',
-      title: 'Weather Intelligence Platform',
-      description: 'Explore global weather stations and get AI-powered insights about weather patterns and conditions.',
-      image: 'https://images.pexels.com/photos/1118873/pexels-photo-1118873.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      path: '/weather-intelligence',
-      available: true,
-      hoverColor: '#a589e8',
-      buttonClass: 'nb-button-accent',
-    },
-    {
-      id: 'future-innovations',
-      title: 'Weather Insurance Platform',
-      description: 'Weatherxm X eulerfinance.',
-      image: 'https://images.pexels.com/photos/2496572/pexels-photo-2496572.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-      path: '/future-platform',
-      available: false,
-      hoverColor: 'var(--nb-warning)',
-      buttonClass: 'nb-button',
-    },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col relative">
-      {/* Overlay Title */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none">
-      <div className="absolute top-8 left-1/2 z-30"
-     style={{ transform: 'translateX(-50%)' }}>
-  <div
-    className="bg-[#ffb3ba] border-4 border-black px-8 py-3  shadow-[4px_4px_0_#111]
-                text-black text-xl md:text-2xl font-extrabold uppercase tracking-wide"
-    
-  >
-    Choose Your Kiyan
-  </div>
-  
-</div>
-        
-        {/* User info in top right */}
-        <div className="absolute top-8 right-8 pointer-events-auto z-40">
-  <div
-    className="flex items-center space-x-4
-               bg-white
-               border-4 border-black
-               
-               px-5 py-3
-               shadow-[4px_4px_0_#111]
-               font-bold"
-    style={{ fontFamily: "Montserrat, Arial Black, sans-serif" }}
-  >
-    <span className="text-black text-sm font-extrabold">
-      Welcome, {user?.name || 'Explorer'}!
-      {isGuest && <span className="text-gray-500 font-normal"> (Guest)</span>}
-    </span>
-    <button
-      onClick={signOut}
-      className="bg-[#ffe066] border-2 border-black text-black px-4 py-1.5 rounded-xl font-bold text-sm shadow-[2px_2px_0_#111] hover:bg-[#ffd23f] active:translate-y-1 active:shadow-none transition-all"
-      style={{ fontFamily: "Montserrat, Arial Black, sans-serif" }}
-    >
-      Sign Out
-    </button>
-  </div>
-</div>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background Image with Dark Overlay */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: 'url(https://images.pexels.com/photos/1205301/pexels-photo-1205301.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=2)',
+        }}
+      />
+      <div className="absolute inset-0 bg-black/60" />
+
+      {/* Top Right Navigation */}
+      <div className="absolute top-8 right-8 z-30 flex items-center space-x-4">
+        <Link 
+          to="/weather-intelligence" 
+          className="nb-button-accent px-4 py-2 font-bold text-sm"
+        >
+          Weather Intelligence
+        </Link>
+        <Link 
+          to="/weather-betting" 
+          className="nb-button px-4 py-2 font-bold text-sm"
+        >
+          Weather Betting
+        </Link>
+        <div className="nb-panel-white px-4 py-2 flex items-center space-x-3">
+          <span className="text-black text-sm font-bold">
+            {user?.name || 'Explorer'}
+            {isGuest && <span className="text-gray-600"> (Guest)</span>}
+          </span>
+          <button
+            onClick={signOut}
+            className="nb-button px-3 py-1 text-xs font-bold"
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
 
-      {/* Platform Selection Grid - Full Screen */}
-      
-      <div className="flex-1 flex">
-        {platforms.map((platform) => (
-          <div key={platform.id} className="flex-1 h-screen relative group">
-            {platform.available ? (
-              <Link
-                to={platform.path}
-                className="block w-full h-full relative overflow-hidden"
-              >
-                <img
-                  src={platform.image}
-                  alt={platform.title}
-                  className="absolute inset-0 w-full h-full object-cover platform-choice-image transition-all duration-500 group-hover:scale-110"
-                />
-                
-                {/* Neobrutalism hover overlay with color */}
-                <div 
-                  className="absolute inset-0 bg-gradient-to-t to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{
-                    background: `linear-gradient(to top, ${platform.hoverColor}, ${platform.hoverColor}70, transparent)`
-                  }}
-                />
+      {/* Central Content */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-20 text-white">
+        <div className="text-center mb-8">
+          <h1 className="text-6xl font-bold mb-4 text-shadow-md">
+            Kiyan Weather Intelligence Platform
+          </h1>
+          <p className="text-xl text-shadow-sm font-medium">
+            Harnessing the power of global weather data and AI
+          </p>
+        </div>
 
-                
-                {/* Neobrutalism border on hover */}
-                <div className="absolute inset-4 border-8 border-black opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-                
-                {/* Platform info - appears on hover with neobrutalism styling */}
-                <div className="absolute bottom-8 left-8 right-8 text-black opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
-                  <h3 className="text-3xl font-bold mb-4 text-shadow-lg">{platform.title}</h3>
-                  <p className="text-lg mb-6 text-shadow-md font-bold">{platform.description}</p>
-                  <div className={`${platform.buttonClass} px-6 py-3 font-bold text-lg inline-block`}>
-                    Enter Platform →
-                  </div>
-                </div>
-              </Link>
-            ) : (
-              <div className="w-full h-full relative overflow-hidden">
-                <img
-                  src={platform.image}
-                  alt={platform.title}
-                  className="absolute inset-0 w-full h-full object-cover grayscale"
-                />
-                
-                {/* Coming soon overlay */}
-                <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center">
-                  {/* Neobrutalism Coming Soon badge */}
-                  <div className="nb-panel-warning px-6 py-3 font-bold text-xl mb-6 transform -rotate-12">
-                    🚧 Coming Soon
-                  </div>
-                  <h3 className="text-3xl font-bold mb-4 text-white text-shadow-lg text-center">{platform.title}</h3>
-                  <p className="text-lg text-gray-300 text-shadow-md text-center max-w-md px-4">{platform.description}</p>
-                </div>
-              </div>
-            )}
+        {/* Latest Expansion Badge */}
+        <div className="flex items-center space-x-4 mb-12">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-green-500 border-4 border-white shadow-lg flex items-center justify-center">
+            <span className="text-2xl">🌍</span>
           </div>
-        ))}
+          <div>
+            <p className="text-sm font-bold text-gray-300">Latest Platform</p>
+            <p className="text-2xl font-bold text-shadow-sm">Weather Intelligence Hub</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Navigation Cards */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30">
+        <div className="flex space-x-6">
+          <Link 
+            to="/weather-intelligence" 
+            className="nb-panel-white p-6 hover:nb-panel-accent transition-all duration-200 group"
+          >
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-3 bg-black rounded border-2 border-black flex items-center justify-center group-hover:bg-gray-800">
+                <span className="text-white text-xl">🏠</span>
+              </div>
+              <p className="font-bold text-sm">Dashboard</p>
+            </div>
+          </Link>
+
+          <Link 
+            to="/weather-intelligence/stations" 
+            className="nb-panel-white p-6 hover:nb-panel-accent transition-all duration-200 group"
+          >
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-3 bg-black rounded border-2 border-black flex items-center justify-center group-hover:bg-gray-800">
+                <span className="text-white text-xl">🌤️</span>
+              </div>
+              <p className="font-bold text-sm">Stations</p>
+            </div>
+          </Link>
+
+          <Link 
+            to="/weather-intelligence/my-stations" 
+            className="nb-panel-white p-6 hover:nb-panel-accent transition-all duration-200 group"
+          >
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-3 bg-black rounded border-2 border-black flex items-center justify-center group-hover:bg-gray-800">
+                <span className="text-white text-xl">⭐</span>
+              </div>
+              <p className="font-bold text-sm">My Stations</p>
+            </div>
+          </Link>
+
+          <Link 
+            to="/weather-betting" 
+            className="nb-panel-white p-6 hover:nb-panel-accent transition-all duration-200 group"
+          >
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-3 bg-black rounded border-2 border-black flex items-center justify-center group-hover:bg-gray-800">
+                <span className="text-white text-xl">🎲</span>
+              </div>
+              <p className="font-bold text-sm">Betting</p>
+            </div>
+          </Link>
+        </div>
       </div>
     </div>
   );
