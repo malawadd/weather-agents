@@ -25,7 +25,6 @@ export function WeatherInsuranceHeader() {
         <div className="flex items-center space-x-8">
           <div className="flex items-center space-x-4">
             <h1 className="text-2xl font-bold">☔ Kiyan Insurance</h1>
-            <Link to="/platform-selection" className="nb-betting-button px-3 py-1 text-sm font-bold">
             <Link to="/platform-selection" className="nb-insurance-button px-3 py-1 text-sm font-bold">
               ← Platforms
             </Link>
