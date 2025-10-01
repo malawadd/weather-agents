@@ -45,7 +45,7 @@ export function DepositPremiumPanel({
   const { isLoading: isDepositing } = useWaitForTransactionReceipt({
     hash: depositHash,
     onSuccess: () => {
-      showSuccess('Deposit successful! Kiyan tickets have been minted to your wallet.');
+      showSuccess('Deposit successful! Kiyan insurance tickets have been minted to your wallet.');
       setDepositAmount('');
       onTransactionSuccess();
     },
@@ -134,9 +134,9 @@ export function DepositPremiumPanel({
     <div className="space-y-6">
       {/* Deposit Panel */}
       <div className="nb-betting-panel-white p-6">
-        <h3 className="text-xl font-bold mb-4">💎 Deposit for Tickets</h3>
+        <h3 className="text-xl font-bold mb-4">💎 Deposit for Insurance Tickets</h3>
         <p className="text-sm text-gray-600 mb-4">
-          Deposit {mtokenSymbol} tokens to mint Kiyan tickets for purchasing insurance policies.
+          Deposit {mtokenSymbol} tokens to mint Kiyan insurance tickets for purchasing weather protection policies.
         </p>
         
         <div className="space-y-4">
@@ -175,7 +175,7 @@ export function DepositPremiumPanel({
               disabled={!isValidAmount(depositAmount) || isDepositing}
               className="nb-betting-button-success w-full py-3 font-bold disabled:opacity-50"
             >
-              {isDepositing ? '⏳ Depositing...' : '💎 Deposit & Mint Tickets'}
+              {isDepositing ? '⏳ Depositing...' : '💎 Deposit & Mint Insurance Tickets'}
             </button>
           </div>
         </div>
@@ -224,7 +224,7 @@ export function DepositPremiumPanel({
               disabled={!isValidAmount(donateAmount) || isDonating}
               className="nb-betting-button-accent w-full py-3 font-bold disabled:opacity-50"
             >
-              {isDonating ? '⏳ Contributing...' : '💝 Contribute to Pool'}
+              {isDonating ? '⏳ Contributing...' : '💝 Contribute to Coverage Pool'}
             </button>
           </div>
         </div>

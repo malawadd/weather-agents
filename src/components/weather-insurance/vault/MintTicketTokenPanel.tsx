@@ -28,7 +28,7 @@ export function MintTicketTokenPanel({
   const { isLoading: isMinting } = useWaitForTransactionReceipt({
     hash: mintHash,
     onSuccess: () => {
-      showSuccess(`${mtokenSymbol} tokens minted successfully! You can now use them for insurance.`);
+      showSuccess(`${mtokenSymbol} tokens minted successfully! You can now use them for insurance premiums.`);
       setMintAmount('');
       onTransactionSuccess();
     },
@@ -67,7 +67,7 @@ export function MintTicketTokenPanel({
     <div className="nb-betting-panel-warning p-6">
       <h3 className="text-xl font-bold mb-4">🪙 Mint {mtokenSymbol} Tokens</h3>
       <p className="text-sm text-gray-600 mb-4">
-        Mint {mtokenSymbol} tokens for testing purposes. In production, you would acquire these through other means.
+        Mint {mtokenSymbol} tokens for testing purposes. In production, you would acquire these through legitimate means for insurance premiums.
       </p>
       
       <div className="space-y-4">
@@ -82,7 +82,7 @@ export function MintTicketTokenPanel({
             disabled={isMinting}
           />
           <p className="text-xs text-gray-600 mt-1">
-            Mint tokens to your wallet for testing
+            Mint tokens to your wallet for testing insurance features
           </p>
         </div>
 
@@ -100,7 +100,7 @@ export function MintTicketTokenPanel({
         <h4 className="font-bold text-sm mb-2">⚠️ Testing Only:</h4>
         <p className="text-xs">
           This minting function is for testing purposes only. In a production environment, 
-          tokens would be acquired through legitimate means.
+          tokens would be acquired through legitimate means for insurance premiums.
         </p>
       </div>
     </div>

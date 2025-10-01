@@ -33,7 +33,7 @@ export function UserPremiumBalance({
 
   return (
     <div className="nb-betting-panel-white p-6">
-      <h3 className="text-xl font-bold mb-4">💰 Your Balances</h3>
+      <h3 className="text-xl font-bold mb-4">💰 Your Insurance Balances</h3>
       
       <div className="space-y-4">
         {/* MToken Balance */}
@@ -42,22 +42,22 @@ export function UserPremiumBalance({
           <p className="text-2xl font-bold">
             {formatUnits(mtokenBalance, mtokenDecimals)}
           </p>
-          <p className="text-xs text-gray-600">Available for deposits</p>
+          <p className="text-xs text-gray-600">Available for premium deposits</p>
         </div>
 
         {/* Vault Tickets Balance */}
         <div className="nb-betting-panel-accent p-4">
-          <h4 className="font-bold text-sm mb-1">🎫 {vaultSymbol} Tickets</h4>
+          <h4 className="font-bold text-sm mb-1">🎫 {vaultSymbol} Insurance Tickets</h4>
           <p className="text-2xl font-bold">
             {formatUnits(vaultBalance, vaultDecimals)}
           </p>
-          <p className="text-xs text-gray-600">Insurance tickets for policies</p>
+          <p className="text-xs text-gray-600">Available for purchasing policies</p>
         </div>
       </div>
 
       {/* Balance Actions */}
       <div className="mt-6 pt-4 border-t-4 border-black">
-        <h4 className="font-bold text-sm mb-3">⚡ Quick Actions</h4>
+        <h4 className="font-bold text-sm mb-3">⚡ Portfolio Summary</h4>
         <div className="space-y-2">
           <div className="flex justify-between text-xs">
             <span>Total Portfolio Value:</span>
