@@ -50,7 +50,7 @@ export function NewsSlider({ newsItems = defaultNewsItems }: NewsSliderProps) {
   const currentNews = newsItems[currentIndex];
 
   return (
-    <div className="w-80 h-48 relative overflow-hidden">
+    <div className="w-full md:w-80 h-48 relative overflow-hidden">
       <div
         className="absolute inset-0 bg-cover bg-center transition-all duration-1000"
         style={{ backgroundImage: `url(${currentNews.image})` }}

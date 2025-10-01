@@ -73,27 +73,30 @@ export function PlatformSelectionPage() {
       <div className="absolute inset-0 bg-black/70" />
 
       {/* Top Navigation Bar */}
-      <div className="absolute top-0 left-0 right-0 z-30 p-6">
-        <div className="flex justify-between items-center">
+      <div className="relative z-30 p-4 md:p-6">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="nb-panel-white px-6 py-3">
-            <h1 className="text-2xl font-bold">🤖 KIYAN ECOSYSTEM</h1>
+            <h1 className="text-xl md:text-2xl font-bold">🤖 KIYAN ECOSYSTEM</h1>
           </div>
           
-          <div className="flex items-center space-x-4">
-            <div className="nb-panel px-4 py-2">
-              <span className="text-white font-bold text-sm">STORE</span>
+          <div className="flex flex-wrap items-center gap-2 md:gap-4">
+            <div className="nb-panel px-3 py-2">
+              <span className="text-white font-bold text-xs md:text-sm">STORE</span>
             </div>
-            <div className="nb-panel px-4 py-2">
-              <span className="text-white font-bold text-sm">REWARDS</span>
+            <div className="nb-panel px-3 py-2">
+              <span className="text-white font-bold text-xs md:text-sm">REWARDS</span>
             </div>
-            <div className="nb-panel px-4 py-2">
-              <span className="text-white font-bold text-sm">QUESTS</span>
+            <div className="nb-panel px-3 py-2">
+              <span className="text-white font-bold text-xs md:text-sm">QUESTS</span>
             </div>
-            <div className="nb-panel-accent px-4 py-2">
-              <span className="font-bold text-sm">PORTAL</span>
+            <div className="nb-panel px-3 py-2">
+              <span className="text-white font-bold text-xs md:text-sm">WORLD</span>
+            </div>
+            <div className="nb-panel-accent px-3 py-2">
+              <span className="font-bold text-xs md:text-sm">PORTAL</span>
             </div>
             <div className="nb-panel-white px-4 py-2 flex items-center space-x-2">
-              <span className="font-bold text-sm">{user?.name || 'Explorer'}</span>
+              <span className="font-bold text-xs md:text-sm">{user?.name || 'Explorer'}</span>
               {isGuest && <span className="text-xs text-gray-600">(Guest)</span>}
               <button onClick={signOut} className="text-xs font-bold text-red-600">✕</button>
             </div>
@@ -102,51 +105,54 @@ export function PlatformSelectionPage() {
       </div>
 
       {/* Central Content */}
-      <div className="absolute inset-0 flex items-center justify-center z-20">
+      <div className="relative z-20 flex-1 flex items-center justify-center px-4 py-8 md:py-16">
         <div className="text-center text-white max-w-4xl">
           <div className="mb-8">
-            <p className="text-lg font-bold text-gray-300 mb-2">Latest Platform</p>
-            <h1 className="text-6xl font-bold mb-4 text-shadow-md">Weather Intelligence</h1>
-            <h2 className="text-3xl font-bold mb-6 text-shadow-sm">AI-POWERED INSIGHTS</h2>
-            <p className="text-xl text-shadow-sm max-w-2xl mx-auto">
+            <p className="text-sm md:text-lg font-bold text-gray-300 mb-2">Latest Platform</p>
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 text-shadow-md">Weather Intelligence</h1>
+            <h2 className="text-xl md:text-3xl font-bold mb-6 text-shadow-sm">AI-POWERED INSIGHTS</h2>
+            <p className="text-base md:text-xl text-shadow-sm max-w-2xl mx-auto">
               Harness the power of global weather data with AI-driven analysis and real-time insights from the WeatherXM network.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Bottom Platform Cards */}
-      <div className="absolute bottom-8 left-8 z-30">
-        <div className="flex space-x-6">
-          <button 
-            onClick={openWeatherIntelligenceModal}
-            className="nb-panel-white p-6 hover:nb-panel-accent transition-all duration-200 group"
-          >
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-3 nb-panel flex items-center justify-center">
-                <span className="text-2xl">🌤️</span>
+      {/* Bottom Section - Platform Cards and News */}
+      <div className="relative z-30 p-4 md:p-8">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-6">
+          {/* Platform Cards */}
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full md:w-auto">
+            <button 
+              onClick={openWeatherIntelligenceModal}
+              className="nb-panel-white p-4 md:p-6 hover:nb-panel-accent transition-all duration-200 group w-full sm:w-auto"
+            >
+              <div className="text-center">
+                <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 nb-panel flex items-center justify-center">
+                  <span className="text-xl md:text-2xl">🌤️</span>
+                </div>
+                <p className="font-bold text-sm md:text-base">Weather Intelligence</p>
               </div>
-              <p className="font-bold">Weather Intelligence</p>
-            </div>
-          </button>
+            </button>
 
-          <button 
-            onClick={openWeatherBettingModal}
-            className="nb-panel-white p-6 hover:nb-panel-accent transition-all duration-200 group"
-          >
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-3 nb-panel flex items-center justify-center">
-                <span className="text-2xl">🎲</span>
+            <button 
+              onClick={openWeatherBettingModal}
+              className="nb-panel-white p-4 md:p-6 hover:nb-panel-accent transition-all duration-200 group w-full sm:w-auto"
+            >
+              <div className="text-center">
+                <div className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 nb-panel flex items-center justify-center">
+                  <span className="text-xl md:text-2xl">🎲</span>
+                </div>
+                <p className="font-bold text-sm md:text-base">Weather Betting</p>
               </div>
-              <p className="font-bold">Weather Betting</p>
-            </div>
-          </button>
+            </button>
+          </div>
+
+          {/* News Slider */}
+          <div className="w-full md:w-auto">
+            <NewsSlider />
+          </div>
         </div>
-      </div>
-
-      {/* News Slider - Bottom Right */}
-      <div className="absolute bottom-8 right-8 z-30">
-        <NewsSlider />
       </div>
 
       {/* Platform Introduction Modal */}
